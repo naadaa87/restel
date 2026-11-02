@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { adminCredsOk, signSession, setCookieHeader, cookieName, sameOrigin } from '@/lib/auth';
+import { str, flash } from '@/lib/portal';
+
+const env = (Astro.locals as any).runtime?.env || {};
+if ((Astro.locals as any).admin) return Astro.redirect('/admin');
+let { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const r = adminCredsOk(env, str(fd, 'email'), str(fd, 'password'));
+  if (!sameOrigin(Astro.request)) err = '잘못된 요청입니다.';
+  else if (r.reason) err = r.reason;
+  else if (!r.ok) err = '이메일 또는 비밀번호가 맞지 않습니다.';
+  else {
+    const token = await signSession(env, { t: 'admin', email: env.ADMIN_EMAIL, exp: Date.now() + 12 * 3600 * 1000 });
+    return new Response(null, { status: 303, headers: { Location: '/admin', 'Set-Cookie': setCookieHeader(cookieName('admin'), token, 12 * 3600, Astro.url.protocol === 'https:') } });
+  }
+}
+const configured = !!(env.ADMIN_EMAIL && env.ADMIN_PASSWORD);
+---
+<Portal title="관리자 로그인" kind="admin" msg={msg} err={err}>
+  <div class="auth">
+    <div class="panel">
+      <h1>총괄 관리자</h1>
+      {!configured && <div class="alert alert--info" style="margin-bottom:14px">Cloudflare 대시보드 → Worker → Settings → Variables and Secrets 에 <code>ADMIN_EMAIL</code>, <code>ADMIN_PASSWORD</code>, <code>SESSION_SECRET</code> 을 먼저 등록해 주세요.</div>}
+      <form method="post" class="form">
+        <div class="field"><label>이메일</label><input type="email" name="email" required autocomplete="username" /></div>
+        <div class="field"><label>비밀번호</label><input type="password" name="password" required autocomplete="current-password" /></div>
+        <button class="btn btn--primary btn--block" type="submit">로그인</button>
+      </form>
+    </div>
+  </div>
+</Portal>

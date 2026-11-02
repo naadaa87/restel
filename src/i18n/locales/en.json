@@ -1,0 +1,401 @@
+{
+  "meta": {
+    "siteName": "RESTEL",
+    "tagline": "Rest, the Korean way.",
+    "titleSuffix": " | RESTEL — Korean Rest Space in Seoul",
+    "description": "RESTEL is a Korean rest space you rent by the hour in Sinchon, Seoul. Book a private room for a nap, meditation, healing and a quiet reset. Floor mats, soft lighting, warm tea. Not a hotel — a rest space rental.",
+    "keywords": "rest space Seoul, nap room Seoul, Korean rest space, hourly rest space, meditation space Seoul, wellness space Sinchon, nap place Hongdae, quiet room Seoul, ondol floor rest, RESTEL, rest space rental",
+    "ogTitle": "RESTEL — A Korean rest space you rent by the hour"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "What is RESTEL",
+    "spaces": "Spaces",
+    "sessions": "Sessions & Prices",
+    "krest": "K-REST",
+    "guide": "How to Rest",
+    "faq": "FAQ",
+    "hosts": "For Hosts",
+    "contact": "Contact",
+    "book": "Request a Session",
+    "language": "Language",
+    "menu": "Menu",
+    "close": "Close",
+    "hostLogin": "Host login",
+    "myRequest": "Check my request"
+  },
+  "common": {
+    "notLodging": "RESTEL is a rest space rental, not an accommodation.",
+    "notLodgingShort": "Not an accommodation",
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "requestBooking": "Request a session",
+    "perSpace": "Whole space · for {n} people",
+    "extraPerson": "Extra person {price}",
+    "minutes": "{n} min",
+    "hours": "{n} hours",
+    "upTo": "Up to {n} hours",
+    "people": "{n} people",
+    "weekday": "Weekdays",
+    "weekend": "Weekends & holidays",
+    "refNote": "Reference only. Payment is made in Korean won (KRW).",
+    "flagship": "Flagship",
+    "partner": "RESTEL Partner",
+    "comingSoon": "Coming soon",
+    "readMore": "Read more",
+    "back": "Back",
+    "submit": "Send",
+    "required": "required",
+    "optional": "optional",
+    "langSuggest": "This page is available in {lang}.",
+    "langSwitch": "Switch",
+    "dismiss": "Dismiss",
+    "kstNote": "All times are Korea Standard Time (KST)."
+  },
+  "home": {
+    "kicker": "REST SPACE RENTAL · SEOUL",
+    "title": "A place to rest,\nnot to stay.",
+    "subtitle": "Not a hotel, not a motel, not a hostel. RESTEL is a Korean rest space you rent by the hour. Take off your shoes, step up onto the wooden platform, and find floor mats and blankets, soft light, and a warm cup of tea waiting.",
+    "cta1": "Sessions & prices",
+    "cta2": "See RESTEL Sinchon",
+    "heroPoints": ["Nap & rest", "Meditation & breathing", "Healing & reset", "Private space"],
+    "notHotel": {
+      "kicker": "NOT A HOTEL",
+      "title": "You don't check in. You come in to rest.",
+      "body": "RESTEL isn't somewhere to spend the night. Whether it's one hour or half a day, you rent the whole atmosphere you need to rest: folding mats and a sofa instead of beds, blankets instead of duvets, a quiet entrance instead of a check-in. It's the fourth kind of \"-tel\", built around rest.",
+      "items": [
+        { "title": "Sessions by the hour", "body": "From a 60-minute nap to a full-day rest — rent only the time you need." },
+        { "title": "Korean floor rest", "body": "A raised platform you step onto barefoot, mats and blankets, a warm wooden floor." },
+        { "title": "Stillness, prepared", "body": "Three light levels, nature sounds, guided meditation and tea are already in place." }
+      ]
+    },
+    "how": {
+      "title": "How it works",
+      "steps": [
+        { "title": "Pick a session", "body": "Choose Nap 60, Rest 180 or Day Rest — the length of rest you need." },
+        { "title": "Request a time", "body": "Choose a date and start time. We confirm availability and send you the details." },
+        { "title": "Enter quietly", "body": "Open the door with the code we send, take off your shoes, step up onto the platform." },
+        { "title": "Rest", "body": "Dim the lights, lie down on a mat, pour some tea, press play on a guided meditation." }
+      ]
+    },
+    "sessionsTitle": "Sessions & prices",
+    "sessionsSub": "Every session gives you the whole space, privately. Prices are for two people.",
+    "flagshipTitle": "RESTEL Sinchon",
+    "flagshipSub": "Our first space: a wooden floor platform under a line of black roof tiles, a glowing moon-gate niche, and a terrace. A short walk from Sinchon Station, between Hongdae and the university quarter.",
+    "flagshipCta": "View the space",
+    "krestTitle": "K-REST: how Koreans rest",
+    "krestSub": "Heated floors and floor culture, the jjimjilbang way of resting, a cup of grain tea, temple-like stillness. We turned Korean rest into short, friendly guides for travellers.",
+    "keywordsTitle": "Looking for one of these?",
+    "keywordsBody": "A nap room, a rest space, a retreat, a sanctuary, a haven, a hideout, a wellness space, a sleep box — RESTEL has a little of each. What it is not is a pod hotel or a micro stay. RESTEL is a rest space you rent by the hour.",
+    "hostsTitle": "Turn your space into a RESTEL",
+    "hostsBody": "Party rooms, studios and vacant units sit empty most weekday afternoons. Convert them into a rest space that meets the RESTEL standard — we handle requests, multilingual listing and content with you.",
+    "hostsCta": "Host information",
+    "faqTitle": "Frequently asked questions"
+  },
+  "about": {
+    "title": "What is RESTEL",
+    "lead": "RESTEL joins REST and TEL. After the hotel, the motel and the hostel comes a new kind of \"-tel\": a place you enter to rest.",
+    "story": [
+      "Hotels grew out of service and formality, motels out of the road trip, hostels out of backpacker culture. The suffix \"-tel\" no longer describes a building; it describes a way of staying.",
+      "Koreans rest on the floor. On a warm ondol floor with a mat rolled out, in a grandmother's room, on the wooden deck of a jjimjilbang, in the open hall of a hanok. You don't need a bed to rest, and one floor can be shared by family and friends. RESTEL brings this old habit into the middle of the city.",
+      "There are no beds at RESTEL. There are folding mats and a sofa, blankets and pillows. It is not a place to spend the night but a place to rest properly, for an hour or for half a day. That is why RESTEL is a rest space rental and not an accommodation — and we say so up front."
+    ],
+    "valuesTitle": "Three things RESTEL promises",
+    "values": [
+      { "title": "Separation", "body": "The moment the door closes, the noise and the to-do list stay outside. Taking off your shoes draws the line." },
+      { "title": "Floor rest", "body": "Mats and blankets on a raised platform, a buckwheat pillow. The most comfortable way to lie down, no bed required." },
+      { "title": "Stillness, prepared", "body": "Light, sound, scent, tea and self-guided content are already there. You don't have to figure out how to rest." }
+    ],
+    "notTitle": "What RESTEL is not",
+    "notList": [
+      "Not an accommodation. No nights, no check-in, no rooms.",
+      "Not a party room. Quiet is the default, not music and crowds.",
+      "Not a clinic. We make no medical or sleep-benefit claims."
+    ],
+    "compareTitle": "How it differs from places that look similar",
+    "compare": [
+      { "alt": "Hotel day-use", "they": "A room with a bed for a few hours.", "we": "Not an accommodation. You rent the whole atmosphere of rest, not a room." },
+      { "alt": "Nap cafés & massage-chair cafés", "they": "One seat in an open room.", "we": "The entire space is yours — alone, as a couple or as a family sharing one floor." },
+      { "alt": "Party rooms", "they": "Sound and light for gatherings.", "we": "The same kind of rental, the opposite purpose: designed around quiet." },
+      { "alt": "Jjimjilbang & saunas", "they": "Resting on a shared public floor.", "we": "The jjimjilbang floor rest, reinterpreted as private and clean." },
+      { "alt": "Meditation studios", "they": "Classes at fixed times.", "we": "Self-guided content built into the space, whenever you arrive." }
+    ],
+    "insideTitle": "Inside a RESTEL",
+    "inside": [
+      "A raised wooden platform you step onto without shoes",
+      "Folding mats, a sofa, blankets, buckwheat and latex pillows",
+      "Three light levels: bright, soft, dark",
+      "Sound channels: rain, wind chimes, crackling embers",
+      "A tea corner with jujube, barley and brown-rice green tea",
+      "Guided meditation in several languages (10 and 20 minutes)",
+      "A terrace for fresh air (varies by location)",
+      "A digital detox box and quiet games"
+    ]
+  },
+  "sessions": {
+    "title": "Sessions & prices",
+    "lead": "RESTEL sells kinds of rest, not hours. Every session is the whole space, privately. Prices are for two people, with a small fee per extra person. All sessions end before midnight.",
+    "items": {
+      "nap60": { "name": "Nap 60", "ko": "A one-hour nap", "for": "Lunch breaks · between meetings · exam season", "desc": "The perfect hour to close your eyes. Mats, blankets and a wake-up light are ready.", "includes": ["Whole space", "2 mats & blankets", "1 tea per person", "Sound channel", "Wake-up light 10 min before the end"] },
+      "rest180": { "name": "Rest 180", "ko": "Three hours of rest", "for": "Couples · travellers · a half-day recovery", "desc": "Three unhurried hours for a nap, a meditation and a cup of tea.", "includes": ["Whole space", "2 mats & blankets", "2 teas per person", "Guided meditation", "Tea snacks"] },
+      "dayrest": { "name": "Day Rest", "ko": "A day of rest", "for": "Families · small groups · a long reset", "desc": "Up to 8 hours within opening hours, with quiet games, books and tea.", "includes": ["Whole space", "4 mats & blankets", "Unlimited tea", "Meditation & tea set", "Board games & books"] },
+      "krest90": { "name": "K-REST 90", "ko": "Korean rest experience", "for": "Travellers · 2 people or more", "desc": "A tea guide, a 20-minute guided meditation and ondol-style floor rest, in 90 minutes.", "includes": ["Tea guide (video & cards)", "20-min guided meditation", "Mat & blanket rest", "K-REST guide cards"] }
+    },
+    "priceFrom": "from {price}",
+    "perPerson": "per person",
+    "startWindow": "Start times",
+    "duration": "Length",
+    "includes": "Included",
+    "addons": {
+      "title": "Add-ons",
+      "items": [
+        { "name": "Tea set", "body": "Cups, teapot, snacks and a how-to card" },
+        { "name": "Sleep kit", "body": "Eye mask, earplugs, pillow upgrade" },
+        { "name": "Scent", "body": "Mugwort, hinoki or herbal" },
+        { "name": "Digital detox box", "body": "A box to put your phone away for a while" }
+      ]
+    },
+    "rules": {
+      "title": "House rules",
+      "items": [
+        "Open 07:00–24:00. Every session ends before midnight.",
+        "There is a 60-minute reset between sessions.",
+        "Guests must be 19 or older. ID verification may be requested.",
+        "Cancellation: 100% refund up to 48 h before, 50% up to 24 h before, none after. Changes are free before confirmation.",
+        "Light snacks are fine. No cooking, no alcohol."
+      ]
+    },
+    "priceNote": "Prices shown are for RESTEL Sinchon. Partner spaces list their own prices."
+  },
+  "spaces": {
+    "title": "RESTEL spaces",
+    "lead": "Our flagship space and partner spaces that meet the RESTEL standard. All are rest space rentals, not accommodations.",
+    "empty": "No partner spaces yet — more are coming.",
+    "view": "View space",
+    "region": "Area",
+    "sessionsFrom": "Sessions from {price}",
+    "capacity": "For {base} · up to {max} people"
+  },
+  "space": {
+    "aboutTitle": "About the space",
+    "featuresTitle": "What's inside",
+    "sessionsTitle": "Sessions & prices",
+    "rulesTitle": "House rules",
+    "directionsTitle": "Getting here",
+    "hoursTitle": "Opening hours",
+    "mapGoogle": "Google Maps",
+    "mapNaver": "Naver Map",
+    "mapKakao": "Kakao Map",
+    "hostedBy": "Operated by",
+    "requestCta": "Request this space",
+    "guideCta": "How to rest here",
+    "galleryAlt": "{name} photo {n}",
+    "photosNote": "Photos show the actual space; some have been retouched."
+  },
+  "krest": {
+    "title": "K-REST — Korean rest",
+    "lead": "For travellers, RESTEL is a way to experience how Koreans rest. We picked the parts people find unfamiliar or curious, and kept them short.",
+    "cards": {
+      "ondol": {
+        "title": "Ondol & floor culture",
+        "summary": "Why Koreans rest on the floor",
+        "body": "Ondol is Korea's traditional heated floor. A warm floor naturally invites people to sit and lie down, and it shaped a culture of sleeping, eating and resting on the floor without beds. RESTEL's raised wooden platform carries this floor culture into the city. The moment you step up without shoes, your body sits lower and your breathing slows."
+      },
+      "yo": {
+        "title": "Mats, blankets & pillows",
+        "summary": "A mat instead of a yo, a blanket instead of a duvet",
+        "body": "A traditional Korean bed is a yo (padded mat) laid on the floor and a duvet on top. Because RESTEL is a space for rest, not sleepovers, we use folding mats and blankets. The buckwheat-hull pillow is a Korean classic: cool, firm, and quietly rustling when you move."
+      },
+      "jjimjilbang": {
+        "title": "The jjimjilbang way of resting",
+        "summary": "Resting on a shared wooden floor",
+        "body": "A jjimjilbang is a Korean bathhouse where people lie down on a wide heated floor after bathing, with baked eggs, sweet rice punch and a towel folded into 'sheep ears'. RESTEL reinterprets that floor rest as private and quiet. Pair it with a bathhouse visit and your day of rest is complete."
+      },
+      "tea": {
+        "title": "A cup of tea",
+        "summary": "Jujube, barley, brown-rice green tea",
+        "body": "Korean tea isn't only leaf tea. Everyday favourites are made from grains and fruit: jujube tea simmered for hours, nutty roasted barley tea, green tea blended with roasted brown rice. The RESTEL tea corner has all three and a few small sweets, with a card showing how to brew each."
+      },
+      "stillness": {
+        "title": "Stillness & meditation",
+        "summary": "Temple quiet, in the city",
+        "body": "In Korea's mountain temples a day passes with dawn chanting, 108 bows and tea talk. RESTEL distils that quiet into 10- and 20-minute guided meditations you can play through the room speaker in several languages. Counting your breath is enough."
+      },
+      "hanok": {
+        "title": "The lines of a hanok",
+        "summary": "A roof-tile ridge and a moon gate",
+        "body": "Along the wall of RESTEL Sinchon runs a line of black roof tiles, and in the centre an arched niche shaped like a moon holds a soft glow. It's a modern compression of the hanok roofline and gate. It makes a lovely photo, but better still: lie down facing the light."
+      }
+    },
+    "pairTitle": "Korean rest to pair with your visit",
+    "pairs": ["Bathhouses & saunas (HANTANG guide)", "Urban templestay", "Tea ceremony", "A hanok walk"]
+  },
+  "guide": {
+    "title": "How to rest at RESTEL",
+    "lead": "From entering to leaving — everything you need. The QR code inside the space opens this page too.",
+    "blocks": [
+      { "title": "Entering", "text": "Open the door with the code we sent you. It works from 10 minutes before your start until 10 minutes after the end.", "detail": "If the door doesn't open, message the contact in your confirmation. If the building has a separate entrance code, it is included there." },
+      { "title": "Shoes off", "text": "Put your shoes in the cabinet by the door. The platform is for bare feet or socks.", "detail": "A hand-washing spot and sanitiser are by the entrance." },
+      { "title": "Light", "text": "Use the wall switch to choose bright, soft or dark.", "detail": "Ten minutes before the end, the lights slowly brighten — that's your alarm." },
+      { "title": "Sound", "text": "Nature sounds play through the speaker. Switch to silence or another channel if you like.", "detail": "Guided meditation plays from the player on this page or through the speaker." },
+      { "title": "Mats", "text": "Unfold a mat and take a blanket and pillow. One mat per person.", "detail": "Mat covers are changed every session. Drop used covers in the box by the door." },
+      { "title": "Tea", "text": "Fill a cup with hot water from the dispenser in the tea corner and steep a tea bag.", "detail": "Jujube, barley or brown-rice green tea. Leave used cups in the sink." },
+      { "title": "Quiet", "text": "The walls are thin. Please take calls on the terrace.", "detail": "Keep speaker volume at 3 or below; use earphones for videos." },
+      { "title": "Emergency", "text": "The extinguisher and emergency light are next to the door. Check the evacuation map.", "detail": "Emergency: 119. For anything else, use the contact in your confirmation." },
+      { "title": "Leaving", "text": "Sort your rubbish, fold the mats back, and set the lights to bright.", "detail": "Lost items are kept for 7 days. A one-line note about your rest means a lot to us." }
+    ],
+    "playerTitle": "Guided meditation",
+    "player10": "Settle your breath · 10 min",
+    "player20": "Lie down · 20 min",
+    "playerNote": "Audio will play here once available."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": [
+      { "q": "Is RESTEL a hotel or hostel?", "a": "No. RESTEL is a rest space you rent by the hour. We don't provide rooms with beds and bathrooms, and there are no overnight products. Every session ends before midnight." },
+      { "q": "Can I sleep there?", "a": "Yes — napping is welcome. Folding mats, blankets and a wake-up light are ready. What we don't offer is a place to spend the night." },
+      { "q": "How many people can use a space?", "a": "Prices cover two people. You can add people up to the space's maximum (6 at Sinchon) for a small fee each." },
+      { "q": "Can foreign visitors book?", "a": "Of course. The site is in seven languages and we confirm requests by email. We're preparing payment with internationally issued cards." },
+      { "q": "Is there an age limit?", "a": "Guests must be 19 or older. Whether minors may join with a guardian is announced per space." },
+      { "q": "Can I take a shower?", "a": "RESTEL Sinchon has a washbasin but no shower. RESTEL is a place to rest, not somewhere to wash and sleep." },
+      { "q": "How is a request confirmed?", "a": "Send a request and we'll check availability and message you (email or KakaoTalk). Once payment is complete, we send your entry code." },
+      { "q": "What is the refund policy?", "a": "100% refund up to 48 hours before the start, 50% up to 24 hours before, no refund after that. Changes are free before confirmation." },
+      { "q": "Can I bring food?", "a": "Light snacks and drinks are fine. Please avoid cooking, alcohol and strong-smelling food." },
+      { "q": "Can I list my own space on RESTEL?", "a": "Yes. Apply on the host page. We share the RESTEL standard (lighting, blackout, mats, signage, safety) and list your space once approved." }
+    ]
+  },
+  "hosts": {
+    "title": "Become a RESTEL host",
+    "lead": "Party rooms, studios and vacant units sit empty on weekday afternoons. Convert yours into a rest space that meets the RESTEL standard. We provide request handling, multilingual exposure, content and operating rules.",
+    "whyTitle": "Why RESTEL",
+    "why": [
+      { "title": "Fill empty weekday hours", "body": "Party rooms run at 20–30% occupancy off-peak. Weekday nap and meditation demand sits on the other side of the clock." },
+      { "title": "Reach international guests", "body": "A seven-language site and K-REST content introduce your space to independent travellers as a Korean rest space." },
+      { "title": "Clear operating rules", "body": "We share product, signage and wording standards that keep spaces positioned as rest space rentals, not accommodations." }
+    ],
+    "criteriaTitle": "The RESTEL standard",
+    "criteria": [
+      "A private, enclosed space of 10 m² or more with ventilation",
+      "Blackout and three light levels (bright · soft · dark)",
+      "Folding mats, blankets and pillows (no beds), one mat per person",
+      "Sound management for quiet",
+      "Access to a washbasin and a tea corner (water dispenser, tea)",
+      "A 60-minute reset and mat-cover change between sessions",
+      "Fire safety equipment (extinguisher, emergency light, evacuation map) and regular checks",
+      "Compliance with the RESTEL language guide (no accommodation wording)"
+    ],
+    "stepsTitle": "How onboarding works",
+    "steps": [
+      { "title": "Create a host account", "body": "Sign up with your email and register your space." },
+      { "title": "Review", "body": "We look at your photos and details and tell you what needs changing." },
+      { "title": "Meet the standard", "body": "Follow the checklist: lighting, mats, signage, safety." },
+      { "title": "Go live", "body": "Once approved, your space appears as a RESTEL Partner and starts receiving requests." }
+    ],
+    "feeTitle": "Fees",
+    "feeBody": "There is no listing fee. A commission (15% by default) applies to requests that come through RESTEL. Conversion work and the standard kit are quoted separately.",
+    "cta": "Start as a host",
+    "ctaLogin": "Already have an account? Log in",
+    "contactNote": "Questions? Use the contact page."
+  },
+  "book": {
+    "title": "Request a session",
+    "lead": "Tell us the session and time you'd like. We'll check availability and send you a confirmation message. Payment follows confirmation.",
+    "space": "Space",
+    "session": "Session",
+    "date": "Date",
+    "start": "Start time",
+    "people": "People",
+    "name": "Name",
+    "contact": "Phone (with country code)",
+    "email": "Email",
+    "lang": "Language for messages",
+    "note": "Notes",
+    "notePh": "e.g. mostly meditation / two buckwheat pillows",
+    "consent1": "I have read the house rules and the cancellation policy.",
+    "consent2": "I agree to the use of my contact details for this request.",
+    "consent3": "I understand RESTEL is a rest space rental, not an accommodation.",
+    "submit": "Send request",
+    "contactOrEmail": "Please provide a phone number or an email address.",
+    "estimate": "Estimated total",
+    "estimateNote": "Includes {base} people; extra-person fees applied. The final amount is confirmed in our message.",
+    "done": {
+      "title": "Your request has been received",
+      "body": "Request code {code}. We'll check availability and reach you at the contact you gave. Use the link below to follow progress and messages.",
+      "cta": "View request status",
+      "home": "Back to home"
+    },
+    "error": "We couldn't send your request. Please try again shortly or use the contact page.",
+    "dbUnavailable": "Online requests are temporarily unavailable. Please contact us by KakaoTalk or email."
+  },
+  "request": {
+    "title": "Check your request",
+    "lead": "Enter your request code and the phone or email you used to see progress and messages.",
+    "code": "Request code",
+    "contact": "Phone or email",
+    "find": "Find",
+    "notFound": "We couldn't find a matching request.",
+    "status": "Status",
+    "statuses": { "requested": "Received", "confirmed": "Confirmed", "declined": "Unavailable", "cancelled": "Cancelled", "completed": "Completed" },
+    "messages": "Messages",
+    "reply": "Send a message",
+    "replyPh": "A note for the host",
+    "cancel": "Cancel request",
+    "cancelConfirm": "Cancel this request?"
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "Questions about visiting, partnerships, corporate rest rooms or hosting — leave us a note. We reply within one or two business days.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "topic": "Topic",
+    "topics": { "use": "Visiting", "host": "Hosting", "biz": "Corporate & partnerships", "press": "Press & other" },
+    "message": "Message",
+    "submit": "Send",
+    "done": "Thank you — we'll be in touch soon.",
+    "kakao": "Message us on KakaoTalk",
+    "emailUs": "Email us"
+  },
+  "legal": {
+    "termsTitle": "Terms of use",
+    "privacyTitle": "Privacy policy",
+    "refundTitle": "Cancellation & refunds",
+    "terms": [
+      "RESTEL (the \"Service\") rents rest spaces by the hour and is not an accommodation business. Guests may use the space only during the booked session.",
+      "Guests must be 19 or older and must not exceed the maximum number of people for the space.",
+      "Smoking, cooking, alcohol, loud noise and behaviour that disturbs others are prohibited. Violations may end the session without refund.",
+      "Damage to the space or its contents may be charged at the cost of restoration.",
+      "The Service uses your contact details to confirm requests, send entry information and follow up after your visit.",
+      "These terms are governed by the laws of the Republic of Korea."
+    ],
+    "privacy": [
+      "We collect: name, phone or email, preferred language, country (optional) and notes. We never collect passport or ID numbers.",
+      "Purpose: confirming and managing requests, entry information, follow-up surveys and replying to enquiries.",
+      "Retention: one year after the session, then anonymised. Transaction records required by law are kept for the statutory period.",
+      "Processors: payment provider, messaging and email providers, hosting (Cloudflare). This list is updated here when it changes.",
+      "You may request access, correction or deletion at any time using the contact details below."
+    ],
+    "refund": [
+      "Cancel up to 48 hours before the start: 100% refund",
+      "Cancel up to 24 hours before the start: 50% refund",
+      "Later cancellation or no-show: no refund",
+      "Before confirmation, requests can be changed or cancelled freely.",
+      "If we cannot provide the session, you receive a full refund."
+    ]
+  },
+  "footer": {
+    "about": "RESTEL is a Korean rest space you rent by the hour — private rooms for naps, meditation, healing and a quiet reset in Seoul. Not an accommodation.",
+    "links": "Explore",
+    "legal": "Policies",
+    "contact": "Contact",
+    "business": "Business information",
+    "hostPortal": "Host portal",
+    "admin": "Admin",
+    "copyright": "© {year} RESTEL. All rights reserved."
+  },
+  "notFound": {
+    "title": "This page is resting",
+    "body": "The page you're looking for doesn't exist or has moved.",
+    "cta": "Go home"
+  }
+}

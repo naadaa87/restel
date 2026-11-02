@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listBookingsForHost } from '@/lib/db';
+import { flash, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const filter = Astro.url.searchParams.get('status') || '';
+let bookings = d ? await listBookingsForHost(d, me.id) : [];
+if (filter) bookings = bookings.filter((b) => b.status === filter);
+const tabs = ['', 'requested', 'confirmed', 'completed', 'declined', 'cancelled'];
+---
+<Portal title="예약 요청" kind="host" user={me} current="bookings" msg={msg} err={err}>
+  <h1>예약 요청</h1>
+  <div class="tabs">{tabs.map((s) => <a class={`btn btn--ghost btn--sm ${filter === s ? 'is-active' : ''}`} style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={s ? `?status=${s}` : '/host/bookings'}>{s ? STATUS_KO[s] : '전체'}</a>)}</div>
+  <div class="panel">
+    {bookings.length === 0 ? <p class="help">표시할 요청이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>상태</th><th>접수</th></tr></thead>
+        <tbody>{bookings.map((b) => (
+          <tr>
+            <td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a></td>
+            <td>{b.space_name}<br /><span class="small muted">{b.session_code}</span></td>
+            <td>{b.date} {b.start_time}</td>
+            <td>{b.people}</td>
+            <td>{b.name}<br /><span class="small muted">{b.phone || b.email} · {b.lang}</span></td>
+            <td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></td>
+            <td class="small muted">{fmtDate(b.created_at)}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

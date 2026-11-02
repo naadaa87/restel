@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listAllSpaces } from '@/lib/db';
+import { flash, redirectWith, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const filter = Astro.url.searchParams.get('status') || '';
+let spaces = await listAllSpaces(d);
+if (filter) spaces = spaces.filter((s) => s.status === filter);
+const tabs = ['', 'submitted', 'published', 'draft', 'hidden', 'rejected'];
+---
+<Portal title="공간" kind="admin" user={me} current="spaces" msg={msg} err={err}>
+  <h1>공간 관리</h1>
+  <div class="tabs">{tabs.map((s) => <a class="btn btn--ghost btn--sm" style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={s ? `?status=${s}` : '/admin/spaces'}>{s ? STATUS_KO[s] : '전체'}</a>)}</div>
+  <div class="panel">
+    <p class="help" style="margin-bottom:10px">직영 "레스텔 신촌"은 코드(src/data/flagship.ts)로 관리되며 이 목록에는 호스트가 등록한 파트너 공간만 표시됩니다.</p>
+    {spaces.length === 0 ? <p class="help">표시할 공간이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>공간</th><th>호스트</th><th>상태</th><th>수정</th><th></th></tr></thead>
+        <tbody>{spaces.map((s) => { const n = JSON.parse(s.name_json || '{}'); return (
+          <tr>
+            <td><a href={`/admin/spaces/${s.id}`}><strong>{n.ko || n.en || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td>
+            <td>{s.host_name}<br /><span class="small muted">{s.host_email}</span></td>
+            <td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span>{s.admin_note && <div class="small muted">{s.admin_note}</div>}</td>
+            <td class="small muted">{fmtDate(s.updated_at)}</td>
+            <td style="white-space:nowrap"><a class="btn btn--ghost btn--sm" href={`/admin/spaces/${s.id}`}>검토·편집</a></td>
+          </tr>); })}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

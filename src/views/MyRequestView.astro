@@ -1,0 +1,69 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath, formatKRW } from '@/i18n';
+import { fmtDate } from '@/lib/text';
+
+interface Props { lang: Locale; data: any }
+const { lang, data } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const b = data.booking;
+const statusLabel = (s: string) => (t.request.statuses as any)[s] || s;
+---
+<Base lang={lang} path="/my" title={t.request.title} description={t.request.lead} noindex>
+  <section class="section">
+    <div class="narrow">
+      <span class="kicker">{t.nav.myRequest}</span>
+      <h1 class="h1" style="font-size:clamp(28px,4vw,40px)">{t.request.title}</h1>
+      <p class="lead" style="margin:12px 0 24px">{t.request.lead}</p>
+      <form class="form" method="get" style="margin-bottom:28px">
+        <div class="form__row">
+          <div class="field"><label for="code">{t.request.code}</label><input id="code" name="code" value={data.code} placeholder="RT-XXXXXX" required /></div>
+          <div class="field"><label for="contact">{t.request.contact}</label><input id="contact" name="contact" value={data.contact} /></div>
+        </div>
+        <button class="btn btn--primary" type="submit" style="justify-self:start">{t.request.find}</button>
+      </form>
+      {data.dbUnavailable && <div class="alert alert--info">{t.book.dbUnavailable}</div>}
+      {data.notFound && <div class="alert alert--error">{t.request.notFound}</div>}
+      {b && (
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+            <h2 class="h3">{b.code}</h2>
+            <span class={`status status--${b.status}`}>{statusLabel(b.status)}</span>
+          </div>
+          <dl class="kv" style="margin-top:14px">
+            <dt>{t.book.space}</dt><dd>{b.space_name}</dd>
+            <dt>{t.book.session}</dt><dd>{(t.sessions.items as any)[b.session_code]?.name || b.session_code}</dd>
+            <dt>{t.book.date}</dt><dd>{b.date} {b.start_time} (KST)</dd>
+            <dt>{t.book.people}</dt><dd>{b.people}</dd>
+            <dt>{t.book.estimate}</dt><dd>{b.est_amount ? formatKRW(b.est_amount) : '—'}</dd>
+            <dt>{t.book.note}</dt><dd>{b.note || '—'}</dd>
+          </dl>
+          <h3 class="h3" style="margin:24px 0 10px">{t.request.messages}</h3>
+          <div class="thread">
+            {data.messages.length === 0 && <p class="muted small">—</p>}
+            {data.messages.map((m: any) => <div class={`msg msg--${m.sender}`}>{m.body}<small>{m.sender} · {fmtDate(m.created_at, lang)}</small></div>)}
+          </div>
+          {data.canAct ? (
+            <>
+              <form method="post" class="form" style="margin-top:16px">
+                <input type="hidden" name="code" value={b.code} /><input type="hidden" name="contact" value={data.contact} /><input type="hidden" name="action" value="message" />
+                <div class="field"><textarea name="body" placeholder={t.request.replyPh} required maxlength="2000"></textarea></div>
+                <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">{t.request.reply}</button>
+              </form>
+              {(b.status === 'requested' || b.status === 'confirmed') && (
+                <form method="post" style="margin-top:12px" onsubmit={`return confirm(${JSON.stringify(t.request.cancelConfirm)})`}>
+                  <input type="hidden" name="code" value={b.code} /><input type="hidden" name="contact" value={data.contact} /><input type="hidden" name="action" value="cancel" />
+                  <button class="btn btn--ghost btn--sm" type="submit">{t.request.cancel}</button>
+                </form>
+              )}
+            </>
+          ) : (
+            <p class="small muted" style="margin-top:14px">{t.request.contact}: {t.common.required}</p>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

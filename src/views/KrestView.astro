@@ -1,0 +1,44 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const cards = Object.entries(t.krest.cards) as [string, { title: string; summary: string; body: string }][];
+const imgs: Record<string, string> = { ondol: '/images/sinchon/mats.webp', yo: '/images/sinchon/mats.webp', jjimjilbang: '/images/sinchon/family.webp', tea: '/images/sinchon/amenities.webp', stillness: '/images/sinchon/hall.webp', hanok: '/images/sinchon/mats.webp' };
+const ld = { '@context': 'https://schema.org', '@type': 'ItemList', name: t.krest.title, itemListElement: cards.map(([k, c], i) => ({ '@type': 'ListItem', position: i + 1, name: c.title, url: `${L('/krest')}#${k}` })) };
+---
+<Base lang={lang} path="/krest" title={t.krest.title} description={t.krest.lead} jsonLd={[ld]}>
+  <section class="section">
+    <div class="narrow">
+      <span class="kicker">K-REST</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.krest.title}</h1>
+      <p class="lead" style="margin-top:16px">{t.krest.lead}</p>
+    </div>
+  </section>
+  <section class="section section--tight section--paper">
+    <div class="container" style="display:grid;gap:40px">
+      {cards.map(([key, c], i) => (
+        <article id={key} class="split" style={i % 2 ? 'direction:rtl' : ''}>
+          <img src={imgs[key]} alt={c.title} loading="lazy" width="1400" height="1050" style="direction:ltr" />
+          <div style="direction:ltr">
+            <span class="kicker">{String(i + 1).padStart(2, '0')}</span>
+            <h2 class="h2">{c.title}</h2>
+            <p class="muted" style="font-weight:600">{c.summary}</p>
+            <p style="color:var(--ink-2);font-size:17px">{c.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="section">
+    <div class="narrow center">
+      <h2 class="h3">{t.krest.pairTitle}</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0 28px">{t.krest.pairs.map((p) => <span class="pill pill--sage">{p}</span>)}</div>
+      <a class="btn btn--primary" href={L('/book/sinchon?session=krest90')}>K-REST 90 · {t.common.requestBooking}</a>
+    </div>
+  </section>
+</Base>

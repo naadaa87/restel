@@ -1,0 +1,6 @@
+---
+// /ko/... 는 기본 언어이므로 접두어 없는 경로로 보낸다
+export const prerender = false;
+const slug = (Astro.params.slug as string | undefined) || '';
+return Astro.redirect('/' + slug + Astro.url.search, 301);
+---

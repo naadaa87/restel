@@ -1,0 +1,95 @@
+---
+import Base from '@/layouts/Base.astro';
+import SessionCard from '@/components/SessionCard.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { fmt } from '@/lib/text';
+import type { SpaceView } from '@/lib/spaces';
+
+interface Props { lang: Locale; space: SpaceView }
+const { lang, space: s } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const path = `/spaces/${s.slug}`;
+const photo = s.photos[0]?.src;
+const mapQ = encodeURIComponent(s.address || s.name);
+const gmap = s.lat && s.lng ? `https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}` : `https://www.google.com/maps/search/?api=1&query=${mapQ}`;
+const nmap = s.lat && s.lng ? `https://map.naver.com/p/search/${mapQ}?c=${s.lng},${s.lat},16,0,0,0,dh` : `https://map.naver.com/p/search/${mapQ}`;
+const kmap = s.lat && s.lng ? `https://map.kakao.com/link/map/${encodeURIComponent(s.name)},${s.lat},${s.lng}` : `https://map.kakao.com/link/search/${mapQ}`;
+const embed = s.lat && s.lng ? `https://www.google.com/maps?q=${s.lat},${s.lng}&z=16&output=embed&hl=${lang.startsWith('zh') ? lang : lang}` : null;
+const ld = {
+  '@context': 'https://schema.org', '@type': 'LocalBusiness', '@id': site.url + path, name: s.name, description: s.tagline || s.description[0],
+  image: s.photos.map((p) => site.url + p.src), url: site.url + L(path), telephone: site.contact.phone, email: site.contact.email, priceRange: '₩₩',
+  address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: 'Seoul', addressCountry: 'KR' },
+  ...(s.lat && s.lng ? { geo: { '@type': 'GeoCoordinates', latitude: s.lat, longitude: s.lng } } : {}),
+  amenityFeature: s.features.map((f) => ({ '@type': 'LocationFeatureSpecification', name: f, value: true })),
+  makesOffer: s.sessions.map((x) => ({ '@type': 'Offer', name: (t.sessions.items as any)[x.code]?.name || x.customName || x.code, price: x.priceWeekday, priceCurrency: 'KRW' })),
+};
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: t.nav.home, item: site.url + L('/') },
+  { '@type': 'ListItem', position: 2, name: t.spaces.title, item: site.url + L('/spaces') },
+  { '@type': 'ListItem', position: 3, name: s.name, item: site.url + L(path) },
+] };
+---
+<Base lang={lang} path={path} title={`${s.name} — ${s.region}`} description={`${s.tagline}. ${s.description[0] || ''}`.slice(0, 300)} image={photo} jsonLd={[ld, crumbs]}>
+  <section class="section section--tight">
+    <div class="container">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+        <span class={`badge ${s.type === 'flagship' ? 'badge--coral' : 'badge--sage'}`}>{s.type === 'flagship' ? t.common.flagship : t.common.partner}</span>
+        <span class="muted small">{s.region}</span>
+        <span class="badge badge--line">{t.common.notLodgingShort}</span>
+      </div>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{s.name}</h1>
+      <p class="lead" style="margin-top:10px">{s.tagline}</p>
+      {s.photos.length > 0 && (
+        <div class="gallery" style="margin-top:28px">
+          {s.photos.slice(0, 5).map((p, i) => <img src={p.src} alt={p.alt || fmt(t.space.galleryAlt, { name: s.name, n: i + 1 })} loading={i === 0 ? 'eager' : 'lazy'} />)}
+        </div>
+      )}
+      <p class="small muted" style="margin-top:8px">{t.space.photosNote}</p>
+    </div>
+  </section>
+  <section class="section section--tight">
+    <div class="container detail">
+      <div>
+        <h2 class="h2">{t.space.aboutTitle}</h2>
+        {s.description.map((p) => <p style="color:var(--ink-2);font-size:17px">{p}</p>)}
+        {s.features.length > 0 && (<>
+          <h2 class="h2" style="margin-top:40px">{t.space.featuresTitle}</h2>
+          <ul class="check" style="gap:10px;grid-template-columns:1fr 1fr">{s.features.map((f) => <li>{f}</li>)}</ul>
+        </>)}
+        <h2 class="h2" style="margin-top:40px" id="sessions">{t.space.sessionsTitle}</h2>
+        <div class="grid grid--2">{s.sessions.map((x) => <SessionCard lang={lang} session={x} compact href={L(`/book/${s.slug}?session=${x.code}`)} />)}</div>
+        {lang !== 'ko' && <p class="small muted">{t.common.refNote}</p>}
+        {s.rules.length > 0 && (<>
+          <h2 class="h2" style="margin-top:40px">{t.space.rulesTitle}</h2>
+          <ul class="check" style="gap:10px">{s.rules.map((r) => <li>{r}</li>)}</ul>
+        </>)}
+        <h2 class="h2" style="margin-top:40px">{t.space.directionsTitle}</h2>
+        <p class="muted">{s.address}</p>
+        {s.directions.length > 0 && <ul class="check" style="gap:10px">{s.directions.map((d) => <li>{d}</li>)}</ul>}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0">
+          <a class="btn btn--ghost btn--sm" href={gmap} target="_blank" rel="noopener">{t.space.mapGoogle}</a>
+          <a class="btn btn--ghost btn--sm" href={nmap} target="_blank" rel="noopener">{t.space.mapNaver}</a>
+          <a class="btn btn--ghost btn--sm" href={kmap} target="_blank" rel="noopener">{t.space.mapKakao}</a>
+        </div>
+        {embed && <iframe src={embed} width="100%" height="320" style="border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title={t.space.mapGoogle}></iframe>}
+      </div>
+      <aside class="sticky">
+        <div class="card">
+          <h3 class="h3" style="margin-bottom:12px">{s.name}</h3>
+          <dl class="kv">
+            <dt>{t.space.hoursTitle}</dt><dd>{s.hours.open}–{s.hours.close} (KST)</dd>
+            <dt>{t.book.people}</dt><dd>{fmt(t.spaces.capacity, { base: s.capacityBase, max: s.capacityMax })}</dd>
+            {s.area && <><dt>{t.space.featuresTitle}</dt><dd>{s.area}</dd></>}
+            <dt>{t.space.hostedBy}</dt><dd>{s.operator}</dd>
+          </dl>
+          <a class="btn btn--primary btn--block" href={L(`/book/${s.slug}`)} style="margin-top:18px">{t.space.requestCta}</a>
+          <a class="btn btn--ghost btn--block" href={L('/guide')} style="margin-top:8px">{t.space.guideCta}</a>
+          <p class="small muted" style="margin:14px 0 0">{t.common.notLodging}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>

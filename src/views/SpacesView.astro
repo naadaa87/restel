@@ -1,0 +1,25 @@
+---
+import Base from '@/layouts/Base.astro';
+import SpaceCard from '@/components/SpaceCard.astro';
+import type { Locale } from '@/config/site';
+import { getDict } from '@/i18n';
+import type { SpaceView } from '@/lib/spaces';
+
+interface Props { lang: Locale; spaces: SpaceView[] }
+const { lang, spaces } = Astro.props;
+const t = getDict(lang);
+const partners = spaces.filter((s) => s.type === 'partner');
+---
+<Base lang={lang} path="/spaces" title={t.spaces.title} description={t.spaces.lead}>
+  <section class="section">
+    <div class="container">
+      <span class="kicker">{t.nav.spaces}</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.spaces.title}</h1>
+      <p class="lead" style="margin:16px 0 36px">{t.spaces.lead}</p>
+      <div class="grid grid--3">
+        {spaces.map((s) => <SpaceCard lang={lang} space={s} />)}
+      </div>
+      {partners.length === 0 && <p class="muted" style="margin-top:24px">{t.spaces.empty}</p>}
+    </div>
+  </section>
+</Base>

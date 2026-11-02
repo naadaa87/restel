@@ -1,0 +1,25 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { fmt } from '@/lib/text';
+
+interface Props { lang: Locale; code: string }
+const { lang, code } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+---
+<Base lang={lang} path={`/book/done/${code}`} title={t.book.done.title} noindex>
+  <section class="section center">
+    <div class="narrow">
+      <img src="/brand/mascot.webp" alt="" width="120" height="158" style="margin:0 auto 16px" />
+      <h1 class="h2">{t.book.done.title}</h1>
+      <p class="lead" style="margin:0 auto 24px">{fmt(t.book.done.body, { code })}</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--primary" href={L('/my') + `?code=${code}`}>{t.book.done.cta}</a>
+        <a class="btn btn--ghost" href={L('/')}>{t.book.done.home}</a>
+      </div>
+      <p class="small muted" style="margin-top:24px">{t.common.notLodging}</p>
+    </div>
+  </section>
+</Base>

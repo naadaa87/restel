@@ -1,0 +1,10 @@
+---
+export const prerender = false;
+import View from '@/views/MyRequestView.astro';
+import { handleMyRequest } from '@/lib/handlers';
+import { getDict } from '@/i18n';
+const lang = 'ko' as const;
+const t = getDict(lang);
+const data = await handleMyRequest(Astro as any, t);
+---
+<View lang={lang} data={data} />

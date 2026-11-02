@@ -1,0 +1,74 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import SpaceForm from '@/components/SpaceForm.astro';
+import { db, getSpace, updateSpace, updateSpaceStatus, deleteSpace, slugExists, audit, getHost, parseJson } from '@/lib/db';
+import { spaceFromForm, redirectWith, flash, STATUS_KO, str } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { rowToView } from '@/lib/spaces';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const id = Number(Astro.params.id);
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const space = await getSpace(d, id);
+if (!space) return redirectWith('/admin/spaces', undefined, '공간을 찾을 수 없습니다.');
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith(`/admin/spaces/${id}`, undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const op = str(fd, 'op');
+  if (op === 'status') {
+    const s = str(fd, 'status'); const note = str(fd, 'note');
+    if (['draft', 'submitted', 'published', 'hidden', 'rejected'].includes(s)) {
+      await updateSpaceStatus(d, id, s, note);
+      await audit(d, `admin:${me.email}`, 'space.status', String(id), `${s} ${note}`);
+      const h = await getHost(d, space.host_id);
+      if (h?.email && (s === 'published' || s === 'rejected')) await sendMail(env, { to: h.email, subject: `[RESTEL] 공간 검토 결과 · ${STATUS_KO[s]}`, text: `${JSON.parse(space.name_json || '{}').ko || space.slug}: ${STATUS_KO[s]}\n${note ? '메모: ' + note + '\n' : ''}\n${env.SITE_URL || ''}/host/spaces/${id}` });
+      return redirectWith(`/admin/spaces/${id}`, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
+    }
+  }
+  if (op === 'delete') { await deleteSpace(d, id); await audit(d, `admin:${me.email}`, 'space.delete', String(id)); return redirectWith('/admin/spaces', '공간을 삭제했습니다.'); }
+  const data = spaceFromForm(fd);
+  if (await slugExists(d, data.slug, id)) return redirectWith(`/admin/spaces/${id}`, undefined, '이미 사용 중인 슬러그입니다.');
+  await updateSpace(d, id, data);
+  await audit(d, `admin:${me.email}`, 'space.update', String(id));
+  return redirectWith(`/admin/spaces/${id}`, '저장되었습니다.');
+}
+const name = JSON.parse(space.name_json || '{}').ko || space.slug;
+const view = rowToView(space, 'ko');
+const photos = parseJson<any[]>(space.photos_json, []);
+---
+<Portal title={`공간 검토 — ${name}`} kind="admin" user={me} current="spaces" msg={msg} err={err}>
+  <a class="small muted" href="/admin/spaces">← 공간 목록</a>
+  <div class="toolbar" style="margin-top:8px">
+    <div><h1 style="margin:0 0 4px">{name}</h1><span class={`status status--${space.status}`}>{STATUS_KO[space.status]}</span> <span class="small muted">/{space.slug} · 호스트 {space.host_name} ({space.host_email})</span></div>
+    {space.status === 'published' && <a class="btn btn--ghost btn--sm" href={`/spaces/${space.slug}`} target="_blank">공개 페이지 ↗</a>}
+  </div>
+  <div class="grid grid--2" style="margin-bottom:18px">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">검토 결정</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="op" value="status" />
+        <div class="field"><label>상태</label><select name="status">{['submitted', 'published', 'hidden', 'rejected', 'draft'].map((s) => <option value={s} selected={space.status === s}>{STATUS_KO[s]}</option>)}</select></div>
+        <div class="field"><label>호스트에게 남길 메모</label><textarea name="note" rows="3" placeholder="예: 조명 3단계 사진과 암막 확인 사진을 추가해 주세요.">{space.admin_note}</textarea></div>
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">결정 저장</button>
+      </form>
+      <h3 class="h3" style="margin:18px 0 8px;font-size:16px">레스텔 기준 체크</h3>
+      <ul class="check" style="gap:6px;font-size:14px">
+        <li>침대 없음 · 접이식 매트/담요 명시</li><li>조명 3단계 · 암막</li><li>세션 자정 전 종료</li><li>숙박 어휘(1박·체크인·객실) 없음</li><li>소화기·비상등·피난안내도</li><li>사진 3장 이상, 실제 공간</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">미리보기(한국어)</h2>
+      {photos.length > 0 && <div class="photos-grid" style="margin-bottom:10px">{photos.slice(0, 6).map((p: any) => <figure><img src={p.sm || p.src} alt="" /></figure>)}</div>}
+      <p><strong>{view.name}</strong> — {view.tagline}</p>
+      {view.description.map((p) => <p class="small">{p}</p>)}
+      <p class="small muted">세션 {view.sessions.length}개 · 기본 {view.capacityBase}인 · 최대 {view.capacityMax}인 · {view.hours.open}–{view.hours.close}</p>
+      <form method="post" data-confirm="공간을 완전히 삭제할까요?" style="margin-top:10px"><input type="hidden" name="op" value="delete" /><button class="btn btn--ghost btn--sm" type="submit">삭제</button></form>
+    </div>
+  </div>
+  <SpaceForm space={space} action={`/admin/spaces/${id}`} isAdmin />
+</Portal>

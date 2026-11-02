@@ -1,0 +1,159 @@
+---
+import Base from '@/layouts/Base.astro';
+import SessionCard from '@/components/SessionCard.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { flagships } from '@/data/flagship';
+import { flagshipToView } from '@/lib/spaces';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const flagship = flagshipToView(flagships[0], lang);
+const faqLd = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: t.faq.items.slice(0, 6).map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })),
+};
+const bizLd = {
+  '@context': 'https://schema.org', '@type': 'LocalBusiness', '@id': site.url + '/spaces/sinchon',
+  name: flagship.name, image: site.url + flagship.photos[0].src, url: site.url + L('/spaces/sinchon'),
+  description: flagship.tagline, telephone: site.contact.phone, email: site.contact.email, priceRange: '₩₩',
+  address: { '@type': 'PostalAddress', addressLocality: 'Seodaemun-gu', addressRegion: 'Seoul', addressCountry: 'KR' },
+  geo: { '@type': 'GeoCoordinates', latitude: flagship.lat, longitude: flagship.lng },
+  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '07:00', closes: '23:59' }],
+};
+---
+<Base lang={lang} path="/" fullTitle={`${t.meta.ogTitle}`} description={t.meta.description} jsonLd={[faqLd, bizLd]}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div>
+        <span class="kicker">{t.home.kicker}</span>
+        <h1 class="h1 hero__title">{t.home.title}</h1>
+        <p class="lead hero__sub">{t.home.subtitle}</p>
+        <div class="hero__ctas">
+          <a class="btn btn--primary" href={L('/sessions')}>{t.home.cta1}</a>
+          <a class="btn btn--ghost" href={L('/spaces/sinchon')}>{t.home.cta2}</a>
+        </div>
+        <div class="hero__points">{t.home.heroPoints.map((p) => <span class="pill pill--coral">{p}</span>)}</div>
+      </div>
+      <div class="hero__visual">
+        <img class="photo" src={flagship.photos[1].src} alt={flagship.photos[1].alt} width="1400" height="1050" fetchpriority="high" />
+        <img class="hero__mascot" src="/brand/mascot.webp" alt="" width="150" height="198" aria-hidden="true" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div>
+          <span class="kicker">{t.home.notHotel.kicker}</span>
+          <h2 class="h2">{t.home.notHotel.title}</h2>
+          <p class="lead">{t.home.notHotel.body}</p>
+          <a class="btn btn--ghost btn--sm" href={L('/about')}>{t.common.learnMore}</a>
+        </div>
+        <div class="grid" style="gap:14px">
+          {t.home.notHotel.items.map((it, i) => (
+            <div class="card card--paper" style="padding:20px 22px">
+              <div style="display:flex;gap:14px;align-items:flex-start"><span class="card__num" style="margin:0;flex:none">{i + 1}</span><div><h3 class="h3" style="margin-bottom:4px">{it.title}</h3><p class="muted" style="margin:0">{it.body}</p></div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <h2 class="h2 center">{t.home.how.title}</h2>
+      <div class="steps" style="margin-top:28px">
+        {t.home.how.steps.map((s, i) => (
+          <div class="card"><span class="card__num">{i + 1}</span><h3 class="h3">{s.title}</h3><p class="muted" style="margin:0">{s.body}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="h2 center">{t.home.sessionsTitle}</h2>
+      <p class="sub center">{t.home.sessionsSub}</p>
+      <div class="grid grid--3">
+        {flagship.sessions.filter((s) => s.code !== 'krest90').map((s) => <SessionCard lang={lang} session={s} compact />)}
+      </div>
+      <div class="center" style="margin-top:28px"><a class="btn btn--primary" href={L('/sessions')}>{t.common.viewAll}</a></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container split">
+      <img src={flagship.photos[0].src} alt={flagship.photos[0].alt} width="1400" height="1050" loading="lazy" />
+      <div>
+        <span class="badge badge--coral">{t.common.flagship}</span>
+        <h2 class="h2" style="margin-top:12px">{t.home.flagshipTitle}</h2>
+        <p class="lead">{t.home.flagshipSub}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--primary" href={L('/spaces/sinchon')}>{t.home.flagshipCta}</a>
+          <a class="btn btn--ghost" href={L('/book/sinchon')}>{t.common.requestBooking}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="h2 center">{t.home.krestTitle}</h2>
+      <p class="sub center">{t.home.krestSub}</p>
+      <div class="grid grid--3">
+        {Object.entries(t.krest.cards).map(([key, c]: [string, any]) => (
+          <a class="card" href={L('/krest#' + key)}>
+            <span class="kicker" style="margin-bottom:6px">K-REST</span>
+            <h3 class="h3">{c.title}</h3>
+            <p class="muted" style="margin:0">{c.summary}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="narrow">
+      <div class="mascot-note">
+        <img src="/brand/mascot.webp" alt="" width="72" height="95" aria-hidden="true" />
+        <div>
+          <h2 class="h3">{t.home.keywordsTitle}</h2>
+          <p class="muted" style="margin:6px 0 0">{t.home.keywordsBody}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <span class="kicker">{t.nav.hosts}</span>
+        <h2 class="h2">{t.home.hostsTitle}</h2>
+        <p class="lead">{t.home.hostsBody}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--sage" href={L('/hosts')}>{t.home.hostsCta}</a>
+          <a class="btn btn--ghost" href="/host/register">{t.hosts.cta}</a>
+        </div>
+      </div>
+      <img src={flagship.photos[2].src} alt={flagship.photos[2].alt} width="1400" height="1050" loading="lazy" />
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="narrow">
+      <h2 class="h2 center">{t.home.faqTitle}</h2>
+      <div class="faq" style="margin-top:20px">
+        {t.faq.items.slice(0, 5).map((q) => (
+          <details><summary>{q.q}</summary><div class="faq__a">{q.a}</div></details>
+        ))}
+      </div>
+      <div class="center" style="margin-top:22px"><a class="btn btn--ghost btn--sm" href={L('/faq')}>{t.common.viewAll}</a></div>
+    </div>
+  </section>
+</Base>

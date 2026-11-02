@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /host
+Disallow: /api
+Sitemap: https://restel.kr/sitemap.xml

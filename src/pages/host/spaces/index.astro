@@ -1,0 +1,30 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listSpacesByHost } from '@/lib/db';
+import { flash, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const spaces = d ? await listSpacesByHost(d, me.id) : [];
+---
+<Portal title="내 공간" kind="host" user={me} current="spaces" msg={msg} err={err}>
+  <div class="toolbar"><h1 style="margin:0">내 공간</h1><a class="btn btn--primary btn--sm" href="/host/spaces/new">+ 공간 등록</a></div>
+  <div class="panel">
+    {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>공간</th><th>지역</th><th>상태</th><th>수정일</th><th></th></tr></thead>
+        <tbody>{spaces.map((s) => { const n = JSON.parse(s.name_json || '{}'); const r = s.region?.startsWith('{') ? JSON.parse(s.region) : { ko: s.region }; return (
+          <tr>
+            <td><a href={`/host/spaces/${s.id}`}><strong>{n.ko || n.en || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td>
+            <td>{r.ko || r.en || ''}</td>
+            <td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span>{s.admin_note && <div class="small muted">메모: {s.admin_note}</div>}</td>
+            <td class="small muted">{fmtDate(s.updated_at)}</td>
+            <td style="white-space:nowrap"><a class="btn btn--ghost btn--sm" href={`/host/spaces/${s.id}`}>편집</a> {s.status === 'published' && <a class="btn btn--ghost btn--sm" href={`/spaces/${s.slug}`} target="_blank">보기 ↗</a>}</td>
+          </tr>); })}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

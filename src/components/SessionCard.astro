@@ -1,0 +1,36 @@
+---
+import type { Locale } from '@/config/site';
+import { getDict, formatKRW, refPrice } from '@/i18n';
+import { fmt } from '@/lib/text';
+import type { SessionDef } from '@/data/flagship';
+
+interface Props { lang: Locale; session: SessionDef & { customName?: string }; compact?: boolean; href?: string }
+const { lang, session: s, compact = false, href } = Astro.props;
+const t = getDict(lang);
+const dict = (t.sessions.items as any)[s.code];
+const name = dict?.name || s.customName || s.code;
+const ko = dict?.ko || '';
+const forWho = dict?.for || '';
+const desc = dict?.desc || '';
+const includes: string[] = dict?.includes || [];
+const ref = refPrice(s.priceWeekday, lang);
+const dur = s.maxDurationMin ? fmt(t.common.upTo, { n: Math.round(s.maxDurationMin / 60) }) : s.durationMin >= 120 ? fmt(t.common.hours, { n: s.durationMin / 60 }) : fmt(t.common.minutes, { n: s.durationMin });
+---
+<article class="card session">
+  <div class="session__head">
+    <div>
+      <div class="session__name">{name}</div>
+      {ko && <div class="session__ko">{ko}</div>}
+    </div>
+    <div style="text-align:right">
+      <div class="session__price">{formatKRW(s.priceWeekday)}{ref && <span class="session__ref">{ref}</span>}</div>
+      <div class="session__meta">{s.perPerson ? t.sessions.perPerson : fmt(t.common.perSpace, { n: s.basePeople })}</div>
+    </div>
+  </div>
+  {forWho && <div class="session__for">{forWho}</div>}
+  {desc && !compact && <p class="muted" style="margin:0">{desc}</p>}
+  <div class="session__meta">{t.sessions.duration}: {dur} · {t.sessions.startWindow}: {s.startWindow}{s.priceWeekend !== s.priceWeekday && !s.perPerson ? ` · ${t.common.weekend} ${formatKRW(s.priceWeekend)}` : ''}</div>
+  {includes.length > 0 && !compact && <ul class="check">{includes.map((i) => <li>{i}</li>)}</ul>}
+  {!s.perPerson && s.extraPersonPrice > 0 && <div class="session__meta">{fmt(t.common.extraPerson, { price: formatKRW(s.extraPersonPrice) })}</div>}
+  {href && <a class="btn btn--ghost btn--sm" href={href} style="align-self:flex-start;margin-top:6px">{t.common.requestBooking}</a>}
+</article>

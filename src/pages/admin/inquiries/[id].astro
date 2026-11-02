@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getInquiry, updateInquiry, audit } from '@/lib/db';
+import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const id = Number(Astro.params.id);
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const q = await getInquiry(d, id);
+if (!q) return redirectWith('/admin/inquiries', undefined, '문의를 찾을 수 없습니다.');
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith(`/admin/inquiries/${id}`, undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const status = str(fd, 'status'); const reply = str(fd, 'reply');
+  await updateInquiry(d, id, ['new', 'replied', 'closed'].includes(status) ? status : q.status, reply);
+  await audit(d, `admin:${me.email}`, 'inquiry.update', String(id), status);
+  if (reply && q.email && fd.get('send')) await sendMail(env, { to: q.email, subject: 'RESTEL 문의 답변', text: `${q.name}님, 문의 주셔서 감사합니다.\n\n${reply}\n\n— RESTEL` });
+  return redirectWith(`/admin/inquiries/${id}`, '저장했습니다.');
+}
+---
+<Portal title={`문의 #${q.id}`} kind="admin" user={me} current="inquiries" msg={msg} err={err}>
+  <a class="small muted" href="/admin/inquiries">← 문의 목록</a>
+  <div class="grid grid--2" style="margin-top:8px">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">{q.name} <span class={`status status--${q.status}`}>{STATUS_KO[q.status]}</span></h2>
+      <dl class="kv"><dt>이메일</dt><dd>{q.email || '—'}</dd><dt>연락처</dt><dd>{q.phone || '—'}</dd><dt>종류</dt><dd>{q.topic || q.kind}</dd><dt>접수</dt><dd>{fmtDate(q.created_at)}</dd></dl>
+      <p style="white-space:pre-wrap;margin-top:14px;padding:14px;background:var(--paper);border-radius:12px">{q.message}</p>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">답변·처리</h2>
+      <form method="post" class="form">
+        <div class="field"><label>상태</label><select name="status">{['new', 'replied', 'closed'].map((s) => <option value={s} selected={q.status === s}>{STATUS_KO[s]}</option>)}</select></div>
+        <div class="field"><label>답변 내용 (기록용)</label><textarea name="reply" rows="6">{q.reply}</textarea></div>
+        <label class="checkbox"><input type="checkbox" name="send" /> <span>답변을 고객 이메일로도 발송 (이메일 설정 필요)</span></label>
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">저장</button>
+      </form>
+    </div>
+  </div>
+</Portal>

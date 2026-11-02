@@ -1,0 +1,45 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const icons = ['🔑', '🩴', '💡', '🔈', '🛏️', '🍵', '🤫', '🧯', '🚪'];
+const ld = { '@context': 'https://schema.org', '@type': 'HowTo', name: t.guide.title, description: t.guide.lead, step: t.guide.blocks.map((b, i) => ({ '@type': 'HowToStep', position: i + 1, name: b.title, text: b.text })) };
+---
+<Base lang={lang} path="/guide" title={t.guide.title} description={t.guide.lead} jsonLd={[ld]}>
+  <section class="section">
+    <div class="narrow">
+      <span class="kicker">{t.nav.guide}</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.guide.title}</h1>
+      <p class="lead" style="margin-top:16px">{t.guide.lead}</p>
+      <div class="grid" style="margin-top:28px;gap:14px">
+        {t.guide.blocks.map((b, i) => (
+          <details class="card" style="padding:18px 22px">
+            <summary style="cursor:pointer;display:flex;gap:14px;align-items:center;list-style:none">
+              <span style="font-size:26px;flex:none" aria-hidden="true">{icons[i]}</span>
+              <span><strong style="display:block">{b.title}</strong><span class="muted">{b.text}</span></span>
+            </summary>
+            <p class="small" style="margin:12px 0 0 40px;color:var(--ink-2)">{b.detail}</p>
+          </details>
+        ))}
+      </div>
+      <div class="card card--paper" style="margin-top:32px">
+        <h2 class="h3" style="margin-bottom:12px">{t.guide.playerTitle}</h2>
+        <div class="player">
+          {[t.guide.player10, t.guide.player20].map((name, i) => (
+            <div class="player__track">
+              <span>{name}</span>
+              <audio controls preload="none" style="max-width:55%"><source src={`/audio/meditation-${i === 0 ? 10 : 20}-${lang}.mp3`} type="audio/mpeg" /></audio>
+            </div>
+          ))}
+        </div>
+        <p class="small muted" style="margin:10px 0 0">{t.guide.playerNote}</p>
+      </div>
+      <div class="center" style="margin-top:28px"><a class="btn btn--primary" href={L('/book/sinchon')}>{t.common.requestBooking}</a></div>
+    </div>
+  </section>
+</Base>

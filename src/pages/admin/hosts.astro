@@ -1,0 +1,49 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listHosts, updateHostStatus, getHost, audit } from '@/lib/db';
+import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith('/admin/hosts', undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const id = Number(str(fd, 'id')); const status = str(fd, 'status');
+  if (['pending', 'approved', 'suspended'].includes(status)) {
+    const h = await getHost(d, id);
+    await updateHostStatus(d, id, status);
+    await audit(d, `admin:${me.email}`, 'host.status', String(id), status);
+    if (h && status === 'approved') await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 승인 완료', text: `${h.name}님, 레스텔 호스트 승인이 완료되었습니다. 공간을 등록하고 "검토 요청"을 눌러 주세요.\n\n${env.SITE_URL || ''}/host` });
+    return redirectWith('/admin/hosts', `호스트 상태를 "${STATUS_KO[status]}"(으)로 바꿨습니다.`);
+  }
+}
+const hosts = await listHosts(d);
+---
+<Portal title="호스트" kind="admin" user={me} current="hosts" msg={msg} err={err}>
+  <h1>호스트 관리</h1>
+  <div class="panel">
+    {hosts.length === 0 ? <p class="help">가입한 호스트가 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>호스트</th><th>연락처</th><th>공간 수</th><th>가입</th><th>상태</th><th>변경</th></tr></thead>
+        <tbody>{hosts.map((h) => (
+          <tr>
+            <td><strong>{h.name}</strong><br /><span class="small muted">{h.company}</span></td>
+            <td>{h.email}<br /><span class="small muted">{h.phone}</span></td>
+            <td>{h.space_count}</td>
+            <td class="small muted">{fmtDate(h.created_at)}<br />{h.last_login_at && `로그인 ${fmtDate(h.last_login_at)}`}</td>
+            <td><span class={`status status--${h.status}`}>{STATUS_KO[h.status]}</span></td>
+            <td><form method="post" class="inline-form"><input type="hidden" name="id" value={h.id} />
+              <select name="status"><option value="pending" selected={h.status === 'pending'}>승인 대기</option><option value="approved" selected={h.status === 'approved'}>승인</option><option value="suspended" selected={h.status === 'suspended'}>정지</option></select>
+              <button class="btn btn--ghost btn--sm" type="submit">적용</button></form></td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

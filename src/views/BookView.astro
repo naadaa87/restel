@@ -1,0 +1,103 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath, localeList, formatKRW, refPrice } from '@/i18n';
+import { fmt } from '@/lib/text';
+import type { SpaceView } from '@/lib/spaces';
+import type { BookResult } from '@/lib/handlers';
+
+interface Props { lang: Locale; space: SpaceView; result?: BookResult | null; preselect?: string; turnstileSiteKey?: string }
+const { lang, space: s, result, preselect, turnstileSiteKey } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const v = result?.values || {};
+const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const maxDate = new Date(Date.now() + 60 * 86400 * 1000).toISOString().slice(0, 10);
+const sessions = s.sessions.map((x) => ({ ...x, label: (t.sessions.items as any)[x.code]?.name || x.customName || x.code, ko: (t.sessions.items as any)[x.code]?.ko || '' }));
+const times: string[] = [];
+for (let h = 7; h <= 22; h++) for (const m of ['00', '30']) times.push(`${String(h).padStart(2, '0')}:${m}`);
+const pricing = Object.fromEntries(s.sessions.map((x) => [x.code, { wd: x.priceWeekday, we: x.priceWeekend, base: x.basePeople, extra: x.extraPersonPrice, pp: !!x.perPerson }]));
+---
+<Base lang={lang} path={`/book/${s.slug}`} title={`${t.book.title} — ${s.name}`} description={t.book.lead} noindex>
+  <section class="section">
+    <div class="container detail">
+      <div>
+        <span class="kicker">{t.nav.book}</span>
+        <h1 class="h1" style="font-size:clamp(28px,4vw,40px)">{t.book.title}</h1>
+        <p class="lead" style="margin:12px 0 24px">{t.book.lead}</p>
+        {result?.errors?.length ? <div class="alert alert--error" style="margin-bottom:18px">{result.dbUnavailable ? result.errors[0] : `${t.book.error} — ${result.errors.join(', ')}`}</div> : null}
+        <form class="form" method="post" id="book-form">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+          <div class="field">
+            <label>{t.book.space}</label>
+            <input value={`${s.name} · ${s.region}`} readonly />
+          </div>
+          <div class="field">
+            <label for="session">{t.book.session} <span class="req">*</span></label>
+            <select id="session" name="session" required>
+              {sessions.map((x) => <option value={x.code} selected={(v.session || preselect) === x.code}>{x.label}{x.ko ? ` — ${x.ko}` : ''} · {formatKRW(x.priceWeekday)}{x.perPerson ? ` / ${t.sessions.perPerson}` : ''}</option>)}
+            </select>
+          </div>
+          <div class="form__row">
+            <div class="field"><label for="date">{t.book.date} <span class="req">*</span></label><input id="date" type="date" name="date" min={today} max={maxDate} value={v.date || ''} required /></div>
+            <div class="field"><label for="start">{t.book.start} <span class="req">*</span></label>
+              <select id="start" name="start" required>{times.map((tm) => <option value={tm} selected={v.start === tm}>{tm}</option>)}</select>
+              <div class="hint">{t.common.kstNote}</div>
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label for="people">{t.book.people} <span class="req">*</span></label>
+              <select id="people" name="people">{Array.from({ length: s.capacityMax }, (_, i) => i + 1).map((n) => <option value={n} selected={Number(v.people || s.capacityBase) === n}>{fmt(t.common.people, { n })}</option>)}</select>
+            </div>
+            <div class="field"><label for="lang">{t.book.lang}</label>
+              <select id="lang" name="lang">{localeList.map((l) => <option value={l.code} selected={(v.lang || lang) === l.code}>{l.native}</option>)}</select>
+            </div>
+          </div>
+          <div class="field"><label for="name">{t.book.name} <span class="req">*</span></label><input id="name" name="name" value={v.name || ''} required maxlength="80" /></div>
+          <div class="form__row">
+            <div class="field"><label for="contact">{t.book.contact}</label><input id="contact" name="contact" value={v.contact || ''} placeholder="+82 10-0000-0000" maxlength="40" /></div>
+            <div class="field"><label for="email">{t.book.email}</label><input id="email" type="email" name="email" value={v.email || ''} maxlength="120" /><div class="hint">{t.book.contactOrEmail}</div></div>
+          </div>
+          <div class="field"><label for="note">{t.book.note} <span class="muted">({t.common.optional})</span></label><textarea id="note" name="note" placeholder={t.book.notePh} maxlength="1000">{v.note || ''}</textarea></div>
+          <div class="card card--paper" style="padding:16px 20px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><strong>{t.book.estimate}</strong><span style="font-size:22px;font-weight:800" id="est">—</span></div>
+            <div class="small muted" id="est-ref"></div>
+            <div class="small muted" style="margin-top:4px">{fmt(t.book.estimateNote, { base: s.capacityBase })}</div>
+          </div>
+          <label class="checkbox"><input type="checkbox" name="consent1" required /> <span>{t.book.consent1} (<a href={L('/refund')} target="_blank" style="text-decoration:underline">{t.legal.refundTitle}</a>)</span></label>
+          <label class="checkbox"><input type="checkbox" name="consent2" required /> <span>{t.book.consent2} (<a href={L('/privacy')} target="_blank" style="text-decoration:underline">{t.legal.privacyTitle}</a>)</span></label>
+          <label class="checkbox"><input type="checkbox" name="consent3" required /> <span>{t.book.consent3}</span></label>
+          {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>}
+          <button class="btn btn--primary" type="submit">{t.book.submit}</button>
+        </form>
+      </div>
+      <aside class="sticky">
+        <div class="card">
+          {s.photos[0] && <img class="card__img" src={s.photos[0].sm} alt={s.photos[0].alt} />}
+          <h3 class="h3">{s.name}</h3>
+          <p class="muted small">{s.tagline}</p>
+          <ul class="check" style="margin-top:10px">{s.rules.slice(0, 4).map((r) => <li>{r}</li>)}</ul>
+          <p class="small muted" style="margin:14px 0 0">{t.common.notLodging}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+  {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  <script is:inline define:vars={{ pricing, lang }}>
+    (function () {
+      var sel = document.getElementById('session'), ppl = document.getElementById('people'), date = document.getElementById('date');
+      var est = document.getElementById('est'), ref = document.getElementById('est-ref');
+      var rates = { en: [1/1400, '$', 0], ja: [1/9.3, '¥', 0], 'zh-tw': [1/43, 'NT$', 0], 'zh-cn': [1/195, '¥', 0], th: [1/40, '฿', 0], vi: [18.5, '₫', 0] };
+      function calc() {
+        var p = pricing[sel.value]; if (!p) return;
+        var n = Number(ppl.value || 2);
+        var we = false; if (date.value) { var d = new Date(date.value + 'T00:00:00'); we = d.getDay() === 0 || d.getDay() === 6; }
+        var base = we ? p.we : p.wd;
+        var total = p.pp ? base * n : base + Math.max(0, n - p.base) * p.extra;
+        est.textContent = '₩' + total.toLocaleString('ko-KR');
+        var r = rates[lang]; ref.textContent = r ? '≈ ' + r[1] + Math.round(total * r[0]).toLocaleString() : '';
+      }
+      [sel, ppl, date].forEach(function (el) { el && el.addEventListener('change', calc); }); calc();
+    })();
+  </script>
+</Base>

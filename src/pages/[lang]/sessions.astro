@@ -1,0 +1,7 @@
+---
+import View from '@/views/SessionsView.astro';
+import { nonDefaultLocalePaths } from '@/i18n';
+export function getStaticPaths() { return nonDefaultLocalePaths(); }
+const { lang } = Astro.params as any;
+---
+<View lang={lang} />

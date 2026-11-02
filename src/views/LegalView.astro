@@ -1,0 +1,21 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict } from '@/i18n';
+
+interface Props { lang: Locale; kind: 'terms' | 'privacy' | 'refund' }
+const { lang, kind } = Astro.props;
+const t = getDict(lang);
+const title = kind === 'terms' ? t.legal.termsTitle : kind === 'privacy' ? t.legal.privacyTitle : t.legal.refundTitle;
+const items: string[] = (t.legal as any)[kind];
+---
+<Base lang={lang} path={`/${kind}`} title={title} description={items[0]} noindex={false}>
+  <section class="section">
+    <div class="narrow">
+      <h1 class="h1" style="font-size:clamp(28px,4vw,40px)">{title}</h1>
+      <ol style="margin-top:24px;display:grid;gap:14px;color:var(--ink-2);font-size:16px">{items.map((p) => <li>{p}</li>)}</ol>
+      <p class="small muted" style="margin-top:28px">{site.contact.email} · {site.contact.phone}</p>
+    </div>
+  </section>
+</Base>

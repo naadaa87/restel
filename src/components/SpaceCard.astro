@@ -1,0 +1,25 @@
+---
+import type { Locale } from '@/config/site';
+import { getDict, localizePath, formatKRW } from '@/i18n';
+import { fmt } from '@/lib/text';
+import { minPrice, type SpaceView } from '@/lib/spaces';
+
+interface Props { lang: Locale; space: SpaceView }
+const { lang, space: s } = Astro.props;
+const t = getDict(lang);
+const photo = s.photos[0];
+const price = minPrice(s);
+---
+<a class="card" href={localizePath(`/spaces/${s.slug}`, lang)} style="display:block">
+  {photo ? <img class="card__img" src={photo.sm || photo.src} alt={photo.alt || s.name} loading="lazy" width="640" height="480" /> : <div class="card__img" style="background:var(--paper-2)"></div>}
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">
+    <span class={`badge ${s.type === 'flagship' ? 'badge--coral' : 'badge--sage'}`}>{s.type === 'flagship' ? t.common.flagship : t.common.partner}</span>
+    <span class="small muted">{s.region}</span>
+  </div>
+  <h3 class="h3">{s.name}</h3>
+  <p class="muted small" style="margin:4px 0 10px">{s.tagline}</p>
+  <div class="small" style="display:flex;justify-content:space-between;color:var(--ink-2)">
+    <span>{fmt(t.spaces.capacity, { base: s.capacityBase, max: s.capacityMax })}</span>
+    {price > 0 && <span style="font-weight:700">{fmt(t.spaces.sessionsFrom, { price: formatKRW(price) })}</span>}
+  </div>
+</a>

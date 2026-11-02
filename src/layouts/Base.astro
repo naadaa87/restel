@@ -1,0 +1,106 @@
+---
+import '@/styles/global.css';
+import Seo from '@/components/Seo.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { site, localeMeta, type Locale } from '@/config/site';
+import { getDict, localizePath, localeList } from '@/i18n';
+
+interface Props {
+  lang: Locale;
+  path: string;              // 언어 접두어 없는 경로
+  title?: string;
+  fullTitle?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, any>[];
+  keywords?: string;
+  hideNotice?: boolean;
+  bodyClass?: string;
+}
+const { lang, path, title, fullTitle, description, image, noindex, jsonLd = [], keywords, hideNotice = false, bodyClass = '' } = Astro.props;
+const t = getDict(lang);
+const meta = localeMeta[lang];
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'RESTEL',
+  alternateName: ['레스텔', 'Restel'],
+  url: site.url,
+  logo: site.url + '/brand/logo-full.png',
+  description: t.meta.description,
+  email: site.contact.email,
+  telephone: site.contact.phone,
+  sameAs: [site.contact.instagram, site.contact.kakao].filter(Boolean),
+};
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'RESTEL',
+  url: site.url,
+  inLanguage: localeList.map((l) => l.htmlLang),
+};
+const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}&display=swap` : null;
+---
+<!doctype html>
+<html lang={meta.htmlLang} data-lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    {fonts && <link rel="preconnect" href="https://fonts.googleapis.com" />}
+    {fonts && <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />}
+    {fonts && <link rel="stylesheet" href={fonts} />}
+    <Seo lang={lang} path={path} title={title} fullTitle={fullTitle} description={description} image={image} noindex={noindex} keywords={keywords} jsonLd={[orgLd, websiteLd, ...jsonLd]} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class={bodyClass}>
+    <div id="lang-banner" class="lang-banner" hidden>
+      <div class="container">
+        <span id="lang-banner-text"></span>
+        <a id="lang-banner-link" href="#">{t.common.langSwitch}</a>
+        <button id="lang-banner-close" aria-label={t.common.dismiss}>✕</button>
+      </div>
+    </div>
+    <Header lang={lang} path={path} />
+    {!hideNotice && <div class="notice"><strong>RESTEL</strong> · {t.common.notLodging}</div>}
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <script is:inline define:vars={{ lang, path, locales: localeList.map((l) => ({ code: l.code, native: l.native, html: l.htmlLang })), suggestTpl: t.common.langSuggest }}>
+      (function () {
+        try {
+          var KEY = 'restel_lang';
+          var saved = localStorage.getItem(KEY);
+          if (saved !== lang) localStorage.setItem(KEY, lang);
+          if (sessionStorage.getItem('restel_lang_banner_dismissed')) return;
+          if (saved && saved !== lang) return; // 이미 선택한 언어가 있으면 제안하지 않음
+          var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+          nav = nav.toLowerCase();
+          var map = { ko: 'ko', en: 'en', ja: 'ja', th: 'th', vi: 'vi' };
+          var target = null;
+          if (nav.startsWith('zh')) target = (nav.includes('tw') || nav.includes('hk') || nav.includes('hant') || nav.includes('mo')) ? 'zh-tw' : 'zh-cn';
+          else target = map[nav.split('-')[0]] || null;
+          if (!target || target === lang) return;
+          var loc = locales.find(function (l) { return l.code === target; });
+          if (!loc) return;
+          var href = target === 'ko' ? path : '/' + target + (path === '/' ? '' : path);
+          var el = document.getElementById('lang-banner');
+          document.getElementById('lang-banner-text').textContent = suggestTpl.replace('{lang}', loc.native);
+          document.getElementById('lang-banner-link').setAttribute('href', href);
+          el.hidden = false;
+          document.getElementById('lang-banner-close').addEventListener('click', function () { el.hidden = true; sessionStorage.setItem('restel_lang_banner_dismissed', '1'); });
+        } catch (e) {}
+      })();
+    </script>
+    {site.cfAnalyticsToken && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${site.cfAnalyticsToken}"}`}></script>}
+  </body>
+</html>

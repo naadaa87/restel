@@ -1,0 +1,5 @@
+---
+export const prerender = false;
+import { clearCookieHeader, cookieName } from '@/lib/auth';
+return new Response(null, { status: 303, headers: { Location: '/host/login?msg=' + encodeURIComponent('로그아웃되었습니다.'), 'Set-Cookie': clearCookieHeader(cookieName('host')) } });
+---

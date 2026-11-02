@@ -1,0 +1,53 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict } from '@/i18n';
+
+interface Props { lang: Locale; result?: { done: boolean; error?: string; values: Record<string, string> } | null; turnstileSiteKey?: string }
+const { lang, result, turnstileSiteKey } = Astro.props;
+const t = getDict(lang);
+const v = result?.values || {};
+---
+<Base lang={lang} path="/contact" title={t.contact.title} description={t.contact.lead}>
+  <section class="section">
+    <div class="container detail">
+      <div>
+        <span class="kicker">{t.nav.contact}</span>
+        <h1 class="h1" style="font-size:clamp(28px,4vw,40px)">{t.contact.title}</h1>
+        <p class="lead" style="margin:12px 0 24px">{t.contact.lead}</p>
+        {result?.done ? <div class="alert alert--ok">{t.contact.done}</div> : (
+          <form class="form" method="post">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+            {result?.error && <div class="alert alert--error">{result.error}</div>}
+            <div class="form__row">
+              <div class="field"><label for="name">{t.contact.name} <span class="req">*</span></label><input id="name" name="name" value={v.name || ''} required /></div>
+              <div class="field"><label for="topic">{t.contact.topic}</label>
+                <select id="topic" name="topic">{Object.entries(t.contact.topics).map(([k, label]) => <option value={k} selected={v.topic === k}>{label as string}</option>)}</select>
+              </div>
+            </div>
+            <div class="form__row">
+              <div class="field"><label for="email">{t.contact.email}</label><input id="email" type="email" name="email" value={v.email || ''} /></div>
+              <div class="field"><label for="phone">{t.contact.phone}</label><input id="phone" name="phone" value={v.phone || ''} /></div>
+            </div>
+            <div class="field"><label for="message">{t.contact.message} <span class="req">*</span></label><textarea id="message" name="message" required maxlength="3000">{v.message || ''}</textarea></div>
+            {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>}
+            <button class="btn btn--primary" type="submit" style="justify-self:start">{t.contact.submit}</button>
+          </form>
+        )}
+      </div>
+      <aside>
+        <div class="card">
+          <h3 class="h3" style="margin-bottom:12px">RESTEL</h3>
+          <ul class="check" style="gap:10px">
+            <li><a href={site.contact.kakao} target="_blank" rel="noopener">{t.contact.kakao}</a></li>
+            <li><a href={`mailto:${site.contact.email}`}>{t.contact.emailUs}: {site.contact.email}</a></li>
+            <li><a href={`tel:${site.contact.phone.replace(/-/g, '')}`}>{site.contact.phone}</a></li>
+          </ul>
+          <img src="/brand/mascot.webp" alt="" width="90" height="119" style="margin:18px auto 0" />
+        </div>
+      </aside>
+    </div>
+  </section>
+  {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</Base>

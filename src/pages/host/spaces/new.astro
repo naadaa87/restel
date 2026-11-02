@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import SpaceForm from '@/components/SpaceForm.astro';
+import { db, createSpace, slugExists, audit } from '@/lib/db';
+import { spaceFromForm, redirectWith } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+
+const me = (Astro.locals as any).host;
+let err = '';
+if (Astro.request.method === 'POST') {
+  const d = await db(Astro.locals);
+  if (!d) err = '데이터베이스가 연결되지 않았습니다.';
+  else if (!sameOrigin(Astro.request)) err = '잘못된 요청입니다.';
+  else {
+    const fd = await Astro.request.formData();
+    const data = spaceFromForm(fd);
+    if (!JSON.parse(data.name_json!).ko) err = '한국어 공간 이름은 필수입니다.';
+    else {
+      let slug = data.slug; let n = 2;
+      while (await slugExists(d, slug)) slug = `${data.slug}-${n++}`;
+      data.slug = slug;
+      const id = await createSpace(d, me.id, data);
+      await audit(d, `host:${me.email}`, 'space.create', String(id), slug);
+      return redirectWith(`/host/spaces/${id}`, '공간이 저장되었습니다. 사진을 추가한 뒤 "검토 요청"을 눌러 주세요.');
+    }
+  }
+}
+---
+<Portal title="공간 등록" kind="host" user={me} current="spaces" err={err}>
+  <h1>공간 등록</h1>
+  <SpaceForm space={null} action="/host/spaces/new" />
+</Portal>

@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getSettings, setSetting, audit } from '@/lib/db';
+import { flash, redirectWith, str } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const KEYS = [
+  { key: 'announcement', label: '호스트 공지 (호스트 대시보드 상단에 표시)', type: 'textarea' },
+  { key: 'commission_rate', label: '파트너 수수료율 (%)', type: 'text' },
+  { key: 'admin_memo', label: '운영 메모 (관리자만 봄)', type: 'textarea' },
+];
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith('/admin/settings', undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  for (const k of KEYS) await setSetting(d, k.key, str(fd, k.key));
+  await audit(d, `admin:${me.email}`, 'settings.update');
+  return redirectWith('/admin/settings', '설정을 저장했습니다.');
+}
+const s = await getSettings(d);
+const envRows = [
+  ['ADMIN_EMAIL', env.ADMIN_EMAIL ? '설정됨' : '없음'], ['ADMIN_PASSWORD', env.ADMIN_PASSWORD ? '설정됨' : '없음'], ['SESSION_SECRET', env.SESSION_SECRET ? '설정됨' : '없음(임시 키 사용 중)'],
+  ['RESEND_API_KEY', env.RESEND_API_KEY ? '설정됨' : '없음(메일 미발송)'], ['MAIL_FROM', env.MAIL_FROM || '기본값'], ['TURNSTILE_SITE_KEY', env.TURNSTILE_SITE_KEY ? '설정됨' : '없음(봇 차단 비활성)'],
+  ['SITE_URL', env.SITE_URL || '—'], ['D1 (DB)', '연결됨'], ['R2 (MEDIA)', env.MEDIA ? '연결됨' : '없음'],
+];
+---
+<Portal title="설정" kind="admin" user={me} current="settings" msg={msg} err={err}>
+  <h1>설정</h1>
+  <div class="grid grid--2">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">운영 설정</h2>
+      <form method="post" class="form">
+        {KEYS.map((k) => <div class="field"><label>{k.label}</label>{k.type === 'textarea' ? <textarea name={k.key} rows="3">{s[k.key] || ''}</textarea> : <input name={k.key} value={s[k.key] || (k.key === 'commission_rate' ? '15' : '')} />}</div>)}
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">저장</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">환경 상태</h2>
+      <table class="list"><tbody>{envRows.map(([k, v]) => <tr><td><code>{k}</code></td><td>{v}</td></tr>)}</tbody></table>
+      <p class="help" style="margin-top:10px">값 변경은 Cloudflare 대시보드 → Workers & Pages → restel → Settings → Variables and Secrets 에서 합니다. 사이트 문구·연락처·사업자 정보는 GitHub 저장소의 <code>src/config/site.ts</code>, 직영 지점 정보·가격은 <code>src/data/flagship.ts</code>, 번역은 <code>src/i18n/locales/*.json</code> 에서 수정합니다.</p>
+    </div>
+  </div>
+</Portal>

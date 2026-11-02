@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+import View from '@/views/MyRequestView.astro';
+import { handleMyRequest } from '@/lib/handlers';
+import { getDict } from '@/i18n';
+import { isLocale } from '@/i18n';
+const langParam = Astro.params.lang as string;
+if (!isLocale(langParam) || langParam === 'ko') return new Response(null, { status: 404 });
+const lang = langParam;
+const t = getDict(lang);
+const data = await handleMyRequest(Astro as any, t);
+---
+<View lang={lang} data={data} />

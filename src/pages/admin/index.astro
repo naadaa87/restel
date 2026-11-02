@@ -1,0 +1,49 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, adminStats, listAllBookings, listHosts, listAllSpaces } from '@/lib/db';
+import { flash, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const stats = d ? await adminStats(d) : null;
+const recent = d ? (await listAllBookings(d)).slice(0, 8) : [];
+const pendingHosts = d ? (await listHosts(d)).filter((h) => h.status === 'pending').slice(0, 5) : [];
+const submitted = d ? (await listAllSpaces(d)).filter((s) => s.status === 'submitted').slice(0, 5) : [];
+const env = (Astro.locals as any).runtime?.env || {};
+const warnings: string[] = [];
+if (!env.SESSION_SECRET) warnings.push('SESSION_SECRET 이 설정되지 않았습니다. 대시보드 Variables and Secrets 에 긴 임의 문자열을 등록해 주세요.');
+if (!env.RESEND_API_KEY) warnings.push('이메일 발송 키(RESEND_API_KEY)가 없어 알림 메일이 발송되지 않습니다. 예약 요청은 관리자 화면에서 확인하세요.');
+if (!(Astro.locals as any).runtime?.env?.MEDIA) warnings.push('R2(MEDIA)가 연결되지 않아 호스트 사진 업로드는 URL 방식만 가능합니다.');
+---
+<Portal title="대시보드" kind="admin" user={me} current="dash" msg={msg} err={err}>
+  <h1>총괄 관리자 대시보드</h1>
+  {!d && <div class="alert alert--error">D1 데이터베이스가 연결되지 않았습니다. wrangler.jsonc 의 d1_databases 바인딩과 배포 로그를 확인해 주세요.</div>}
+  {warnings.map((w) => <div class="alert alert--info" style="margin-bottom:10px">{w}</div>)}
+  {stats && (
+    <div class="grid grid--4" style="margin:16px 0 22px">
+      <a class="stat" href="/admin/hosts"><b>{stats.hostsPending}</b><span>승인 대기 호스트 (승인됨 {stats.hostsApproved})</span></a>
+      <a class="stat" href="/admin/spaces"><b>{stats.spacesSubmitted}</b><span>검토 요청 공간 (공개 {stats.spacesPublished})</span></a>
+      <a class="stat" href="/admin/bookings?status=requested"><b>{stats.bookingsRequested}</b><span>새 예약 요청 (확정 {stats.bookingsConfirmed})</span></a>
+      <a class="stat" href="/admin/inquiries"><b>{stats.inquiriesNew}</b><span>새 문의</span></a>
+    </div>
+  )}
+  <div class="grid grid--2">
+    <div class="panel">
+      <div class="toolbar"><h2 class="h3">최근 예약 요청</h2><a class="small" href="/admin/bookings">전체 →</a></div>
+      {recent.length === 0 ? <p class="help">아직 예약 요청이 없습니다.</p> : <table class="list"><tbody>{recent.map((b) => <tr><td><a href={`/admin/bookings/${b.id}`}><strong>{b.code}</strong></a><br /><span class="small muted">{b.space_name} · {b.date} {b.start_time} · {b.people}인 · {b.lang}</span></td><td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><br /><span class="small muted">{fmtDate(b.created_at)}</span></td></tr>)}</tbody></table>}
+    </div>
+    <div>
+      <div class="panel">
+        <div class="toolbar"><h2 class="h3">승인 대기 호스트</h2><a class="small" href="/admin/hosts">전체 →</a></div>
+        {pendingHosts.length === 0 ? <p class="help">대기 중인 호스트가 없습니다.</p> : <table class="list"><tbody>{pendingHosts.map((h) => <tr><td><strong>{h.name}</strong> <span class="small muted">{h.company}</span><br /><span class="small muted">{h.email} · {h.phone}</span></td><td class="small muted">{fmtDate(h.created_at)}</td></tr>)}</tbody></table>}
+      </div>
+      <div class="panel">
+        <div class="toolbar"><h2 class="h3">검토 요청 공간</h2><a class="small" href="/admin/spaces">전체 →</a></div>
+        {submitted.length === 0 ? <p class="help">검토할 공간이 없습니다.</p> : <table class="list"><tbody>{submitted.map((s) => <tr><td><a href={`/admin/spaces/${s.id}`}><strong>{JSON.parse(s.name_json || '{}').ko || s.slug}</strong></a><br /><span class="small muted">{s.host_name} · {s.host_email}</span></td><td class="small muted">{fmtDate(s.updated_at)}</td></tr>)}</tbody></table>}
+      </div>
+    </div>
+  </div>
+</Portal>

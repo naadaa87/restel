@@ -1,0 +1,7 @@
+---
+export const prerender = false;
+import View from '@/views/BookDoneView.astro';
+const lang = 'ko' as const;
+const code = String(Astro.params.code || '').toUpperCase();
+---
+<View lang={lang} code={code} />

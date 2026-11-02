@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "siteName": "RESTEL",
+    "tagline": "Nơi bạn bước vào để nghỉ ngơi — RESTEL",
+    "titleSuffix": " | RESTEL — Không gian nghỉ ngơi kiểu Hàn tại Seoul",
+    "description": "RESTEL là không gian nghỉ ngơi kiểu Hàn Quốc cho thuê theo giờ tại Sinchon, Seoul. Đặt một không gian riêng để chợp mắt, thiền, chữa lành và nạp lại năng lượng. Nệm trải sàn, ánh sáng dịu, trà ấm. Không phải khách sạn — là dịch vụ cho thuê không gian nghỉ ngơi.",
+    "keywords": "không gian nghỉ ngơi Seoul, phòng chợp mắt Seoul, ngủ trưa Sinchon, nghỉ ngơi theo giờ Hàn Quốc, không gian thiền Seoul, chữa lành Seoul, Hongdae nghỉ ngơi, ondol, RESTEL, cho thuê không gian nghỉ ngơi",
+    "ogTitle": "RESTEL — Không gian nghỉ ngơi kiểu Hàn cho thuê theo giờ"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "about": "RESTEL là gì",
+    "spaces": "Địa điểm",
+    "sessions": "Gói & Giá",
+    "krest": "K-REST",
+    "guide": "Hướng dẫn",
+    "faq": "Câu hỏi thường gặp",
+    "hosts": "Dành cho chủ không gian",
+    "contact": "Liên hệ",
+    "book": "Gửi yêu cầu",
+    "language": "Ngôn ngữ",
+    "menu": "Menu",
+    "close": "Đóng",
+    "hostLogin": "Đăng nhập chủ không gian",
+    "myRequest": "Tra cứu yêu cầu"
+  },
+  "common": {
+    "notLodging": "RESTEL là dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú.",
+    "notLodgingShort": "Không phải cơ sở lưu trú",
+    "learnMore": "Tìm hiểu thêm",
+    "viewAll": "Xem tất cả",
+    "requestBooking": "Gửi yêu cầu đặt chỗ",
+    "perSpace": "Trọn không gian · cho {n} người",
+    "extraPerson": "Thêm mỗi người {price}",
+    "minutes": "{n} phút",
+    "hours": "{n} giờ",
+    "upTo": "Tối đa {n} giờ",
+    "people": "{n} người",
+    "weekday": "Ngày thường",
+    "weekend": "Cuối tuần & ngày lễ",
+    "refNote": "Giá quy đổi chỉ để tham khảo. Thanh toán bằng won Hàn Quốc (KRW).",
+    "flagship": "Trực tiếp",
+    "partner": "Đối tác RESTEL",
+    "comingSoon": "Sắp ra mắt",
+    "readMore": "Đọc thêm",
+    "back": "Quay lại",
+    "submit": "Gửi",
+    "required": "bắt buộc",
+    "optional": "tùy chọn",
+    "langSuggest": "Trang này có bản {lang}.",
+    "langSwitch": "Chuyển",
+    "dismiss": "Đóng",
+    "kstNote": "Mọi thời gian theo giờ chuẩn Hàn Quốc (KST)."
+  },
+  "home": {
+    "kicker": "CHO THUÊ KHÔNG GIAN NGHỈ NGƠI · SEOUL",
+    "title": "Nơi để nghỉ ngơi,\nkhông phải để ở lại.",
+    "subtitle": "Không phải khách sạn, không phải motel, không phải hostel. RESTEL là không gian nghỉ ngơi kiểu Hàn Quốc cho thuê theo giờ. Cởi giày, bước lên bục gỗ, và nệm cùng chăn trên sàn, ánh sáng dịu, một tách trà ấm đang chờ bạn.",
+    "cta1": "Xem gói & giá",
+    "cta2": "Xem RESTEL Sinchon",
+    "heroPoints": ["Chợp mắt · Nghỉ ngơi", "Thiền · Hít thở", "Chữa lành · Nạp năng lượng", "Không gian riêng tư"],
+    "notHotel": {
+      "kicker": "NOT A HOTEL",
+      "title": "Không cần check-in. Bạn bước vào để nghỉ.",
+      "body": "RESTEL không phải nơi để qua đêm. Dù là một giờ hay nửa ngày, bạn thuê trọn bầu không khí cần thiết để nghỉ ngơi: nệm gấp và sofa thay cho giường, chăn mỏng thay cho chăn bông, bước vào lặng lẽ thay cho check-in. Đây là kiểu \"-tel\" thứ tư, được xây dựng quanh sự nghỉ ngơi.",
+      "items": [
+        { "title": "Gói theo giờ", "body": "Từ giấc ngủ trưa 60 phút đến một ngày nghỉ trọn vẹn — chỉ thuê thời gian bạn cần." },
+        { "title": "Nghỉ trên sàn kiểu Hàn", "body": "Bục gỗ nâng để bước lên bằng chân trần, nệm và chăn, sàn gỗ ấm." },
+        { "title": "Sự tĩnh lặng đã sẵn sàng", "body": "Ba mức ánh sáng, âm thanh thiên nhiên, thiền có hướng dẫn và trà đã được chuẩn bị." }
+      ]
+    },
+    "how": {
+      "title": "Cách sử dụng",
+      "steps": [
+        { "title": "Chọn gói", "body": "Chọn Nap 60, Rest 180 hoặc Day Rest — độ dài nghỉ ngơi bạn cần." },
+        { "title": "Yêu cầu thời gian", "body": "Chọn ngày và giờ bắt đầu. Chúng tôi kiểm tra và gửi xác nhận cho bạn." },
+        { "title": "Bước vào lặng lẽ", "body": "Mở cửa bằng mã chúng tôi gửi, cởi giày, bước lên bục." },
+        { "title": "Nghỉ ngơi", "body": "Giảm ánh sáng, nằm xuống nệm, pha trà, bật thiền có hướng dẫn." }
+      ]
+    },
+    "sessionsTitle": "Gói & giá",
+    "sessionsSub": "Mọi gói đều là trọn không gian, riêng tư. Giá dành cho hai người.",
+    "flagshipTitle": "RESTEL Sinchon",
+    "flagshipSub": "Không gian đầu tiên: bục gỗ dưới hàng ngói đen, hốc tường hình cổng trăng phát sáng, và một sân hiên. Cách ga Sinchon vài phút đi bộ, giữa Hongdae và khu đại học.",
+    "flagshipCta": "Xem không gian",
+    "krestTitle": "K-REST: người Hàn nghỉ ngơi như thế nào",
+    "krestSub": "Sàn sưởi ondol và văn hóa ngồi sàn, cách nghỉ của jjimjilbang, một tách trà ngũ cốc, sự tĩnh lặng như trong chùa. Chúng tôi biến cách nghỉ ngơi của người Hàn thành những hướng dẫn ngắn cho du khách.",
+    "keywordsTitle": "Bạn đang tìm một nơi như thế này?",
+    "keywordsBody": "Nap room, rest space, retreat, sanctuary, haven, hideout, wellness space, sleep box… RESTEL có một chút của tất cả. Nhưng RESTEL không phải pod hotel hay micro stay — không phải cơ sở lưu trú. RESTEL là không gian nghỉ ngơi cho thuê theo giờ.",
+    "hostsTitle": "Biến không gian của bạn thành RESTEL",
+    "hostsBody": "Phòng tiệc, studio và mặt bằng trống thường bỏ không vào buổi chiều ngày thường. Hãy chuyển đổi theo tiêu chuẩn RESTEL — chúng tôi cùng bạn xử lý yêu cầu đặt chỗ, hiển thị đa ngôn ngữ và nội dung.",
+    "hostsCta": "Thông tin cho chủ không gian",
+    "faqTitle": "Câu hỏi thường gặp"
+  },
+  "about": {
+    "title": "RESTEL là gì",
+    "lead": "RESTEL ghép từ REST và TEL. Sau hotel, motel và hostel là một kiểu \"-tel\" mới: nơi bạn bước vào để nghỉ ngơi.",
+    "story": [
+      "Khách sạn ra đời từ dịch vụ và nghi thức, motel từ những chuyến đi đường dài, hostel từ văn hóa du lịch bụi. Hậu tố \"-tel\" không còn chỉ một loại công trình mà chỉ một cách lưu lại.",
+      "Người Hàn nghỉ ngơi trên sàn. Trên sàn ondol ấm với tấm nệm trải ra, trong phòng của bà, trên sàn gỗ jjimjilbang, trong gian chính của nhà hanok. Không cần giường vẫn nghỉ được, và một mặt sàn có thể chia sẻ với gia đình và bạn bè. RESTEL mang thói quen lâu đời này vào giữa thành phố.",
+      "RESTEL không có giường. Có nệm gấp và sofa, chăn và gối. Đây không phải nơi qua đêm mà là nơi nghỉ ngơi đúng nghĩa, trong một giờ hay nửa ngày. Vì vậy RESTEL là dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú — và chúng tôi nói rõ điều đó ngay từ đầu."
+    ],
+    "valuesTitle": "Ba điều RESTEL cam kết",
+    "values": [
+      { "title": "Tách biệt", "body": "Khoảnh khắc cửa đóng lại, tiếng ồn và việc phải làm ở lại bên ngoài. Hành động cởi giày vạch ra ranh giới." },
+      { "title": "Nghỉ trên sàn", "body": "Nệm và chăn trên bục nâng, gối vỏ kiều mạch. Tư thế nằm thoải mái nhất mà không cần giường." },
+      { "title": "Sự tĩnh lặng đã sẵn sàng", "body": "Ánh sáng, âm thanh, hương, trà và nội dung tự hướng dẫn đã có sẵn. Bạn không cần nghĩ xem nghỉ ngơi thế nào." }
+    ],
+    "notTitle": "RESTEL không phải là",
+    "notList": [
+      "Không phải nơi lưu trú. Không qua đêm, không check-in, không phòng khách sạn.",
+      "Không phải phòng tiệc. Yên tĩnh là mặc định, không phải nhạc và đám đông.",
+      "Không phải cơ sở y tế. Chúng tôi không khẳng định bất kỳ công dụng nào về giấc ngủ hay sức khỏe."
+    ],
+    "compareTitle": "Khác gì những nơi trông tương tự",
+    "compare": [
+      { "alt": "Khách sạn theo giờ", "they": "Một phòng có giường trong vài giờ.", "we": "Không phải cơ sở lưu trú. Bạn thuê trọn bầu không khí nghỉ ngơi, không phải một căn phòng." },
+      { "alt": "Quán cà phê ngủ trưa · ghế massage", "they": "Một chỗ ngồi trong không gian mở.", "we": "Toàn bộ không gian là của bạn — một mình, hai người hay cả gia đình chia sẻ một mặt sàn." },
+      { "alt": "Phòng tiệc", "they": "Âm thanh và ánh sáng cho tụ họp.", "we": "Cùng là cho thuê không gian, mục đích ngược lại: thiết kế quanh sự yên tĩnh." },
+      { "alt": "Jjimjilbang · Sauna", "they": "Nghỉ trên sàn chung.", "we": "Cách nghỉ trên sàn của jjimjilbang, diễn giải lại thành riêng tư và sạch sẽ." },
+      { "alt": "Studio thiền", "they": "Lớp học theo giờ cố định.", "we": "Nội dung tự hướng dẫn tích hợp trong không gian, đến lúc nào cũng dùng được." }
+    ],
+    "insideTitle": "Bên trong RESTEL có",
+    "inside": [
+      "Bục gỗ nâng để bước lên không mang giày",
+      "Nệm gấp, sofa, chăn, gối kiều mạch và gối cao su",
+      "Ba mức ánh sáng: sáng, dịu, tối",
+      "Kênh âm thanh: tiếng mưa, chuông gió, than hồng",
+      "Góc trà với trà táo đỏ, trà lúa mạch và trà xanh gạo lứt",
+      "Thiền có hướng dẫn nhiều ngôn ngữ (10 và 20 phút)",
+      "Sân hiên hít thở không khí (tùy địa điểm)",
+      "Hộp cai nghiện kỹ thuật số và trò chơi yên tĩnh"
+    ]
+  },
+  "sessions": {
+    "title": "Gói & giá",
+    "lead": "RESTEL bán \"loại nghỉ ngơi\", không bán giờ. Mọi gói đều là trọn không gian riêng tư. Giá cho hai người, thêm phí nhỏ cho mỗi người thêm. Mọi gói kết thúc trước nửa đêm.",
+    "items": {
+      "nap60": { "name": "Nap 60", "ko": "Chợp mắt một giờ", "for": "Giờ nghỉ trưa · giữa các cuộc hẹn · mùa thi", "desc": "Một giờ vừa đủ để nhắm mắt. Nệm, chăn và đèn đánh thức đã sẵn sàng.", "includes": ["Trọn không gian", "2 nệm & chăn", "1 tách trà/người", "Kênh âm thanh", "Đèn đánh thức 10 phút trước khi kết thúc"] },
+      "rest180": { "name": "Rest 180", "ko": "Ba giờ nghỉ ngơi", "for": "Cặp đôi · du khách · hồi phục nửa ngày", "desc": "Ba giờ không vội cho một giấc ngủ, một buổi thiền và một tách trà.", "includes": ["Trọn không gian", "2 nệm & chăn", "2 tách trà/người", "Thiền có hướng dẫn", "Bánh kèm trà"] },
+      "dayrest": { "name": "Day Rest", "ko": "Một ngày nghỉ ngơi", "for": "Gia đình · nhóm nhỏ · nạp năng lượng dài", "desc": "Tối đa 8 giờ trong giờ mở cửa, với trò chơi yên tĩnh, sách và trà.", "includes": ["Trọn không gian", "4 nệm & chăn", "Trà không giới hạn", "Bộ thiền & trà", "Board game & sách"] },
+      "krest90": { "name": "K-REST 90", "ko": "Trải nghiệm nghỉ ngơi kiểu Hàn", "for": "Du khách · từ 2 người", "desc": "Hướng dẫn pha trà, 20 phút thiền có hướng dẫn và nghỉ trên sàn kiểu ondol, gói gọn trong 90 phút.", "includes": ["Hướng dẫn trà (video & thẻ)", "Thiền có hướng dẫn 20 phút", "Nghỉ trên nệm & chăn", "Thẻ hướng dẫn K-REST"] }
+    },
+    "priceFrom": "từ {price}",
+    "perPerson": "mỗi người",
+    "startWindow": "Giờ bắt đầu",
+    "duration": "Thời lượng",
+    "includes": "Bao gồm",
+    "addons": {
+      "title": "Dịch vụ thêm",
+      "items": [
+        { "name": "Bộ trà", "body": "Tách, ấm, bánh và thẻ hướng dẫn pha" },
+        { "name": "Bộ ngủ", "body": "Bịt mắt, nút tai, nâng cấp gối" },
+        { "name": "Hương", "body": "Ngải cứu, hinoki hoặc thảo mộc" },
+        { "name": "Hộp cai nghiện kỹ thuật số", "body": "Chiếc hộp để cất điện thoại một lúc" }
+      ]
+    },
+    "rules": {
+      "title": "Quy định",
+      "items": [
+        "Mở cửa 07:00–24:00. Mọi gói kết thúc trước nửa đêm.",
+        "Có 60 phút dọn dẹp giữa các gói.",
+        "Khách từ 19 tuổi trở lên. Có thể yêu cầu xác minh danh tính.",
+        "Hủy: hoàn 100% trước 48 giờ, 50% trước 24 giờ, sau đó không hoàn. Thay đổi miễn phí trước khi xác nhận.",
+        "Đồ ăn nhẹ được phép. Không nấu nướng, không rượu bia."
+      ]
+    },
+    "priceNote": "Giá hiển thị là của RESTEL Sinchon. Không gian đối tác có giá riêng."
+  },
+  "spaces": {
+    "title": "Các địa điểm RESTEL",
+    "lead": "Không gian trực tiếp của chúng tôi và các không gian đối tác đạt tiêu chuẩn RESTEL. Tất cả đều là cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú.",
+    "empty": "Chưa có không gian đối tác — sẽ sớm có thêm.",
+    "view": "Xem không gian",
+    "region": "Khu vực",
+    "sessionsFrom": "Gói từ {price}",
+    "capacity": "Cho {base} · tối đa {max} người"
+  },
+  "space": {
+    "aboutTitle": "Về không gian",
+    "featuresTitle": "Bên trong có gì",
+    "sessionsTitle": "Gói & giá",
+    "rulesTitle": "Quy định",
+    "directionsTitle": "Đường đến",
+    "hoursTitle": "Giờ mở cửa",
+    "mapGoogle": "Google Maps",
+    "mapNaver": "Naver Map",
+    "mapKakao": "Kakao Map",
+    "hostedBy": "Vận hành bởi",
+    "requestCta": "Yêu cầu không gian này",
+    "guideCta": "Hướng dẫn nghỉ tại đây",
+    "galleryAlt": "{name} ảnh {n}",
+    "photosNote": "Ảnh chụp không gian thực tế; một số đã được chỉnh sửa."
+  },
+  "krest": {
+    "title": "K-REST — Nghỉ ngơi kiểu Hàn",
+    "lead": "Với du khách, RESTEL là cách trải nghiệm \"người Hàn nghỉ ngơi như thế nào\". Chúng tôi chọn những điều lạ lẫm và thú vị, viết thật ngắn.",
+    "cards": {
+      "ondol": { "title": "Ondol & văn hóa ngồi sàn", "summary": "Vì sao người Hàn nghỉ trên sàn", "body": "Ondol là hệ thống sưởi sàn truyền thống của Hàn Quốc. Sàn ấm tự nhiên mời gọi người ta ngồi và nằm xuống, hình thành văn hóa ngủ, ăn và nghỉ trên sàn không cần giường. Bục gỗ của RESTEL mang văn hóa sàn này vào thành phố. Khoảnh khắc bước lên không mang giày, cơ thể hạ thấp và hơi thở chậm lại." },
+      "yo": { "title": "Nệm, chăn & gối", "summary": "Nệm thay cho yo, chăn mỏng thay cho chăn bông", "body": "Giường ngủ truyền thống của Hàn Quốc là tấm yo (nệm bông) trải trên sàn và chăn bông phủ lên. Vì RESTEL là nơi nghỉ ngơi chứ không phải ngủ qua đêm, chúng tôi dùng nệm gấp và chăn mỏng. Gối vỏ kiều mạch là món kinh điển của Hàn: mát, chắc và sột soạt khẽ khi bạn cử động." },
+      "jjimjilbang": { "title": "Cách nghỉ của jjimjilbang", "summary": "Nghỉ trên sàn gỗ chung", "body": "Jjimjilbang là nhà tắm công cộng Hàn Quốc, nơi mọi người nằm nghỉ trên sàn sưởi rộng sau khi tắm, với trứng nướng, nước gạo ngọt và khăn gấp hình tai cừu. RESTEL diễn giải lại cách nghỉ trên sàn đó thành riêng tư và yên tĩnh. Kết hợp với một buổi jjimjilbang, ngày nghỉ của bạn sẽ trọn vẹn." },
+      "tea": { "title": "Một tách trà", "summary": "Trà táo đỏ, lúa mạch, trà xanh gạo lứt", "body": "Trà Hàn Quốc không chỉ có trà lá. Những loại quen thuộc hằng ngày làm từ ngũ cốc và quả: trà táo đỏ ninh nhiều giờ, trà lúa mạch rang thơm bùi, trà xanh trộn gạo lứt rang. Góc trà của RESTEL có cả ba loại cùng vài chiếc bánh nhỏ, kèm thẻ hướng dẫn cách pha." },
+      "stillness": { "title": "Tĩnh lặng & thiền", "summary": "Sự yên tĩnh của chùa, giữa thành phố", "body": "Trong các ngôi chùa trên núi Hàn Quốc, một ngày trôi qua với tụng kinh lúc bình minh, 108 lạy và trò chuyện bên trà. RESTEL chắt lọc sự tĩnh lặng đó thành thiền có hướng dẫn 10 và 20 phút, phát qua loa phòng bằng nhiều ngôn ngữ, không cần tai nghe. Chỉ cần đếm hơi thở là đủ." },
+      "hanok": { "title": "Đường nét của hanok", "summary": "Hàng ngói mái và cổng trăng", "body": "Dọc bức tường của RESTEL Sinchon là một hàng ngói đen chạy dài như bờ tường, và ở giữa là hốc vòm hình trăng ôm lấy ánh sáng dịu. Đó là cách nén hiện đại đường mái và cổng của nhà hanok. Chụp ảnh rất đẹp, nhưng tốt hơn nữa: hãy nằm xuống hướng về phía ánh sáng." }
+    },
+    "pairTitle": "Nghỉ ngơi kiểu Hàn nên kết hợp",
+    "pairs": ["Nhà tắm & sauna (hướng dẫn HANTANG)", "Templestay trong thành phố", "Trà đạo", "Dạo bước khu hanok"]
+  },
+  "guide": {
+    "title": "Hướng dẫn nghỉ ngơi tại RESTEL",
+    "lead": "Từ lúc bước vào đến lúc rời đi — mọi điều bạn cần biết. Mã QR trong không gian cũng mở trang này.",
+    "blocks": [
+      { "title": "Vào cửa", "text": "Mở cửa bằng mã chúng tôi đã gửi. Mã có hiệu lực từ 10 phút trước giờ bắt đầu đến 10 phút sau khi kết thúc.", "detail": "Nếu cửa không mở, nhắn cho số liên hệ trong tin nhắn xác nhận. Nếu tòa nhà có mã cửa riêng, mã sẽ được gửi kèm." },
+      { "title": "Cởi giày", "text": "Để giày vào tủ cạnh cửa. Trên bục đi chân trần hoặc mang tất.", "detail": "Có chỗ rửa tay và nước sát khuẩn ở lối vào." },
+      { "title": "Ánh sáng", "text": "Dùng công tắc trên tường để chọn sáng, dịu hoặc tối.", "detail": "Mười phút trước khi kết thúc, đèn sáng dần — đó là báo thức của bạn." },
+      { "title": "Âm thanh", "text": "Âm thanh thiên nhiên phát qua loa. Bạn có thể tắt hoặc chuyển kênh khác.", "detail": "Thiền có hướng dẫn phát từ trình phát trên trang này hoặc qua loa." },
+      { "title": "Nệm", "text": "Mở nệm gấp, lấy chăn và gối. Mỗi người một nệm.", "detail": "Vỏ nệm được thay mỗi lượt. Bỏ vỏ đã dùng vào thùng cạnh cửa." },
+      { "title": "Trà", "text": "Lấy nước nóng từ máy ở góc trà và ngâm túi trà.", "detail": "Trà táo đỏ, lúa mạch hoặc trà xanh gạo lứt. Để tách đã dùng vào bồn rửa." },
+      { "title": "Yên tĩnh", "text": "Tường mỏng. Vui lòng nghe điện thoại ngoài sân hiên.", "detail": "Giữ âm lượng loa ở mức 3 trở xuống; dùng tai nghe khi xem video." },
+      { "title": "Khẩn cấp", "text": "Bình chữa cháy và đèn khẩn cấp ở cạnh cửa. Xem sơ đồ thoát hiểm.", "detail": "Khẩn cấp: 119. Việc khác, dùng số liên hệ trong tin nhắn xác nhận." },
+      { "title": "Rời đi", "text": "Phân loại rác, gấp nệm về chỗ cũ và bật đèn sáng.", "detail": "Đồ thất lạc giữ 7 ngày. Một dòng cảm nhận về buổi nghỉ của bạn rất có ý nghĩa với chúng tôi." }
+    ],
+    "playerTitle": "Thiền có hướng dẫn",
+    "player10": "Ổn định hơi thở · 10 phút",
+    "player20": "Nằm xuống · 20 phút",
+    "playerNote": "Âm thanh sẽ phát tại đây khi sẵn sàng."
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp",
+    "items": [
+      { "q": "RESTEL có phải khách sạn hay hostel không?", "a": "Không. RESTEL là không gian nghỉ ngơi cho thuê theo giờ. Chúng tôi không cung cấp phòng có giường và phòng tắm, và không có gói qua đêm. Mọi gói kết thúc trước nửa đêm." },
+      { "q": "Tôi có thể ngủ ở đó không?", "a": "Có — chợp mắt rất được hoan nghênh. Nệm gấp, chăn và đèn đánh thức đã sẵn sàng. Điều chúng tôi không cung cấp là chỗ qua đêm." },
+      { "q": "Bao nhiêu người có thể dùng một không gian?", "a": "Giá bao gồm hai người. Bạn có thể thêm người đến mức tối đa của không gian (6 người tại Sinchon) với phí nhỏ mỗi người." },
+      { "q": "Du khách nước ngoài có đặt được không?", "a": "Tất nhiên. Trang web có 7 ngôn ngữ và chúng tôi xác nhận yêu cầu qua email. Chúng tôi đang chuẩn bị thanh toán bằng thẻ phát hành ở nước ngoài." },
+      { "q": "Có giới hạn tuổi không?", "a": "Khách phải từ 19 tuổi trở lên. Việc trẻ vị thành niên đi cùng người giám hộ được thông báo theo từng không gian." },
+      { "q": "Có thể tắm không?", "a": "RESTEL Sinchon có bồn rửa nhưng không có vòi sen. RESTEL là nơi để nghỉ, không phải nơi để tắm và ngủ lại." },
+      { "q": "Yêu cầu được xác nhận như thế nào?", "a": "Gửi yêu cầu, chúng tôi kiểm tra và nhắn cho bạn (email hoặc KakaoTalk). Khi thanh toán xong, chúng tôi gửi mã vào cửa." },
+      { "q": "Chính sách hoàn tiền thế nào?", "a": "Hoàn 100% trước 48 giờ, 50% trước 24 giờ, sau đó không hoàn. Thay đổi miễn phí trước khi xác nhận." },
+      { "q": "Tôi có thể mang đồ ăn không?", "a": "Đồ ăn nhẹ và đồ uống thì được. Vui lòng tránh nấu nướng, rượu bia và đồ ăn nặng mùi." },
+      { "q": "Tôi có thể đăng không gian của mình lên RESTEL không?", "a": "Có. Đăng ký tại trang dành cho chủ không gian. Chúng tôi chia sẻ tiêu chuẩn RESTEL (ánh sáng, rèm tối, nệm, biển chỉ dẫn, an toàn) và hiển thị không gian của bạn sau khi duyệt." }
+    ]
+  },
+  "hosts": {
+    "title": "Trở thành chủ không gian RESTEL",
+    "lead": "Phòng tiệc, studio và mặt bằng trống thường bỏ không vào buổi chiều ngày thường. Hãy chuyển đổi theo tiêu chuẩn RESTEL. Chúng tôi cung cấp xử lý yêu cầu, hiển thị đa ngôn ngữ, nội dung và quy tắc vận hành.",
+    "whyTitle": "Vì sao chọn RESTEL",
+    "why": [
+      { "title": "Lấp đầy giờ trống ngày thường", "body": "Phòng tiệc chỉ đạt 20–30% công suất mùa thấp điểm. Nhu cầu chợp mắt và thiền ngày thường nằm ở phía bên kia của đồng hồ." },
+      { "title": "Tiếp cận du khách quốc tế", "body": "Trang web 7 ngôn ngữ và nội dung K-REST giới thiệu không gian của bạn tới du khách tự túc như một không gian nghỉ ngơi kiểu Hàn." },
+      { "title": "Quy tắc vận hành rõ ràng", "body": "Chúng tôi chia sẻ tiêu chuẩn về gói, biển chỉ dẫn và từ ngữ để không gian luôn được định vị là cho thuê không gian nghỉ ngơi, không phải lưu trú." }
+    ],
+    "criteriaTitle": "Tiêu chuẩn RESTEL",
+    "criteria": [
+      "Không gian riêng, kín, từ 10 m² trở lên, có thông gió",
+      "Rèm tối và ba mức ánh sáng (sáng · dịu · tối)",
+      "Nệm gấp, chăn và gối (không giường), mỗi người một nệm",
+      "Quản lý âm thanh để giữ yên tĩnh",
+      "Có bồn rửa và góc trà (máy nước, trà)",
+      "60 phút dọn dẹp và thay vỏ nệm giữa các gói",
+      "Thiết bị an toàn cháy nổ (bình chữa cháy, đèn khẩn cấp, sơ đồ thoát hiểm) và kiểm tra định kỳ",
+      "Tuân thủ hướng dẫn ngôn ngữ RESTEL (không dùng từ ngữ lưu trú)"
+    ],
+    "stepsTitle": "Quy trình tham gia",
+    "steps": [
+      { "title": "Tạo tài khoản chủ không gian", "body": "Đăng ký bằng email và đăng thông tin không gian." },
+      { "title": "Xét duyệt", "body": "Chúng tôi xem ảnh và thông tin, cho biết cần thay đổi gì." },
+      { "title": "Đạt tiêu chuẩn", "body": "Làm theo danh sách kiểm tra: ánh sáng, nệm, biển chỉ dẫn, an toàn." },
+      { "title": "Lên sóng", "body": "Sau khi duyệt, không gian của bạn xuất hiện là Đối tác RESTEL và bắt đầu nhận yêu cầu." }
+    ],
+    "feeTitle": "Chi phí",
+    "feeBody": "Không có phí đăng. Hoa hồng (mặc định 15%) áp dụng cho các yêu cầu đến qua RESTEL. Thi công chuyển đổi và bộ tiêu chuẩn được báo giá riêng.",
+    "cta": "Bắt đầu làm chủ không gian",
+    "ctaLogin": "Đã có tài khoản? Đăng nhập",
+    "contactNote": "Có câu hỏi? Dùng trang liên hệ."
+  },
+  "book": {
+    "title": "Gửi yêu cầu đặt chỗ",
+    "lead": "Cho chúng tôi biết gói và thời gian bạn muốn. Chúng tôi kiểm tra và gửi tin nhắn xác nhận. Thanh toán sau khi xác nhận.",
+    "space": "Không gian",
+    "session": "Gói",
+    "date": "Ngày",
+    "start": "Giờ bắt đầu",
+    "people": "Số người",
+    "name": "Họ tên",
+    "contact": "Điện thoại (kèm mã quốc gia)",
+    "email": "Email",
+    "lang": "Ngôn ngữ nhận tin",
+    "note": "Ghi chú",
+    "notePh": "vd: chủ yếu thiền yên tĩnh / hai gối kiều mạch",
+    "consent1": "Tôi đã đọc quy định và chính sách hủy.",
+    "consent2": "Tôi đồng ý sử dụng thông tin liên hệ cho yêu cầu này.",
+    "consent3": "Tôi hiểu RESTEL là dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú.",
+    "submit": "Gửi yêu cầu",
+    "contactOrEmail": "Vui lòng cung cấp số điện thoại hoặc email.",
+    "estimate": "Tổng ước tính",
+    "estimateNote": "Bao gồm {base} người; đã tính phí người thêm. Số tiền cuối cùng sẽ được xác nhận trong tin nhắn.",
+    "done": {
+      "title": "Đã nhận yêu cầu của bạn",
+      "body": "Mã yêu cầu {code}. Chúng tôi sẽ kiểm tra và liên hệ qua thông tin bạn cung cấp. Dùng liên kết bên dưới để theo dõi tiến trình và tin nhắn.",
+      "cta": "Xem trạng thái yêu cầu",
+      "home": "Về trang chủ"
+    },
+    "error": "Không gửi được yêu cầu. Vui lòng thử lại sau hoặc dùng trang liên hệ.",
+    "dbUnavailable": "Tạm thời không nhận yêu cầu trực tuyến. Vui lòng liên hệ qua KakaoTalk hoặc email."
+  },
+  "request": {
+    "title": "Tra cứu yêu cầu",
+    "lead": "Nhập mã yêu cầu và số điện thoại hoặc email đã dùng để xem tiến trình và tin nhắn.",
+    "code": "Mã yêu cầu",
+    "contact": "Điện thoại hoặc email",
+    "find": "Tìm",
+    "notFound": "Không tìm thấy yêu cầu phù hợp.",
+    "status": "Trạng thái",
+    "statuses": { "requested": "Đã nhận", "confirmed": "Đã xác nhận", "declined": "Không có chỗ", "cancelled": "Đã hủy", "completed": "Hoàn tất" },
+    "messages": "Tin nhắn",
+    "reply": "Gửi tin nhắn",
+    "replyPh": "Lời nhắn cho chủ không gian",
+    "cancel": "Hủy yêu cầu",
+    "cancelConfirm": "Hủy yêu cầu này?"
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "lead": "Câu hỏi về việc sử dụng, hợp tác, phòng nghỉ cho doanh nghiệp hay làm chủ không gian — hãy để lại lời nhắn. Chúng tôi trả lời trong 1–2 ngày làm việc.",
+    "name": "Họ tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "topic": "Chủ đề",
+    "topics": { "use": "Sử dụng", "host": "Làm chủ không gian", "biz": "Doanh nghiệp & hợp tác", "press": "Báo chí & khác" },
+    "message": "Nội dung",
+    "submit": "Gửi",
+    "done": "Cảm ơn bạn — chúng tôi sẽ sớm liên hệ.",
+    "kakao": "Nhắn qua KakaoTalk",
+    "emailUs": "Gửi email"
+  },
+  "legal": {
+    "termsTitle": "Điều khoản sử dụng",
+    "privacyTitle": "Chính sách bảo mật",
+    "refundTitle": "Hủy & hoàn tiền",
+    "terms": [
+      "RESTEL (\"Dịch vụ\") cho thuê không gian nghỉ ngơi theo giờ và không phải cơ sở kinh doanh lưu trú. Khách chỉ được sử dụng không gian trong thời gian gói đã đặt.",
+      "Khách phải từ 19 tuổi trở lên và không vượt quá số người tối đa của không gian.",
+      "Cấm hút thuốc, nấu nướng, rượu bia, gây ồn và hành vi làm phiền người khác. Vi phạm có thể bị dừng sử dụng mà không hoàn tiền.",
+      "Hư hại không gian hoặc đồ đạc có thể bị tính phí khôi phục.",
+      "Dịch vụ sử dụng thông tin liên hệ của bạn để xác nhận yêu cầu, gửi thông tin vào cửa và khảo sát sau sử dụng.",
+      "Điều khoản này tuân theo pháp luật Hàn Quốc."
+    ],
+    "privacy": [
+      "Thu thập: họ tên, điện thoại hoặc email, ngôn ngữ ưu tiên, quốc gia (tùy chọn) và ghi chú. Không thu thập số hộ chiếu hay CMND.",
+      "Mục đích: xác nhận và quản lý yêu cầu, thông tin vào cửa, khảo sát sau sử dụng, trả lời thắc mắc.",
+      "Lưu trữ: một năm sau gói, sau đó ẩn danh hóa. Hồ sơ giao dịch theo luật được lưu trong thời hạn quy định.",
+      "Bên xử lý: nhà cung cấp thanh toán, dịch vụ tin nhắn và email, lưu trữ (Cloudflare). Danh sách được cập nhật tại đây khi thay đổi.",
+      "Bạn có thể yêu cầu truy cập, chỉnh sửa hoặc xóa bất cứ lúc nào qua thông tin liên hệ bên dưới."
+    ],
+    "refund": [
+      "Hủy trước 48 giờ: hoàn 100%",
+      "Hủy trước 24 giờ: hoàn 50%",
+      "Hủy muộn hơn hoặc không đến: không hoàn",
+      "Trước khi xác nhận, yêu cầu có thể thay đổi hoặc hủy miễn phí.",
+      "Nếu chúng tôi không thể cung cấp gói, bạn được hoàn tiền đầy đủ."
+    ]
+  },
+  "footer": {
+    "about": "RESTEL là không gian nghỉ ngơi kiểu Hàn cho thuê theo giờ — không gian riêng để chợp mắt, thiền, chữa lành và nạp năng lượng tại Seoul. Không phải cơ sở lưu trú.",
+    "links": "Khám phá",
+    "legal": "Chính sách",
+    "contact": "Liên hệ",
+    "business": "Thông tin doanh nghiệp",
+    "hostPortal": "Cổng chủ không gian",
+    "admin": "Quản trị",
+    "copyright": "© {year} RESTEL. All rights reserved."
+  },
+  "notFound": {
+    "title": "Trang này đang nghỉ ngơi",
+    "body": "Trang bạn tìm không tồn tại hoặc đã được chuyển.",
+    "cta": "Về trang chủ"
+  }
+}

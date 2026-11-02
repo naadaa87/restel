@@ -1,0 +1,54 @@
+---
+import type { Locale } from '@/config/site';
+import { getDict, localizePath, localeList, stripLang } from '@/i18n';
+
+interface Props { lang: Locale; path: string }
+const { lang, path } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const items = [
+  { href: '/about', label: t.nav.about },
+  { href: '/spaces', label: t.nav.spaces },
+  { href: '/sessions', label: t.nav.sessions },
+  { href: '/krest', label: t.nav.krest },
+  { href: '/guide', label: t.nav.guide },
+  { href: '/faq', label: t.nav.faq },
+  { href: '/hosts', label: t.nav.hosts },
+];
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+const current = localeList.find((l) => l.code === lang)!;
+---
+<header class="header">
+  <div class="container header__inner">
+    <a class="logo" href={L('/')} aria-label="RESTEL">
+      <img src="/brand/logo-mark.webp" alt="" width="60" height="34" />
+      <span>RESTEL</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      {items.map((it) => <a href={L(it.href)} aria-current={isActive(it.href) ? 'page' : undefined}>{it.label}</a>)}
+    </nav>
+    <div class="header__actions">
+      <details class="lang">
+        <summary class="lang__btn" aria-label={t.nav.language}>🌐 {current.native}</summary>
+        <div class="lang__menu">
+          {localeList.map((l) => <a href={localizePath(path, l.code)} hreflang={l.hreflang} lang={l.htmlLang} aria-current={l.code === lang ? 'true' : undefined}><span>{l.native}</span><span class="muted small">{l.code.toUpperCase()}</span></a>)}
+        </div>
+      </details>
+      <a class="btn btn--primary btn--sm" href={L('/book/sinchon')}>{t.nav.book}</a>
+      <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="mobile-nav">{t.nav.menu}</button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
+    {items.map((it) => <a href={L(it.href)}>{it.label}</a>)}
+    <a href={L('/book/sinchon')} style="color:var(--coral-dark);font-weight:700">{t.nav.book}</a>
+    <a href={L('/my')}>{t.nav.myRequest}</a>
+    <a href="/host/login">{t.nav.hostLogin}</a>
+  </nav>
+</header>
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('menu-btn'); var nav = document.getElementById('mobile-nav');
+    if (btn && nav) btn.addEventListener('click', function () { var open = nav.classList.toggle('is-open'); btn.setAttribute('aria-expanded', String(open)); });
+    document.addEventListener('click', function (e) { document.querySelectorAll('details.lang[open]').forEach(function (d) { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+  })();
+</script>

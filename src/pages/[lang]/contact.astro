@@ -1,0 +1,15 @@
+---
+export const prerender = false;
+import View from '@/views/ContactView.astro';
+import { handleContactPost } from '@/lib/handlers';
+import { getDict } from '@/i18n';
+import { isLocale } from '@/i18n';
+const langParam = Astro.params.lang as string;
+if (!isLocale(langParam) || langParam === 'ko') return new Response(null, { status: 404 });
+const lang = langParam;
+const t = getDict(lang);
+let result: any = null;
+if (Astro.request.method === 'POST') result = await handleContactPost(Astro as any, t);
+const turnstileSiteKey = (Astro.locals as any)?.runtime?.env?.TURNSTILE_SITE_KEY || '';
+---
+<View lang={lang} result={result} turnstileSiteKey={turnstileSiteKey} />

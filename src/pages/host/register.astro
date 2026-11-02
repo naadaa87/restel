@@ -1,0 +1,58 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getHostByEmail, createHost, audit } from '@/lib/db';
+import { hashPassword, signSession, setCookieHeader, cookieName, sameOrigin } from '@/lib/auth';
+import { notifyAdmin } from '@/lib/email';
+import { str } from '@/lib/portal';
+
+const env = (Astro.locals as any).runtime?.env || {};
+if ((Astro.locals as any).host) return Astro.redirect('/host');
+let err = '';
+const v: Record<string, string> = {};
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  for (const k of ['email', 'name', 'phone', 'company']) v[k] = str(fd, k);
+  const pw = str(fd, 'password'), pw2 = str(fd, 'password2');
+  const d = await db(Astro.locals);
+  if (!d) err = '데이터베이스가 아직 연결되지 않았습니다.';
+  else if (!sameOrigin(Astro.request) || fd.get('website')) err = '잘못된 요청입니다.';
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) err = '이메일 형식을 확인해 주세요.';
+  else if (pw.length < 8) err = '비밀번호는 8자 이상이어야 합니다.';
+  else if (pw !== pw2) err = '비밀번호가 서로 다릅니다.';
+  else if (!v.name) err = '이름(담당자)을 입력해 주세요.';
+  else if (!fd.get('agree')) err = '레스텔 기준과 약관에 동의해 주세요.';
+  else if (await getHostByEmail(d, v.email)) err = '이미 가입된 이메일입니다. 로그인해 주세요.';
+  else {
+    const id = await createHost(d, { email: v.email, password_hash: await hashPassword(pw), name: v.name, phone: v.phone, company: v.company });
+    await audit(d, `host:${v.email}`, 'host.register', String(id));
+    await notifyAdmin(env, `새 호스트 가입 · ${v.name}`, `${v.email} / ${v.phone} / ${v.company}\n승인: ${env.SITE_URL || ''}/admin/hosts`);
+    const token = await signSession(env, { t: 'host', id, email: v.email.toLowerCase(), name: v.name, exp: Date.now() + 30 * 86400 * 1000 });
+    return new Response(null, { status: 303, headers: { Location: '/host?msg=' + encodeURIComponent('가입이 완료되었습니다. 공간을 등록해 주세요. 관리자 승인 후 공개됩니다.'), 'Set-Cookie': setCookieHeader(cookieName('host'), token, 30 * 86400, Astro.url.protocol === 'https:') } });
+  }
+}
+---
+<Portal title="호스트 가입" kind="host" err={err}>
+  <div class="auth" style="max-width:520px">
+    <div class="panel">
+      <h1>호스트 가입</h1>
+      <p class="help" style="margin-bottom:16px">가입 후 바로 공간을 등록할 수 있고, 레스텔 검토·승인을 거쳐 지점 목록에 공개됩니다. 입점비는 없습니다.</p>
+      <form method="post" class="form">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+        <div class="field"><label>이메일 <span class="req">*</span></label><input type="email" name="email" value={v.email || ''} required autocomplete="username" /></div>
+        <div class="form__row">
+          <div class="field"><label>비밀번호 (8자 이상) <span class="req">*</span></label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
+          <div class="field"><label>비밀번호 확인 <span class="req">*</span></label><input type="password" name="password2" required minlength="8" autocomplete="new-password" /></div>
+        </div>
+        <div class="form__row">
+          <div class="field"><label>담당자 이름 <span class="req">*</span></label><input name="name" value={v.name || ''} required /></div>
+          <div class="field"><label>연락처</label><input name="phone" value={v.phone || ''} placeholder="010-0000-0000" /></div>
+        </div>
+        <div class="field"><label>상호·법인명</label><input name="company" value={v.company || ''} /></div>
+        <label class="checkbox"><input type="checkbox" name="agree" required /> <span><a href="/hosts" target="_blank" style="text-decoration:underline">레스텔 기준</a>(침대 없음·조명 3단계·자정 전 종료·숙박 어휘 금지 등)과 <a href="/terms" target="_blank" style="text-decoration:underline">이용약관</a>·<a href="/privacy" target="_blank" style="text-decoration:underline">개인정보처리방침</a>에 동의합니다.</span></label>
+        <button class="btn btn--sage btn--block" type="submit">가입하고 공간 등록하기</button>
+      </form>
+      <p class="small muted" style="margin-top:16px">이미 계정이 있나요? <a href="/host/login" style="text-decoration:underline">로그인</a></p>
+    </div>
+  </div>
+</Portal>

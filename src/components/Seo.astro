@@ -1,0 +1,49 @@
+---
+import { site, localeMeta, type Locale } from '@/config/site';
+import { alternates, getDict } from '@/i18n';
+
+interface Props {
+  lang: Locale;
+  title?: string;        // 페이지 제목 (접미사 자동)
+  fullTitle?: string;    // 접미사 없이 그대로
+  description?: string;
+  path: string;          // 언어 접두어 없는 기본 경로 (예: /spaces/sinchon)
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: Record<string, any>[];
+  keywords?: string;
+}
+const { lang, title, fullTitle, description, path, image, type = 'website', noindex = false, jsonLd = [], keywords } = Astro.props;
+const t = getDict(lang);
+const pageTitle = fullTitle || (title ? title + t.meta.titleSuffix : t.meta.ogTitle);
+const desc = description || t.meta.description;
+const alts = alternates(path, site.url);
+const canonical = alts.find((a) => a.lang === lang)?.href || site.url + path;
+const img = site.url + (image || site.defaultOg);
+const kw = keywords || t.meta.keywords;
+---
+<title>{pageTitle}</title>
+<meta name="description" content={desc} />
+<meta name="keywords" content={kw} />
+<link rel="canonical" href={canonical} />
+{alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+{noindex ? <meta name="robots" content="noindex,nofollow" /> : <meta name="robots" content="index,follow,max-image-preview:large" />}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="RESTEL" />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={desc} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={img} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={localeMeta[lang].ogLocale} />
+{alts.filter((a) => a.lang !== lang && a.lang !== ('x-default' as any)).map((a) => <meta property="og:locale:alternate" content={localeMeta[a.lang as Locale].ogLocale} />)}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={desc} />
+<meta name="twitter:image" content={img} />
+{site.verification.google && <meta name="google-site-verification" content={site.verification.google} />}
+{site.verification.naver && <meta name="naver-site-verification" content={site.verification.naver} />}
+{site.verification.bing && <meta name="msvalidate.01" content={site.verification.bing} />}
+{jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}

@@ -1,0 +1,54 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getHost, listSpacesByHost, listBookingsForHost, getSettings } from '@/lib/db';
+import { flash, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const host = d ? await getHost(d, me.id) : null;
+const spaces = d ? await listSpacesByHost(d, me.id) : [];
+const bookings = d ? await listBookingsForHost(d, me.id) : [];
+const settings = d ? await getSettings(d) : {};
+const count = (s: string) => bookings.filter((b) => b.status === s).length;
+---
+<Portal title="대시보드" kind="host" user={me} current="dash" msg={msg} err={err}>
+  <h1>안녕하세요, {host?.name || me.email}님</h1>
+  {host?.status === 'pending' && <div class="alert alert--info" style="margin-bottom:16px"><strong>승인 대기 중</strong> — 공간 정보를 등록하고 "검토 요청"을 눌러 주세요. 레스텔이 사진과 정보를 보고 승인하면 지점 목록에 공개됩니다.</div>}
+  {host?.status === 'suspended' && <div class="alert alert--error" style="margin-bottom:16px">계정이 정지되어 공간이 노출되지 않습니다. 문의: 관리자</div>}
+  {settings.announcement && <div class="callout" style="margin-bottom:16px">{settings.announcement}</div>}
+  <div class="grid grid--4" style="margin-bottom:22px">
+    <div class="stat"><b>{spaces.length}</b><span>등록한 공간</span></div>
+    <div class="stat"><b>{spaces.filter((s) => s.status === 'published').length}</b><span>공개 중</span></div>
+    <div class="stat"><b>{count('requested')}</b><span>새 예약 요청</span></div>
+    <div class="stat"><b>{count('confirmed')}</b><span>확정된 예약</span></div>
+  </div>
+  <div class="grid grid--2">
+    <div class="panel">
+      <div class="toolbar"><h2 class="h3">내 공간</h2><a class="btn btn--primary btn--sm" href="/host/spaces/new">+ 공간 등록</a></div>
+      {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다. 첫 공간을 등록해 보세요.</p> : (
+        <table class="list"><tbody>{spaces.slice(0, 6).map((s) => <tr><td><a href={`/host/spaces/${s.id}`}><strong>{(JSON.parse(s.name_json || '{}').ko) || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td><td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span></td></tr>)}</tbody></table>
+      )}
+    </div>
+    <div class="panel">
+      <div class="toolbar"><h2 class="h3">최근 예약 요청</h2><a class="small" href="/host/bookings">전체 보기 →</a></div>
+      {bookings.length === 0 ? <p class="help">아직 예약 요청이 없습니다. 공간이 공개되면 이곳에 표시됩니다.</p> : (
+        <table class="list"><tbody>{bookings.slice(0, 6).map((b) => <tr><td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a><br /><span class="small muted">{b.space_name} · {b.date} {b.start_time} · {b.people}인</span></td><td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><br /><span class="small muted">{fmtDate(b.created_at)}</span></td></tr>)}</tbody></table>
+      )}
+    </div>
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <h2 class="h3" style="margin-bottom:8px">입점 체크리스트</h2>
+    <ul class="check" style="gap:8px">
+      <li>구획된 전용 공간 10㎡ 이상, 환기 가능</li>
+      <li>암막과 조명 3단계(밝음·은은함·어둠)</li>
+      <li>접이식 매트·담요·베개 (침대 없음), 1인 1매트 간격</li>
+      <li>세면대 접근, 차림 코너(정수기·차)</li>
+      <li>세션 사이 60분 정리와 매트 커버 교체</li>
+      <li>소화기·비상등·피난안내도</li>
+      <li>안내문·광고에 숙박 어휘(1박·체크인·객실·침대) 사용 금지</li>
+    </ul>
+  </div>
+</Portal>

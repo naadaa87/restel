@@ -1,0 +1,24 @@
+{
+  "name": "restel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler dev --port 8788",
+    "deploy": "astro build && wrangler deploy",
+    "check": "astro check",
+    "check:words": "node scripts/check-forbidden-words.mjs"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.13",
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.156.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

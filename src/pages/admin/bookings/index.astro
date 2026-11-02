@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listAllBookings } from '@/lib/db';
+import { flash, redirectWith, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const filter = Astro.url.searchParams.get('status') || '';
+const bookings = await listAllBookings(d, filter || undefined);
+const tabs = ['', 'requested', 'confirmed', 'completed', 'declined', 'cancelled'];
+---
+<Portal title="예약 요청" kind="admin" user={me} current="bookings" msg={msg} err={err}>
+  <div class="toolbar"><h1 style="margin:0">예약 요청 (전체)</h1><a class="btn btn--ghost btn--sm" href="/admin/bookings/export.csv">CSV 내보내기</a></div>
+  <div class="tabs">{tabs.map((s) => <a class="btn btn--ghost btn--sm" style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={s ? `?status=${s}` : '/admin/bookings'}>{s ? STATUS_KO[s] : '전체'}</a>)}</div>
+  <div class="panel">
+    {bookings.length === 0 ? <p class="help">표시할 요청이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>예상</th><th>상태</th><th>접수</th></tr></thead>
+        <tbody>{bookings.map((b) => (
+          <tr>
+            <td><a href={`/admin/bookings/${b.id}`}><strong>{b.code}</strong></a>{b.host_id ? <div class="small muted">파트너</div> : <div class="small" style="color:var(--coral-dark)">직영</div>}</td>
+            <td>{b.space_name}<br /><span class="small muted">{b.session_code}</span></td>
+            <td>{b.date} {b.start_time}</td><td>{b.people}</td>
+            <td>{b.name}<br /><span class="small muted">{b.phone || b.email} · {b.lang}</span></td>
+            <td>{b.est_amount ? `₩${b.est_amount.toLocaleString('ko-KR')}` : '—'}</td>
+            <td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></td>
+            <td class="small muted">{fmtDate(b.created_at)}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

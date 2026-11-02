@@ -1,0 +1,21 @@
+---
+export const prerender = false;
+import View from '@/views/BookView.astro';
+import NotFound from '@/views/NotFoundView.astro';
+import { getSpaceBySlug } from '@/lib/spaces';
+import { handleBookingPost } from '@/lib/handlers';
+import { getDict } from '@/i18n';
+const lang = 'ko' as const;
+const t = getDict(lang);
+const space = await getSpaceBySlug(Astro.locals, Astro.params.slug as string, lang);
+if (!space) Astro.response.status = 404;
+let result: any = null;
+if (space && Astro.request.method === 'POST') {
+  const r = await handleBookingPost(Astro as any, lang, space, t);
+  if (r instanceof Response) return r;
+  result = r;
+}
+const preselect = Astro.url.searchParams.get('session') || undefined;
+const turnstileSiteKey = (Astro.locals as any)?.runtime?.env?.TURNSTILE_SITE_KEY || '';
+---
+{space ? <View lang={lang} space={space} result={result} preselect={preselect} turnstileSiteKey={turnstileSiteKey} /> : <NotFound lang={lang} />}

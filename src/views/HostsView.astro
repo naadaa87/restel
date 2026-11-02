@@ -1,0 +1,55 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+---
+<Base lang={lang} path="/hosts" title={t.hosts.title} description={t.hosts.lead}>
+  <section class="section">
+    <div class="container split">
+      <div>
+        <span class="kicker">{t.nav.hosts}</span>
+        <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.hosts.title}</h1>
+        <p class="lead" style="margin:16px 0 24px">{t.hosts.lead}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--sage" href="/host/register">{t.hosts.cta}</a>
+          <a class="btn btn--ghost" href="/host/login">{t.hosts.ctaLogin}</a>
+        </div>
+      </div>
+      <img src="/images/sinchon/hall.webp" alt="" width="1400" height="1050" loading="lazy" />
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="container">
+      <h2 class="h2 center">{t.hosts.whyTitle}</h2>
+      <div class="grid grid--3" style="margin-top:24px">
+        {t.hosts.why.map((w, i) => <div class="card"><span class="card__num">{i + 1}</span><h3 class="h3">{w.title}</h3><p class="muted" style="margin:0">{w.body}</p></div>)}
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--2">
+      <div>
+        <h2 class="h2">{t.hosts.criteriaTitle}</h2>
+        <ul class="check" style="gap:10px">{t.hosts.criteria.map((c) => <li>{c}</li>)}</ul>
+      </div>
+      <div>
+        <h2 class="h2">{t.hosts.stepsTitle}</h2>
+        <div class="grid" style="gap:12px">
+          {t.hosts.steps.map((s, i) => <div class="card card--paper" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start"><span class="card__num" style="margin:0;flex:none">{i + 1}</span><div><strong>{s.title}</strong><p class="muted" style="margin:2px 0 0">{s.body}</p></div></div>)}
+        </div>
+        <div class="callout callout--sage" style="margin-top:18px"><strong>{t.hosts.feeTitle}</strong><p style="margin:6px 0 0">{t.hosts.feeBody}</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="narrow center">
+      <a class="btn btn--sage" href="/host/register">{t.hosts.cta}</a>
+      <p class="muted small" style="margin-top:14px">{t.hosts.contactNote} <a href={L('/contact')} style="text-decoration:underline">{t.nav.contact}</a></p>
+    </div>
+  </section>
+</Base>

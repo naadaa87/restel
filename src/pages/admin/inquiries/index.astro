@@ -1,0 +1,32 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listInquiries } from '@/lib/db';
+import { flash, redirectWith, STATUS_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const items = await listInquiries(d);
+const topics: Record<string, string> = { use: '이용', host: '입점', biz: '기업·제휴', press: '언론·기타' };
+---
+<Portal title="문의" kind="admin" user={me} current="inquiries" msg={msg} err={err}>
+  <h1>문의</h1>
+  <div class="panel">
+    {items.length === 0 ? <p class="help">접수된 문의가 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>종류</th><th>보낸 사람</th><th>내용</th><th>상태</th><th>접수</th></tr></thead>
+        <tbody>{items.map((q) => (
+          <tr>
+            <td>{topics[q.topic] || q.topic || q.kind}</td>
+            <td><strong>{q.name}</strong><br /><span class="small muted">{q.email} {q.phone}</span></td>
+            <td><a href={`/admin/inquiries/${q.id}`}>{q.message.slice(0, 80)}{q.message.length > 80 ? '…' : ''}</a></td>
+            <td><span class={`status status--${q.status}`}>{STATUS_KO[q.status]}</span></td>
+            <td class="small muted">{fmtDate(q.created_at)}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

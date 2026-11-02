@@ -1,0 +1,17 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listAudit } from '@/lib/db';
+import { redirectWith } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const logs = await listAudit(d);
+---
+<Portal title="기록" kind="admin" user={me} current="logs">
+  <h1>변경 기록</h1>
+  <div class="panel">
+    {logs.length === 0 ? <p class="help">기록이 없습니다.</p> : <table class="list"><thead><tr><th>시각</th><th>누가</th><th>무엇을</th><th>대상</th><th>상세</th></tr></thead><tbody>{logs.map((l) => <tr><td class="small muted">{fmtDate(l.at)}</td><td>{l.actor}</td><td>{l.action}</td><td>{l.target}</td><td class="small muted">{l.detail}</td></tr>)}</tbody></table>}
+  </div>
+</Portal>

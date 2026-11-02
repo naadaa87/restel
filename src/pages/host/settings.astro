@@ -1,0 +1,54 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getHost, updateHostProfile, updateHostPassword, audit } from '@/lib/db';
+import { flash, redirectWith, str } from '@/lib/portal';
+import { hashPassword, verifyPassword, sameOrigin } from '@/lib/auth';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/host', undefined, '데이터베이스가 연결되지 않았습니다.');
+const host = await getHost(d, me.id);
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST' && host) {
+  if (!sameOrigin(Astro.request)) return redirectWith('/host/settings', undefined, '잘못된 요청입니다.');
+  const fd = await Astro.request.formData();
+  if (str(fd, 'op') === 'profile') {
+    await updateHostProfile(d, me.id, { name: str(fd, 'name'), phone: str(fd, 'phone'), company: str(fd, 'company') });
+    return redirectWith('/host/settings', '프로필을 저장했습니다.');
+  }
+  if (str(fd, 'op') === 'password') {
+    const cur = str(fd, 'current'), nw = str(fd, 'new');
+    if (!(await verifyPassword(cur, host.password_hash))) return redirectWith('/host/settings', undefined, '현재 비밀번호가 맞지 않습니다.');
+    if (nw.length < 8) return redirectWith('/host/settings', undefined, '새 비밀번호는 8자 이상이어야 합니다.');
+    await updateHostPassword(d, me.id, await hashPassword(nw));
+    await audit(d, `host:${me.email}`, 'host.password', String(me.id));
+    return redirectWith('/host/settings', '비밀번호를 변경했습니다.');
+  }
+}
+---
+<Portal title="설정" kind="host" user={me} current="settings" msg={msg} err={err}>
+  <h1>설정</h1>
+  <div class="grid grid--2">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:12px">프로필</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="op" value="profile" />
+        <div class="field"><label>이메일</label><input value={host?.email} readonly /></div>
+        <div class="field"><label>담당자 이름</label><input name="name" value={host?.name} required /></div>
+        <div class="field"><label>연락처</label><input name="phone" value={host?.phone} /></div>
+        <div class="field"><label>상호·법인명</label><input name="company" value={host?.company} /></div>
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">저장</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:12px">비밀번호 변경</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="op" value="password" />
+        <div class="field"><label>현재 비밀번호</label><input type="password" name="current" required autocomplete="current-password" /></div>
+        <div class="field"><label>새 비밀번호 (8자 이상)</label><input type="password" name="new" required minlength="8" autocomplete="new-password" /></div>
+        <button class="btn btn--ghost btn--sm" type="submit" style="justify-self:start">변경</button>
+      </form>
+    </div>
+  </div>
+</Portal>

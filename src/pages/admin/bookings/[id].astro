@@ -1,0 +1,70 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getBooking, listMessages, addMessage, updateBookingStatus, audit, getHost } from '@/lib/db';
+import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const id = Number(Astro.params.id);
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const b = await getBooking(d, id);
+if (!b) return redirectWith('/admin/bookings', undefined, '요청을 찾을 수 없습니다.');
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith(`/admin/bookings/${id}`, undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const op = str(fd, 'op');
+  if (op === 'status') {
+    const s = str(fd, 'status'); const note = str(fd, 'note');
+    if (['requested', 'confirmed', 'declined', 'completed', 'cancelled'].includes(s)) {
+      await updateBookingStatus(d, id, s);
+      if (note) await addMessage(d, id, 'admin', note);
+      await audit(d, `admin:${me.email}`, 'booking.status', b.code, s);
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · ${STATUS_KO[s]}`, text: `${b.space_name} · ${b.date} ${b.start_time} (KST)\n상태: ${STATUS_KO[s]}\n${note ? '\n' + note + '\n' : ''}\n${env.SITE_URL || ''}/my?code=${b.code}` });
+      return redirectWith(`/admin/bookings/${id}`, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
+    }
+  }
+  if (op === 'message') {
+    const body = str(fd, 'body');
+    if (body) {
+      await addMessage(d, id, 'admin', body.slice(0, 2000));
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code}`, text: `${body}\n\n${env.SITE_URL || ''}/my?code=${b.code}` });
+      return redirectWith(`/admin/bookings/${id}`, '메시지를 보냈습니다.');
+    }
+  }
+  return redirectWith(`/admin/bookings/${id}`);
+}
+const messages = await listMessages(d, id);
+const host = b.host_id ? await getHost(d, b.host_id) : null;
+---
+<Portal title={`예약 요청 ${b.code}`} kind="admin" user={me} current="bookings" msg={msg} err={err}>
+  <a class="small muted" href="/admin/bookings">← 목록</a>
+  <div class="toolbar" style="margin-top:8px"><h1 style="margin:0">{b.code}</h1><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></div>
+  <div class="grid grid--2">
+    <div class="panel">
+      <dl class="kv">
+        <dt>공간</dt><dd>{b.space_name} {host ? <span class="small muted">(호스트 {host.name} · {host.email})</span> : <span class="small" style="color:var(--coral-dark)">직영</span>}</dd>
+        <dt>세션</dt><dd>{b.session_code}</dd><dt>일시</dt><dd>{b.date} {b.start_time} (KST)</dd><dt>인원</dt><dd>{b.people}</dd>
+        <dt>예상 금액</dt><dd>{b.est_amount ? `₩${b.est_amount.toLocaleString('ko-KR')}` : '—'}</dd>
+        <dt>고객</dt><dd>{b.name}</dd><dt>연락처</dt><dd>{b.phone || '—'}</dd><dt>이메일</dt><dd>{b.email || '—'}</dd><dt>언어</dt><dd>{b.lang}</dd>
+        <dt>요청 사항</dt><dd>{b.note || '—'}</dd><dt>접수</dt><dd>{fmtDate(b.created_at)}</dd>
+      </dl>
+      <form method="post" class="form" style="margin-top:18px">
+        <input type="hidden" name="op" value="status" />
+        <div class="field"><label>상태 변경</label><select name="status">{['requested', 'confirmed', 'declined', 'completed', 'cancelled'].map((s) => <option value={s} selected={b.status === s}>{STATUS_KO[s]}</option>)}</select></div>
+        <div class="field"><label>고객에게 함께 보낼 안내 (선택)</label><textarea name="note" rows="3"></textarea></div>
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">상태 저장</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:12px">메시지</h2>
+      <div class="thread">{messages.length === 0 && <p class="help">메시지가 없습니다.</p>}{messages.map((m) => <div class={`msg msg--${m.sender}`}>{m.body}<small>{m.sender === 'customer' ? '고객' : m.sender === 'host' ? '호스트' : '관리자'} · {fmtDate(m.created_at)}</small></div>)}</div>
+      <form method="post" class="form" style="margin-top:14px"><input type="hidden" name="op" value="message" /><div class="field"><textarea name="body" rows="3" placeholder="고객에게 보낼 메시지" required></textarea></div><button class="btn btn--sage btn--sm" type="submit" style="justify-self:start">보내기</button></form>
+    </div>
+  </div>
+</Portal>

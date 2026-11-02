@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+import View from '@/views/SpaceDetailView.astro';
+import NotFound from '@/views/NotFoundView.astro';
+import { getSpaceBySlug } from '@/lib/spaces';
+import { isLocale } from '@/i18n';
+const langParam = Astro.params.lang as string;
+if (!isLocale(langParam) || langParam === 'ko') return new Response(null, { status: 404 });
+const lang = langParam;
+const space = await getSpaceBySlug(Astro.locals, Astro.params.slug as string, lang);
+if (!space) Astro.response.status = 404;
+---
+{space ? <View lang={lang} space={space} /> : <NotFound lang={lang} />}

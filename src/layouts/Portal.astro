@@ -1,0 +1,62 @@
+---
+import '@/styles/global.css';
+interface Props { title: string; kind: 'host' | 'admin'; user?: { email: string; name?: string } | null; current?: string; msg?: string | null; err?: string | null }
+const { title, kind, user, current = '', msg, err } = Astro.props;
+const hostNav = [
+  { href: '/host', label: '대시보드', key: 'dash' },
+  { href: '/host/spaces', label: '내 공간', key: 'spaces' },
+  { href: '/host/bookings', label: '예약 요청', key: 'bookings' },
+  { href: '/host/settings', label: '설정', key: 'settings' },
+];
+const adminNav = [
+  { href: '/admin', label: '대시보드', key: 'dash' },
+  { href: '/admin/hosts', label: '호스트', key: 'hosts' },
+  { href: '/admin/spaces', label: '공간', key: 'spaces' },
+  { href: '/admin/bookings', label: '예약 요청', key: 'bookings' },
+  { href: '/admin/inquiries', label: '문의', key: 'inquiries' },
+  { href: '/admin/settings', label: '설정', key: 'settings' },
+  { href: '/admin/logs', label: '기록', key: 'logs' },
+];
+const nav = kind === 'host' ? hostNav : adminNav;
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{title} · RESTEL {kind === 'host' ? '호스트' : '관리자'}</title>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  </head>
+  <body class="portal">
+    <div class="portal__top">
+      <div class="container">
+        <a class="logo" href={kind === 'host' ? '/host' : '/admin'}><img src="/brand/logo-mark.webp" alt="" width="50" height="28" /><span>RESTEL <span class="muted" style="font-weight:500;letter-spacing:0">{kind === 'host' ? '호스트 포털' : '총괄 관리자'}</span></span></a>
+        {user && (
+          <nav class="portal__nav">
+            {nav.map((n) => <a href={n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}</a>)}
+          </nav>
+        )}
+        <div style="display:flex;gap:10px;align-items:center">
+          <a class="small muted" href="/" target="_blank">사이트 보기 ↗</a>
+          {user && <form method="post" action={`/${kind}/logout`} style="margin:0"><button class="btn btn--ghost btn--sm" type="submit">로그아웃</button></form>}
+        </div>
+      </div>
+    </div>
+    <main class="portal__main">
+      <div class="container">
+        {msg && <div class="alert alert--ok" style="margin-bottom:16px">{msg}</div>}
+        {err && <div class="alert alert--error" style="margin-bottom:16px">{err}</div>}
+        <slot />
+      </div>
+    </main>
+    <script is:inline>
+      document.querySelectorAll('[data-tabs]').forEach(function (root) {
+        var btns = root.querySelectorAll(':scope > .tabs > button'), panels = root.querySelectorAll(':scope > .tabpanel');
+        btns.forEach(function (b, i) { b.addEventListener('click', function (e) { e.preventDefault(); btns.forEach(function (x) { x.classList.remove('is-active'); }); panels.forEach(function (p) { p.classList.remove('is-active'); }); b.classList.add('is-active'); panels[i].classList.add('is-active'); }); });
+      });
+      document.querySelectorAll('form[data-confirm]').forEach(function (f) { f.addEventListener('submit', function (e) { if (!confirm(f.getAttribute('data-confirm'))) e.preventDefault(); }); });
+    </script>
+  </body>
+</html>

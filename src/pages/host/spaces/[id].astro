@@ -1,0 +1,57 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import SpaceForm from '@/components/SpaceForm.astro';
+import { db, getSpace, updateSpace, updateSpaceStatus, deleteSpace, slugExists, audit, getHost } from '@/lib/db';
+import { spaceFromForm, redirectWith, flash, STATUS_KO, str } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { notifyAdmin } from '@/lib/email';
+
+const me = (Astro.locals as any).host;
+const env = (Astro.locals as any).runtime?.env || {};
+const id = Number(Astro.params.id);
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/host', undefined, '데이터베이스가 연결되지 않았습니다.');
+let space = await getSpace(d, id);
+if (!space || space.host_id !== me.id) return redirectWith('/host/spaces', undefined, '공간을 찾을 수 없습니다.');
+let { msg, err } = flash(Astro.url);
+
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const op = str(fd, 'op');
+  if (!sameOrigin(Astro.request)) return redirectWith(`/host/spaces/${id}`, undefined, '잘못된 요청입니다.');
+  if (op === 'submit') {
+    await updateSpaceStatus(d, id, 'submitted');
+    await audit(d, `host:${me.email}`, 'space.submit', String(id));
+    const h = await getHost(d, me.id);
+    await notifyAdmin(env, `공간 검토 요청 · ${JSON.parse(space.name_json || '{}').ko || space.slug}`, `호스트: ${h?.name} (${me.email})\n검토: ${env.SITE_URL || ''}/admin/spaces/${id}`);
+    return redirectWith(`/host/spaces/${id}`, '검토를 요청했습니다. 승인되면 지점 목록에 공개됩니다.');
+  }
+  if (op === 'hide') { await updateSpaceStatus(d, id, 'hidden'); await audit(d, `host:${me.email}`, 'space.hide', String(id)); return redirectWith(`/host/spaces/${id}`, '공간을 숨겼습니다. 다시 공개하려면 검토 요청을 눌러 주세요.'); }
+  if (op === 'delete') {
+    if (space.status === 'draft' || space.status === 'rejected' || space.status === 'hidden') { await deleteSpace(d, id); await audit(d, `host:${me.email}`, 'space.delete', String(id)); return redirectWith('/host/spaces', '공간을 삭제했습니다.'); }
+    return redirectWith(`/host/spaces/${id}`, undefined, '공개 중이거나 검토 중인 공간은 먼저 숨긴 뒤 삭제할 수 있습니다.');
+  }
+  // 저장
+  const data = spaceFromForm(fd);
+  if (!JSON.parse(data.name_json!).ko) return redirectWith(`/host/spaces/${id}`, undefined, '한국어 공간 이름은 필수입니다.');
+  if (await slugExists(d, data.slug, id)) return redirectWith(`/host/spaces/${id}`, undefined, '이미 사용 중인 슬러그입니다. 다른 값을 입력해 주세요.');
+  await updateSpace(d, id, data);
+  await audit(d, `host:${me.email}`, 'space.update', String(id));
+  // 공개 중인 공간을 수정하면 재검토 상태로
+  if (space.status === 'published') await updateSpaceStatus(d, id, 'submitted');
+  return redirectWith(`/host/spaces/${id}`, space.status === 'published' ? '저장되었습니다. 공개 중인 공간은 수정 후 재검토를 거쳐 다시 공개됩니다.' : '저장되었습니다.');
+}
+const name = JSON.parse(space.name_json || '{}').ko || space.slug;
+---
+<Portal title={`공간 편집 — ${name}`} kind="host" user={me} current="spaces" msg={msg} err={err}>
+  <div class="toolbar">
+    <div><h1 style="margin:0 0 4px">{name}</h1><span class={`status status--${space.status}`}>{STATUS_KO[space.status]}</span> <span class="small muted">/{space.slug}</span>{space.admin_note && <div class="small" style="margin-top:6px;color:var(--coral-dark)">관리자 메모: {space.admin_note}</div>}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      {(space.status === 'draft' || space.status === 'hidden' || space.status === 'rejected') && <form method="post" style="margin:0"><input type="hidden" name="op" value="submit" /><button class="btn btn--sage btn--sm" type="submit">검토 요청</button></form>}
+      {space.status === 'published' && <><a class="btn btn--ghost btn--sm" href={`/spaces/${space.slug}`} target="_blank">공개 페이지 ↗</a><form method="post" style="margin:0" data-confirm="공개를 중단하고 숨길까요?"><input type="hidden" name="op" value="hide" /><button class="btn btn--ghost btn--sm" type="submit">숨기기</button></form></>}
+      {space.status !== 'published' && space.status !== 'submitted' && <form method="post" style="margin:0" data-confirm="정말 삭제할까요? 되돌릴 수 없습니다."><input type="hidden" name="op" value="delete" /><button class="btn btn--ghost btn--sm" type="submit">삭제</button></form>}
+    </div>
+  </div>
+  <SpaceForm space={space} action={`/host/spaces/${id}`} photoAction={`/host/spaces/${id}/photos`} />
+</Portal>

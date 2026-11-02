@@ -1,0 +1,26 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: t.faq.items.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) };
+---
+<Base lang={lang} path="/faq" title={t.faq.title} description={t.faq.items[0].a} jsonLd={[ld]}>
+  <section class="section">
+    <div class="narrow">
+      <span class="kicker">FAQ</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.faq.title}</h1>
+      <div class="faq" style="margin-top:24px">
+        {t.faq.items.map((q) => <details><summary>{q.q}</summary><div class="faq__a">{q.a}</div></details>)}
+      </div>
+      <div class="center" style="margin-top:32px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--primary" href={L('/book/sinchon')}>{t.common.requestBooking}</a>
+        <a class="btn btn--ghost" href={L('/contact')}>{t.nav.contact}</a>
+      </div>
+    </div>
+  </section>
+</Base>

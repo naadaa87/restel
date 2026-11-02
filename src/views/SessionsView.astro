@@ -1,0 +1,50 @@
+---
+import Base from '@/layouts/Base.astro';
+import SessionCard from '@/components/SessionCard.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { flagships } from '@/data/flagship';
+import { flagshipToView } from '@/lib/spaces';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const f = flagshipToView(flagships[0], lang);
+const offers = f.sessions.map((s) => ({
+  '@type': 'Offer', name: (t.sessions.items as any)[s.code]?.name || s.code, price: s.priceWeekday, priceCurrency: 'KRW', url: site.url + L('/sessions'), availability: 'https://schema.org/InStock',
+}));
+const ld = { '@context': 'https://schema.org', '@type': 'Service', name: 'RESTEL rest sessions', provider: { '@type': 'Organization', name: 'RESTEL' }, areaServed: 'Seoul', offers };
+---
+<Base lang={lang} path="/sessions" title={t.sessions.title} description={t.sessions.lead} jsonLd={[ld]}>
+  <section class="section">
+    <div class="container">
+      <span class="kicker">{t.nav.sessions}</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.sessions.title}</h1>
+      <p class="lead" style="margin:16px 0 36px">{t.sessions.lead}</p>
+      <div class="grid grid--2">
+        {f.sessions.map((s) => <SessionCard lang={lang} session={s} href={L('/book/sinchon?session=' + s.code)} />)}
+      </div>
+      <p class="small muted" style="margin-top:14px">{t.sessions.priceNote} {lang !== 'ko' && t.common.refNote}</p>
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="container grid grid--2">
+      <div class="card">
+        <h2 class="h3" style="margin-bottom:14px">{t.sessions.addons.title}</h2>
+        <ul class="check" style="gap:10px">{t.sessions.addons.items.map((a) => <li><strong>{a.name}</strong> — {a.body}</li>)}</ul>
+      </div>
+      <div class="card">
+        <h2 class="h3" style="margin-bottom:14px">{t.sessions.rules.title}</h2>
+        <ul class="check" style="gap:10px">{t.sessions.rules.items.map((r) => <li>{r}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="narrow center">
+      <p class="lead">{t.common.notLodging}</p>
+      <a class="btn btn--primary" href={L('/book/sinchon')}>{t.common.requestBooking}</a>
+    </div>
+  </section>
+</Base>

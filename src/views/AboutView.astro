@@ -1,0 +1,58 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+---
+<Base lang={lang} path="/about" title={t.about.title} description={t.about.lead}>
+  <section class="section">
+    <div class="narrow">
+      <span class="kicker">RESTEL = REST + TEL</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.about.title}</h1>
+      <p class="lead" style="margin-top:18px">{t.about.lead}</p>
+      {t.about.story.map((p) => <p style="font-size:17px;color:var(--ink-2)">{p}</p>)}
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="container">
+      <h2 class="h2 center">{t.about.valuesTitle}</h2>
+      <div class="grid grid--3" style="margin-top:24px">
+        {t.about.values.map((v, i) => <div class="card"><span class="card__num">{i + 1}</span><h3 class="h3">{v.title}</h3><p class="muted" style="margin:0">{v.body}</p></div>)}
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container split">
+      <img src="/images/sinchon/mats.webp" alt="" width="1400" height="1050" loading="lazy" />
+      <div>
+        <h2 class="h2">{t.about.insideTitle}</h2>
+        <ul class="check" style="gap:10px">{t.about.inside.map((i) => <li>{i}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="container">
+      <h2 class="h2">{t.about.compareTitle}</h2>
+      <table class="table table--compare" style="margin-top:12px">
+        <thead><tr><th></th><th>—</th><th>RESTEL</th></tr></thead>
+        <tbody>{t.about.compare.map((r) => <tr><td>{r.alt}</td><td class="muted">{r.they}</td><td>{r.we}</td></tr>)}</tbody>
+      </table>
+    </div>
+  </section>
+  <section class="section">
+    <div class="narrow">
+      <div class="callout">
+        <h2 class="h3" style="margin-bottom:10px">{t.about.notTitle}</h2>
+        <ul style="margin:0">{t.about.notList.map((n) => <li>{n}</li>)}</ul>
+      </div>
+      <div class="center" style="margin-top:32px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--primary" href={L('/sessions')}>{t.nav.sessions}</a>
+        <a class="btn btn--ghost" href={L('/krest')}>{t.nav.krest}</a>
+      </div>
+    </div>
+  </section>
+</Base>
