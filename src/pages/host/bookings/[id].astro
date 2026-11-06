@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import { db, getBooking, listMessages, addMessage, updateBookingStatus, audit } from '@/lib/db';
 import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
@@ -27,7 +28,7 @@ if (Astro.request.method === 'POST') {
       await audit(d, `host:${me.email}`, 'booking.status', b.code, s);
       const note = str(fd, 'note');
       if (note) await addMessage(d, id, 'host', note);
-      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · ${STATUS_KO[s]}`, text: `${b.space_name} · ${b.date} ${b.start_time} (KST)\n상태: ${STATUS_KO[s]}\n${note ? '\n' + note + '\n' : ''}\n${env.SITE_URL || ''}/my?code=${b.code}` });
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · ${STATUS_KO[s]}`, text: `${b.space_name} · ${b.date} ${b.start_time} (KST)\n상태: ${STATUS_KO[s]}\n${note ? '\n' + note + '\n' : ''}\n${env.SITE_URL || site.url}/my?code=${b.code}` });
       return redirectWith(`/host/bookings/${id}`, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
     }
   }
@@ -35,7 +36,7 @@ if (Astro.request.method === 'POST') {
     const body = str(fd, 'body');
     if (body) {
       await addMessage(d, id, 'host', body.slice(0, 2000));
-      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · 호스트 메시지`, text: `${body}\n\n${env.SITE_URL || ''}/my?code=${b.code}` });
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · 호스트 메시지`, text: `${body}\n\n${env.SITE_URL || site.url}/my?code=${b.code}` });
       return redirectWith(`/host/bookings/${id}`, '메시지를 보냈습니다.');
     }
   }

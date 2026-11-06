@@ -20,6 +20,8 @@
    - Root directory: `/` (기본값)
 4. **Save and Deploy** → 1~3분 뒤 `restel.<계정>.workers.dev` 주소가 생깁니다.
 
+> 현재 배포 주소: **https://restel.naadaa87.workers.dev** (2026-11 연결 완료). main 브랜치에 커밋이 올라가면 자동으로 다시 배포됩니다.
+
 > D1 데이터베이스(`restel-db`)와 R2 버킷(`restel-media`)은 `wrangler.jsonc`에 ID 없이 선언되어 있어 **첫 배포 때 Wrangler가 자동으로 만들어 연결**합니다. 대시보드에서 따로 만들 필요가 없습니다. 테이블은 첫 요청 때 앱이 스스로 생성합니다.
 
 ### 1-2. 시크릿(비밀값) 등록 — 관리자 로그인에 필요
@@ -29,16 +31,21 @@ Worker → **Settings** → **Variables and Secrets** → **Add** (Type: Secret)
 |---|---|---|
 | `ADMIN_EMAIL` | 관리자 로그인 이메일 | 필수 |
 | `ADMIN_PASSWORD` | 관리자 비밀번호 (12자 이상 권장) | 필수 |
-| `SESSION_SECRET` | 임의의 긴 문자열 (40자 이상, 아무 글자나) | 필수 |
+| `SESSION_SECRET` | 임의의 긴 문자열. 넣지 않으면 첫 로그인 때 무작위 키를 만들어 D1에 보관합니다 | 선택 |
 | `RESEND_API_KEY` | [Resend](https://resend.com) API 키 — 예약·승인 알림 메일 발송 | 선택 |
 | `MAIL_FROM` | 발신 주소, 예: `RESTEL <hello@restel.kr>` (Resend에서 도메인 인증 후) | 선택 |
 | `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET` | Cloudflare Turnstile 봇 차단 키 | 선택 |
 
-등록 후 **Deployments → 최신 배포 → Retry** 또는 GitHub에 아무 커밋을 올리면 반영됩니다.
+대시보드에서 시크릿을 저장하면 그 자리에서 새 버전이 배포되므로 따로 재배포할 필요는 없습니다. 시크릿은 이후 GitHub 자동 배포 때도 그대로 유지됩니다.
+
+> 시크릿은 **Secret** 타입으로 넣어야 합니다. 일반 Variable(Text) 타입으로 넣으면 다음 GitHub 자동 배포 때 `wrangler.jsonc`에 없는 값으로 간주되어 지워집니다.
 
 ### 1-3. 도메인 연결
-Worker → **Settings** → **Domains & Routes** → **Add** → Custom domain → `restel.kr` (도메인의 네임서버가 Cloudflare여야 합니다).
-그 다음 `wrangler.jsonc`의 `SITE_URL`과 `src/config/site.ts`의 `url`을 실제 도메인으로 바꿔 커밋하세요.
+1. 도메인을 Cloudflare에 추가합니다(도메인의 네임서버가 Cloudflare여야 합니다). 2026-11 기준 restel.kr은 이 계정에 없습니다.
+2. Worker → **Domains** 탭 → **Add Domain** → 예: `restel.kr`
+3. Worker → **Settings** → **Build** → **Variables and secrets** → **Add** → 이름 `SITE_URL`, 값 `https://restel.kr`
+4. **Deployments**에서 최신 빌드 → **Retry build**. canonical·사이트맵·OG·robots.txt·알림 메일 링크가 모두 새 주소로 바뀝니다. 코드 수정은 필요 없습니다.
+5. 새 주소가 열리는 것을 확인한 뒤 **Domains** 탭에서 workers.dev 주소를 꺼 두면 검색엔진에 주소가 둘로 잡히지 않습니다.
 
 ### 1-4. 첫 로그인
 - 관리자: `https://도메인/admin/login` — 1-2에서 등록한 이메일·비밀번호

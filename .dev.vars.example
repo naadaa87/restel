@@ -1,7 +1,7 @@
 # 로컬 개발용 — 이 파일을 .dev.vars 로 복사해서 값을 채우세요 (.dev.vars 는 커밋되지 않습니다)
 ADMIN_EMAIL=admin@restel.kr
 ADMIN_PASSWORD=change-me-please-12
-SESSION_SECRET=replace-with-a-long-random-string
+# SESSION_SECRET=선택. 비워 두면 로컬 D1에 자동 생성된 키를 사용
 # RESEND_API_KEY=
 # MAIL_FROM=RESTEL <hello@restel.kr>
 # TURNSTILE_SITE_KEY=

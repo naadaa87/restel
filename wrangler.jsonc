@@ -9,8 +9,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": "./dist", "binding": "ASSETS", "html_handling": "drop-trailing-slash" },
   "observability": { "enabled": true },
+  // 대표 주소(SITE_URL)는 여기 두지 않는다. Cloudflare > Settings > Builds > Variables의 빌드 변수로 관리(astro.config.mjs 참고)
   "vars": {
-    "SITE_URL": "https://restel.kr",
     "DEFAULT_LOCALE": "ko"
   },
   "d1_databases": [
@@ -22,7 +22,7 @@
   // 시크릿(대시보드 Settings → Variables and Secrets 에서 입력):
   //   ADMIN_EMAIL       총괄관리자 로그인 이메일
   //   ADMIN_PASSWORD    총괄관리자 비밀번호 (12자 이상 권장)
-  //   SESSION_SECRET    로그인 세션 서명 키 (임의의 긴 문자열)
+  //   SESSION_SECRET    (선택) 로그인 세션 서명 키. 없으면 첫 로그인 때 자동 생성해 D1에 보관
   //   RESEND_API_KEY    (선택) 이메일 알림용 Resend API 키
   //   MAIL_FROM         (선택) 발신 주소, 예: RESTEL <hello@restel.kr>
   //   TURNSTILE_SITE_KEY / TURNSTILE_SECRET  (선택) 봇 차단

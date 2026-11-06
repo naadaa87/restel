@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import SpaceForm from '@/components/SpaceForm.astro';
 import { db, getSpace, updateSpace, updateSpaceStatus, deleteSpace, slugExists, audit, getHost, parseJson } from '@/lib/db';
@@ -26,7 +27,7 @@ if (Astro.request.method === 'POST') {
       await updateSpaceStatus(d, id, s, note);
       await audit(d, `admin:${me.email}`, 'space.status', String(id), `${s} ${note}`);
       const h = await getHost(d, space.host_id);
-      if (h?.email && (s === 'published' || s === 'rejected')) await sendMail(env, { to: h.email, subject: `[RESTEL] 공간 검토 결과 · ${STATUS_KO[s]}`, text: `${JSON.parse(space.name_json || '{}').ko || space.slug}: ${STATUS_KO[s]}\n${note ? '메모: ' + note + '\n' : ''}\n${env.SITE_URL || ''}/host/spaces/${id}` });
+      if (h?.email && (s === 'published' || s === 'rejected')) await sendMail(env, { to: h.email, subject: `[RESTEL] 공간 검토 결과 · ${STATUS_KO[s]}`, text: `${JSON.parse(space.name_json || '{}').ko || space.slug}: ${STATUS_KO[s]}\n${note ? '메모: ' + note + '\n' : ''}\n${env.SITE_URL || site.url}/host/spaces/${id}` });
       return redirectWith(`/admin/spaces/${id}`, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
     }
   }

@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import { db, getHostByEmail, createHost, audit } from '@/lib/db';
 import { hashPassword, signSession, setCookieHeader, cookieName, sameOrigin } from '@/lib/auth';
@@ -26,7 +27,7 @@ if (Astro.request.method === 'POST') {
   else {
     const id = await createHost(d, { email: v.email, password_hash: await hashPassword(pw), name: v.name, phone: v.phone, company: v.company });
     await audit(d, `host:${v.email}`, 'host.register', String(id));
-    await notifyAdmin(env, `새 호스트 가입 · ${v.name}`, `${v.email} / ${v.phone} / ${v.company}\n승인: ${env.SITE_URL || ''}/admin/hosts`);
+    await notifyAdmin(env, `새 호스트 가입 · ${v.name}`, `${v.email} / ${v.phone} / ${v.company}\n승인: ${env.SITE_URL || site.url}/admin/hosts`);
     const token = await signSession(env, { t: 'host', id, email: v.email.toLowerCase(), name: v.name, exp: Date.now() + 30 * 86400 * 1000 });
     return new Response(null, { status: 303, headers: { Location: '/host?msg=' + encodeURIComponent('가입이 완료되었습니다. 공간을 등록해 주세요. 관리자 승인 후 공개됩니다.'), 'Set-Cookie': setCookieHeader(cookieName('host'), token, 30 * 86400, Astro.url.protocol === 'https:') } });
   }

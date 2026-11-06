@@ -1,4 +1,5 @@
 // 비밀번호 해시(PBKDF2) + 서명 쿠키 세션 (외부 서비스 불필요)
+import { ensureSchema } from './db';
 const enc = new TextEncoder();
 
 function b64url(buf: ArrayBuffer | Uint8Array) {
@@ -32,8 +33,30 @@ export async function verifyPassword(password: string, stored: string): Promise<
   } catch { return false; }
 }
 
-export function sessionSecret(env: any): string {
-  return env?.SESSION_SECRET || (env?.ADMIN_PASSWORD ? 'derived::' + env.ADMIN_PASSWORD : 'restel-dev-only-secret');
+// 세션 서명 키: SESSION_SECRET 환경 변수가 있으면 사용하고, 없으면 첫 사용 시 무작위 키를 만들어 D1(app_secrets)에 저장한다.
+// 공개 저장소에 적힌 고정 기본값은 쓰지 않는다(쿠키 위조 방지).
+let cachedSecret: string | null = null;
+export async function sessionSecret(env: any): Promise<string | null> {
+  const fromEnv = env?.SESSION_SECRET;
+  if (typeof fromEnv === 'string' && fromEnv.length >= 16) return fromEnv;
+  if (cachedSecret) return cachedSecret;
+  const d = env?.DB;
+  if (!d) return null;
+  try {
+    await ensureSchema(d);
+    const read = async () => ((await d.prepare("SELECT value FROM app_secrets WHERE key = 'session_secret'").first()) as { value?: string } | null)?.value || null;
+    let v = await read();
+    if (!v) {
+      const fresh = b64url(crypto.getRandomValues(new Uint8Array(32)));
+      await d.prepare("INSERT INTO app_secrets (key, value, created_at) VALUES ('session_secret', ?, ?) ON CONFLICT(key) DO NOTHING").bind(fresh, new Date().toISOString()).run();
+      v = await read();
+    }
+    cachedSecret = v;
+    return v;
+  } catch (e) {
+    console.error('session secret error', e);
+    return null;
+  }
 }
 
 async function hmac(secret: string, data: string) {
@@ -45,14 +68,18 @@ export type Session = { t: 'host' | 'admin'; id?: number; email: string; name?: 
 
 export async function signSession(env: any, s: Session): Promise<string> {
   const payload = b64url(enc.encode(JSON.stringify(s)));
-  const sig = await hmac(sessionSecret(env), payload);
+  const secret = await sessionSecret(env);
+  if (!secret) throw new Error('세션 키를 준비하지 못했습니다(D1 연결 확인).');
+  const sig = await hmac(secret, payload);
   return `${payload}.${sig}`;
 }
 export async function readSession(env: any, token: string | undefined | null, type: 'host' | 'admin'): Promise<Session | null> {
   if (!token) return null;
   const [payload, sig] = token.split('.');
   if (!payload || !sig) return null;
-  const expect = await hmac(sessionSecret(env), payload);
+  const secret = await sessionSecret(env);
+  if (!secret) return null;
+  const expect = await hmac(secret, payload);
   if (expect !== sig) return null;
   try {
     const s = JSON.parse(new TextDecoder().decode(fromB64url(payload))) as Session;

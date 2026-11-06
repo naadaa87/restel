@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import { db, getSettings, setSetting, audit } from '@/lib/db';
 import { flash, redirectWith, str } from '@/lib/portal';
@@ -24,9 +25,9 @@ if (Astro.request.method === 'POST') {
 }
 const s = await getSettings(d);
 const envRows = [
-  ['ADMIN_EMAIL', env.ADMIN_EMAIL ? '설정됨' : '없음'], ['ADMIN_PASSWORD', env.ADMIN_PASSWORD ? '설정됨' : '없음'], ['SESSION_SECRET', env.SESSION_SECRET ? '설정됨' : '없음(임시 키 사용 중)'],
+  ['ADMIN_EMAIL', env.ADMIN_EMAIL ? '설정됨' : '없음'], ['ADMIN_PASSWORD', env.ADMIN_PASSWORD ? '설정됨' : '없음'], ['SESSION_SECRET', env.SESSION_SECRET ? '설정됨' : '자동 생성 키 사용(D1 보관)'],
   ['RESEND_API_KEY', env.RESEND_API_KEY ? '설정됨' : '없음(메일 미발송)'], ['MAIL_FROM', env.MAIL_FROM || '기본값'], ['TURNSTILE_SITE_KEY', env.TURNSTILE_SITE_KEY ? '설정됨' : '없음(봇 차단 비활성)'],
-  ['SITE_URL', env.SITE_URL || '—'], ['D1 (DB)', '연결됨'], ['R2 (MEDIA)', env.MEDIA ? '연결됨' : '없음'],
+  ['대표 주소', env.SITE_URL || site.url], ['D1 (DB)', '연결됨'], ['R2 (MEDIA)', env.MEDIA ? '연결됨' : '없음'],
 ];
 ---
 <Portal title="설정" kind="admin" user={me} current="settings" msg={msg} err={err}>

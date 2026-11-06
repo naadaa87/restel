@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import { db, listHosts, updateHostStatus, getHost, audit } from '@/lib/db';
 import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
@@ -20,7 +21,7 @@ if (Astro.request.method === 'POST') {
     const h = await getHost(d, id);
     await updateHostStatus(d, id, status);
     await audit(d, `admin:${me.email}`, 'host.status', String(id), status);
-    if (h && status === 'approved') await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 승인 완료', text: `${h.name}님, 레스텔 호스트 승인이 완료되었습니다. 공간을 등록하고 "검토 요청"을 눌러 주세요.\n\n${env.SITE_URL || ''}/host` });
+    if (h && status === 'approved') await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 승인 완료', text: `${h.name}님, 레스텔 호스트 승인이 완료되었습니다. 공간을 등록하고 "검토 요청"을 눌러 주세요.\n\n${env.SITE_URL || site.url}/host` });
     return redirectWith('/admin/hosts', `호스트 상태를 "${STATUS_KO[status]}"(으)로 바꿨습니다.`);
   }
 }

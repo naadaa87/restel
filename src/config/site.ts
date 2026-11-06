@@ -2,7 +2,8 @@
 export const site = {
   name: 'RESTEL',
   nameKo: '레스텔',
-  url: 'https://restel.kr',
+  // 대표 주소: Cloudflare 빌드 변수 SITE_URL로 바꾼다(도메인 연결 전에는 workers.dev 주소). astro.config.mjs 참고
+  url: String(import.meta.env.SITE || 'https://restel.naadaa87.workers.dev').replace(/\/+$/, ''),
   // 연락처 (공개)
   contact: {
     email: 'spaceblank0100@gmail.com',
