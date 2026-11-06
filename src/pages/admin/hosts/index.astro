@@ -1,0 +1,38 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listHosts } from '@/lib/db';
+import { flash, redirectWith, STATUS_KO, BIZ_TYPES, SPACE_KINDS } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const status = Astro.url.searchParams.get('status') || '';
+let hosts = await listHosts(d);
+const counts = { pending: hosts.filter((h) => h.status === 'pending').length, approved: hosts.filter((h) => h.status === 'approved').length, suspended: hosts.filter((h) => h.status === 'suspended').length };
+if (status) hosts = hosts.filter((h) => h.status === status);
+const bizLabel = (c: string) => BIZ_TYPES.find((b) => b.code === c)?.label || c || '—';
+const kindLabel = (c: string) => SPACE_KINDS.find((k) => k.code === c)?.label || c || '—';
+---
+<Portal title="호스트" kind="admin" user={me} current="hosts" msg={msg} err={err}>
+  <h1>호스트 관리</h1>
+  <div class="tabs"><a class="btn btn--ghost btn--sm" style={!status ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href="/admin/hosts">전체</a>{(['pending', 'approved', 'suspended'] as const).map((s) => <a class="btn btn--ghost btn--sm" style={status === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={`?status=${s}`}>{STATUS_KO[s]} {counts[s]}</a>)}</div>
+  <div class="panel">
+    {hosts.length === 0 ? <p class="help">표시할 호스트가 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>호스트</th><th>사업 형태 · 공간 형태</th><th>연락처</th><th>공간 / 예약</th><th>가입</th><th>상태</th></tr></thead>
+        <tbody>{hosts.map((h) => (
+          <tr>
+            <td><a href={`/admin/hosts/${h.id}`}><strong>{h.name}</strong></a><br /><span class="small muted">{h.company || '—'} {h.region && `· ${h.region}`}</span></td>
+            <td class="small">{bizLabel(h.biz_type)}<br /><span class="muted">{kindLabel(h.space_kind)}</span></td>
+            <td>{h.email}<br /><span class="small muted">{h.phone}</span></td>
+            <td>{h.space_count} / {h.booking_count}</td>
+            <td class="small muted">{fmtDate(h.created_at)}<br />{h.last_login_at && `로그인 ${fmtDate(h.last_login_at)}`}</td>
+            <td><span class={`status status--${h.status}`}>{STATUS_KO[h.status]}</span>{h.admin_note && <div class="small muted">{h.admin_note.slice(0, 40)}</div>}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

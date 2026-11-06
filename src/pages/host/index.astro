@@ -1,54 +1,96 @@
 ---
 export const prerender = false;
 import Portal from '@/layouts/Portal.astro';
-import { db, getHost, listSpacesByHost, listBookingsForHost, getSettings } from '@/lib/db';
-import { flash, STATUS_KO } from '@/lib/portal';
+import { db, getHost, listSpacesByHost, listBookingsForHost, listBookingsForHostByDateRange, getSettings, hostStats, listNotices } from '@/lib/db';
+import { flash, STATUS_KO, PAYMENT_KO, onboardingSteps, todayKST, addDaysKST, bookingAmount } from '@/lib/portal';
 import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
 
 const me = (Astro.locals as any).host;
 const d = await db(Astro.locals);
-const { msg, err } = flash(Astro.url);
+let { msg, err } = flash(Astro.url);
+if (Astro.url.searchParams.get('welcome')) msg = '가입이 완료되었습니다. 승인 대기 중에도 공간 등록과 사진·세션 설정을 미리 끝낼 수 있습니다.';
 const host = d ? await getHost(d, me.id) : null;
 const spaces = d ? await listSpacesByHost(d, me.id) : [];
 const bookings = d ? await listBookingsForHost(d, me.id) : [];
 const settings = d ? await getSettings(d) : {};
-const count = (s: string) => bookings.filter((b) => b.status === s).length;
+const stats = d ? await hostStats(d, me.id) : null;
+const today = todayKST();
+const upcoming = d ? await listBookingsForHostByDateRange(d, me.id, today, addDaysKST(today, 2)) : [];
+const todays = upcoming.filter((b) => b.date === today && (b.status === 'confirmed' || b.status === 'requested'));
+const tomorrows = upcoming.filter((b) => b.date === addDaysKST(today, 1) && b.status === 'confirmed');
+const notices = d ? (await listNotices(d, 'host')).slice(0, 3) : [];
+const steps = onboardingSteps(host, spaces);
+const doneCount = steps.filter((s) => s.done).length;
+const showOnboarding = !steps[steps.length - 1].done;
+const todo: { label: string; count: number; href: string }[] = [];
+if (stats) {
+  if (stats.requested) todo.push({ label: '응답을 기다리는 새 요청', count: stats.requested, href: '/host/bookings?status=requested' });
+  if (stats.unanswered) todo.push({ label: '답장하지 않은 고객 메시지', count: stats.unanswered, href: '/host/bookings?filter=unanswered' });
+  if (stats.awaitingPayment) todo.push({ label: '확정됐지만 결제가 끝나지 않은 세션', count: stats.awaitingPayment, href: '/host/bookings?filter=unpaid' });
+  const needEntry = bookings.filter((b) => b.status === 'confirmed' && b.payment_status === 'paid' && !b.entry_sent_at).length;
+  if (needEntry) todo.push({ label: '입장 안내를 아직 보내지 않은 세션', count: needEntry, href: '/host/bookings?filter=entry' });
+  const past = bookings.filter((b) => b.status === 'confirmed' && b.date < today).length;
+  if (past) todo.push({ label: '지난 세션 — 이용 완료/노쇼 처리 필요', count: past, href: '/host/bookings?filter=past' });
+  if (tomorrows.length) todo.push({ label: '내일 세션 — 리마인더 보내기', count: tomorrows.length, href: `/host/bookings?date=${addDaysKST(today, 1)}` });
+}
+const needsFix = spaces.filter((s) => s.status === 'rejected');
 ---
-<Portal title="대시보드" kind="host" user={me} current="dash" msg={msg} err={err}>
-  <h1>안녕하세요, {host?.name || me.email}님</h1>
-  {host?.status === 'pending' && <div class="alert alert--info" style="margin-bottom:16px"><strong>승인 대기 중</strong> — 공간 정보를 등록하고 "검토 요청"을 눌러 주세요. 레스텔이 사진과 정보를 보고 승인하면 지점 목록에 공개됩니다.</div>}
-  {host?.status === 'suspended' && <div class="alert alert--error" style="margin-bottom:16px">계정이 정지되어 공간이 노출되지 않습니다. 문의: 관리자</div>}
-  {settings.announcement && <div class="callout" style="margin-bottom:16px">{settings.announcement}</div>}
-  <div class="grid grid--4" style="margin-bottom:22px">
-    <div class="stat"><b>{spaces.length}</b><span>등록한 공간</span></div>
-    <div class="stat"><b>{spaces.filter((s) => s.status === 'published').length}</b><span>공개 중</span></div>
-    <div class="stat"><b>{count('requested')}</b><span>새 예약 요청</span></div>
-    <div class="stat"><b>{count('confirmed')}</b><span>확정된 예약</span></div>
-  </div>
+<Portal title="대시보드" kind="host" user={me} current="dash" msg={msg} err={err} badges={{ bookings: stats?.requested || 0 }}>
+  <div class="toolbar"><h1 style="margin:0">안녕하세요, {host?.name || me.email}님</h1><span class="small muted">{today} (KST)</span></div>
+  {host?.status === 'pending' && <div class="alert alert--info" style="margin-bottom:14px"><strong>승인 대기 중</strong> — 레스텔이 사업 정보를 확인하고 있습니다(영업일 3일 이내). 그동안 아래 시작하기 단계를 진행해 두면 승인 즉시 검토·공개로 넘어갑니다.{host.admin_note && <div style="margin-top:6px;color:var(--coral-dark)">관리자 메모: {host.admin_note}</div>}</div>}
+  {host?.status === 'suspended' && <div class="alert alert--error" style="margin-bottom:14px">계정이 정지되어 공간이 노출되지 않고 새 요청을 받을 수 없습니다. {host.admin_note && <span>사유: {host.admin_note}</span>} 호스트 센터 &gt; 문의로 연락해 주세요.</div>}
+  {settings.announcement && <div class="callout" style="margin-bottom:14px">{settings.announcement}</div>}
+  {needsFix.length > 0 && <div class="alert alert--error" style="margin-bottom:14px">보완 요청을 받은 공간이 {needsFix.length}개 있습니다. {needsFix.map((s) => <a href={`/host/spaces/${s.id}`} style="text-decoration:underline;margin-right:8px">{JSON.parse(s.name_json || '{}').ko || s.slug}</a>)}</div>}
+
+  {showOnboarding && (
+    <div class="panel" style="margin-bottom:18px">
+      <div class="toolbar"><h2 class="h3">시작하기 — {doneCount}/{steps.length} 완료</h2><a class="small" href="/host/center/guide">운영 가이드 보기 →</a></div>
+      <div class="progress__bar"><i style={`width:${Math.round((doneCount / steps.length) * 100)}%`}></i></div>
+      <div class="progress">{steps.map((s) => <a href={s.href} class={s.done ? 'is-done' : ''}>{s.label}</a>)}</div>
+    </div>
+  )}
+
+  {stats && (
+    <div class="grid grid--4" style="margin-bottom:18px">
+      <a class="stat" href="/host/bookings?status=requested"><b>{stats.requested}</b><span>새 요청 (응답 필요)</span></a>
+      <a class="stat" href="/host/bookings?status=confirmed"><b>{stats.confirmed}</b><span>확정된 세션 (입금 대기 {stats.awaitingPayment})</span></a>
+      <a class="stat" href="/host/settlement"><b>{formatKRW(stats.monthGross)}</b><span>이번 달 완료 매출 · {stats.monthCompleted}회</span></a>
+      <a class="stat" href="/host/spaces"><b>{spaces.filter((s) => s.status === 'published').length}<span class="small muted" style="font-size:14px">/{spaces.length}</span></b><span>공개 중인 공간</span></a>
+    </div>
+  )}
+
   <div class="grid grid--2">
-    <div class="panel">
-      <div class="toolbar"><h2 class="h3">내 공간</h2><a class="btn btn--primary btn--sm" href="/host/spaces/new">+ 공간 등록</a></div>
-      {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다. 첫 공간을 등록해 보세요.</p> : (
-        <table class="list"><tbody>{spaces.slice(0, 6).map((s) => <tr><td><a href={`/host/spaces/${s.id}`}><strong>{(JSON.parse(s.name_json || '{}').ko) || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td><td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span></td></tr>)}</tbody></table>
-      )}
+    <div>
+      <div class="panel">
+        <h2 class="h3" style="margin-bottom:10px">할 일</h2>
+        {todo.length === 0 ? <p class="help">지금 처리할 일이 없습니다.</p> : <ul class="todo">{todo.map((t) => <li><a href={t.href}><span>{t.label}</span><b>{t.count}</b></a></li>)}</ul>}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="toolbar"><h2 class="h3">오늘 세션</h2><a class="small" href={`/host/bookings/calendar?month=${today.slice(0, 7)}`}>달력 보기 →</a></div>
+        {todays.length === 0 ? <p class="help">오늘 예정된 세션이 없습니다.</p> : (
+          <table class="list"><tbody>{todays.map((b) => <tr><td><strong>{b.start_time}</strong><br /><span class="small muted">{b.space_name} · {b.session_code}</span></td><td>{b.name} · {b.people}인<br /><span class="small muted">{b.lang}</span></td><td style="text-align:right"><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><span class={`pay-pill pay--${b.payment_status}`}>{PAYMENT_KO[b.payment_status]}</span><br /><a class="small" href={`/host/bookings/${b.id}`}>열기 →</a></td></tr>)}</tbody></table>
+        )}
+        {tomorrows.length > 0 && <p class="small muted" style="margin-top:10px">내일 확정 세션 {tomorrows.length}건: {tomorrows.map((b) => <a href={`/host/bookings/${b.id}`} style="text-decoration:underline;margin-right:8px">{b.start_time} {b.name}</a>)}</p>}
+      </div>
     </div>
-    <div class="panel">
-      <div class="toolbar"><h2 class="h3">최근 예약 요청</h2><a class="small" href="/host/bookings">전체 보기 →</a></div>
-      {bookings.length === 0 ? <p class="help">아직 예약 요청이 없습니다. 공간이 공개되면 이곳에 표시됩니다.</p> : (
-        <table class="list"><tbody>{bookings.slice(0, 6).map((b) => <tr><td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a><br /><span class="small muted">{b.space_name} · {b.date} {b.start_time} · {b.people}인</span></td><td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><br /><span class="small muted">{fmtDate(b.created_at)}</span></td></tr>)}</tbody></table>
-      )}
+    <div>
+      <div class="panel">
+        <div class="toolbar"><h2 class="h3">최근 요청</h2><a class="small" href="/host/bookings">전체 보기 →</a></div>
+        {bookings.length === 0 ? <p class="help">아직 예약 요청이 없습니다. 공간이 공개되면 이곳에 표시됩니다.</p> : (
+          <table class="list"><tbody>{bookings.slice(0, 6).map((b) => <tr><td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a><br /><span class="small muted">{b.space_name} · {b.date} {b.start_time} · {b.people}인 · {formatKRW(bookingAmount(b))}</span></td><td style="text-align:right"><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><br /><span class="small muted">{fmtDate(b.created_at)}</span></td></tr>)}</tbody></table>
+        )}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="toolbar"><h2 class="h3">레스텔 공지</h2><a class="small" href="/host/center/notices">전체 →</a></div>
+        {notices.length === 0 ? <p class="help">새 공지가 없습니다.</p> : notices.map((n) => <div class="notice-item" style="padding:10px 0"><h3>{n.pinned ? <span class="pin">고정</span> : null}<a href={`/host/center/notices#n${n.id}`}>{n.title}</a></h3><span class="small muted">{fmtDate(n.created_at)}</span></div>)}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:8px">내 공간</h2>
+        {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다. <a href="/host/spaces/new" style="text-decoration:underline">첫 공간을 등록</a>해 보세요.</p> : (
+          <table class="list"><tbody>{spaces.slice(0, 5).map((s) => <tr><td><a href={`/host/spaces/${s.id}`}><strong>{(JSON.parse(s.name_json || '{}').ko) || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td><td style="text-align:right"><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span></td></tr>)}</tbody></table>
+        )}
+      </div>
     </div>
-  </div>
-  <div class="panel" style="margin-top:18px">
-    <h2 class="h3" style="margin-bottom:8px">입점 체크리스트</h2>
-    <ul class="check" style="gap:8px">
-      <li>구획된 전용 공간 10㎡ 이상, 환기 가능</li>
-      <li>암막과 조명 3단계(밝음·은은함·어둠)</li>
-      <li>접이식 매트·담요·베개 (침대 없음), 1인 1매트 간격</li>
-      <li>세면대 접근, 차림 코너(정수기·차)</li>
-      <li>세션 사이 60분 정리와 매트 커버 교체</li>
-      <li>소화기·비상등·피난안내도</li>
-      <li>안내문·광고에 숙박 어휘(1박·체크인·객실·침대) 사용 금지</li>
-    </ul>
   </div>
 </Portal>

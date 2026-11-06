@@ -2,11 +2,12 @@
 export const prerender = false;
 import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
-import { db, getBooking, listMessages, addMessage, updateBookingStatus, audit, getHost } from '@/lib/db';
-import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
+import { db, getBooking, listMessages, addMessage, updateBookingStatus, updateBookingPayment, listAuditForTarget, audit, getHost } from '@/lib/db';
+import { flash, redirectWith, str, num, STATUS_KO, PAYMENT_KO, METHOD_KO, BOOKING_STATUSES, bookingAmount } from '@/lib/portal';
 import { sameOrigin } from '@/lib/auth';
 import { sendMail } from '@/lib/email';
-import { fmtDate } from '@/lib/text';
+import { fmtDate, nowIso } from '@/lib/text';
+import { formatKRW, localizePath } from '@/i18n';
 
 const me = (Astro.locals as any).admin;
 const env = (Astro.locals as any).runtime?.env || {};
@@ -16,56 +17,102 @@ if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
 const b = await getBooking(d, id);
 if (!b) return redirectWith('/admin/bookings', undefined, '요청을 찾을 수 없습니다.');
 const { msg, err } = flash(Astro.url);
+const back = `/admin/bookings/${id}`;
+const siteUrl = env.SITE_URL || site.url;
+const myLink = `${siteUrl}${localizePath('/my', b.lang as any)}?code=${b.code}`;
 if (Astro.request.method === 'POST') {
-  if (!sameOrigin(Astro.request)) return redirectWith(`/admin/bookings/${id}`, undefined, '잘못된 요청');
+  if (!sameOrigin(Astro.request)) return redirectWith(back, undefined, '잘못된 요청');
   const fd = await Astro.request.formData();
   const op = str(fd, 'op');
   if (op === 'status') {
     const s = str(fd, 'status'); const note = str(fd, 'note');
-    if (['requested', 'confirmed', 'declined', 'completed', 'cancelled'].includes(s)) {
+    if (BOOKING_STATUSES.includes(s)) {
       await updateBookingStatus(d, id, s);
       if (note) await addMessage(d, id, 'admin', note);
       await audit(d, `admin:${me.email}`, 'booking.status', b.code, s);
-      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · ${STATUS_KO[s]}`, text: `${b.space_name} · ${b.date} ${b.start_time} (KST)\n상태: ${STATUS_KO[s]}\n${note ? '\n' + note + '\n' : ''}\n${env.SITE_URL || site.url}/my?code=${b.code}` });
-      return redirectWith(`/admin/bookings/${id}`, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code} · ${STATUS_KO[s]}`, text: `${b.space_name} · ${b.date} ${b.start_time} (KST)\n상태: ${STATUS_KO[s]}\n${note ? '\n' + note + '\n' : ''}\n${myLink}` });
+      return redirectWith(back, `상태를 "${STATUS_KO[s]}"(으)로 바꿨습니다.`);
     }
+  }
+  if (op === 'payment') {
+    const ps = str(fd, 'payment_status'); const method = str(fd, 'method');
+    if (!['unpaid', 'awaiting', 'paid', 'refunded'].includes(ps)) return redirectWith(back, undefined, '결제 상태를 확인해 주세요.');
+    const paidAmt = num(fd, 'paid_amount', b.paid_amount); const refundAmt = num(fd, 'refund_amount', b.refund_amount);
+    await updateBookingPayment(d, id, { payment_status: ps as any, payment_method: method, amount_due: num(fd, 'amount', bookingAmount(b)), paid_amount: paidAmt, paid_at: ps === 'paid' && !b.paid_at ? nowIso() : b.paid_at, refund_amount: refundAmt, payment_note: str(fd, 'payment_note') });
+    await audit(d, `admin:${me.email}`, 'booking.payment', b.code, `${ps} ${method} ${paidAmt}/${refundAmt}`);
+    return redirectWith(back, '결제 정보를 저장했습니다.');
   }
   if (op === 'message') {
     const body = str(fd, 'body');
     if (body) {
       await addMessage(d, id, 'admin', body.slice(0, 2000));
-      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code}`, text: `${body}\n\n${env.SITE_URL || site.url}/my?code=${b.code}` });
-      return redirectWith(`/admin/bookings/${id}`, '메시지를 보냈습니다.');
+      if (b.email) await sendMail(env, { to: b.email, subject: `RESTEL · ${b.code}`, text: `${body}\n\n${myLink}` });
+      return redirectWith(back, '메시지를 보냈습니다.');
     }
   }
-  return redirectWith(`/admin/bookings/${id}`);
+  return redirectWith(back);
 }
 const messages = await listMessages(d, id);
+const history = await listAuditForTarget(d, b.code);
 const host = b.host_id ? await getHost(d, b.host_id) : null;
 ---
-<Portal title={`예약 요청 ${b.code}`} kind="admin" user={me} current="bookings" msg={msg} err={err}>
+<Portal title={`예약 ${b.code}`} kind="admin" user={me} current="bookings" msg={msg} err={err}>
   <a class="small muted" href="/admin/bookings">← 목록</a>
-  <div class="toolbar" style="margin-top:8px"><h1 style="margin:0">{b.code}</h1><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></div>
-  <div class="grid grid--2">
-    <div class="panel">
-      <dl class="kv">
-        <dt>공간</dt><dd>{b.space_name} {host ? <span class="small muted">(호스트 {host.name} · {host.email})</span> : <span class="small" style="color:var(--coral-dark)">직영</span>}</dd>
-        <dt>세션</dt><dd>{b.session_code}</dd><dt>일시</dt><dd>{b.date} {b.start_time} (KST)</dd><dt>인원</dt><dd>{b.people}</dd>
-        <dt>예상 금액</dt><dd>{b.est_amount ? `₩${b.est_amount.toLocaleString('ko-KR')}` : '—'}</dd>
-        <dt>고객</dt><dd>{b.name}</dd><dt>연락처</dt><dd>{b.phone || '—'}</dd><dt>이메일</dt><dd>{b.email || '—'}</dd><dt>언어</dt><dd>{b.lang}</dd>
-        <dt>요청 사항</dt><dd>{b.note || '—'}</dd><dt>접수</dt><dd>{fmtDate(b.created_at)}</dd>
-      </dl>
-      <form method="post" class="form" style="margin-top:18px">
-        <input type="hidden" name="op" value="status" />
-        <div class="field"><label>상태 변경</label><select name="status">{['requested', 'confirmed', 'declined', 'completed', 'cancelled'].map((s) => <option value={s} selected={b.status === s}>{STATUS_KO[s]}</option>)}</select></div>
-        <div class="field"><label>고객에게 함께 보낼 안내 (선택)</label><textarea name="note" rows="3"></textarea></div>
-        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">상태 저장</button>
-      </form>
+  <div class="toolbar" style="margin-top:8px"><h1 style="margin:0">{b.code} <span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><span class={`pay-pill pay--${b.payment_status}`}>{PAYMENT_KO[b.payment_status]}{b.payment_method ? ` · ${METHOD_KO[b.payment_method]}` : ''}</span></h1><div class="amount-big">{formatKRW(bookingAmount(b))}</div></div>
+  <div class="grid grid--2" style="align-items:start">
+    <div>
+      <div class="panel">
+        <dl class="kv">
+          <dt>공간</dt><dd>{b.space_name} {host ? <span class="small muted">(호스트 <a href={`/admin/hosts/${host.id}`} style="text-decoration:underline">{host.name}</a> · {host.email})</span> : <span class="small" style="color:var(--coral-dark)">직영</span>}</dd>
+          <dt>세션</dt><dd>{b.session_code}</dd><dt>일시</dt><dd>{b.date} {b.start_time} (KST)</dd><dt>인원</dt><dd>{b.people}</dd>
+          <dt>금액</dt><dd>{formatKRW(bookingAmount(b))} <span class="small muted">(예상 {formatKRW(b.est_amount)})</span></dd>
+          <dt>결제</dt><dd>{PAYMENT_KO[b.payment_status]} {b.paid_amount ? `· ${formatKRW(b.paid_amount)} ${b.paid_at ? fmtDate(b.paid_at) : ''}` : ''} {b.refund_amount ? `· 환불 ${formatKRW(b.refund_amount)}` : ''}{b.payment_note && <><br /><span class="small muted">{b.payment_note}</span></>}</dd>
+          <dt>고객</dt><dd>{b.name}</dd><dt>연락처</dt><dd>{b.phone || '—'}</dd><dt>이메일</dt><dd>{b.email || '—'}</dd><dt>언어</dt><dd>{b.lang}</dd>
+          <dt>요청 사항</dt><dd style="white-space:pre-wrap">{b.note || '—'}</dd><dt>접수</dt><dd>{fmtDate(b.created_at)}</dd>
+          {b.host_memo && <><dt>호스트 메모</dt><dd class="small muted">{b.host_memo}</dd></>}
+          {b.entry_sent_at && <><dt>입장 안내</dt><dd>{fmtDate(b.entry_sent_at)} 발송</dd></>}
+          {b.settlement_id && <><dt>정산</dt><dd><a href={`/admin/settlements/${b.settlement_id}`} style="text-decoration:underline">정산서 #{b.settlement_id}</a></dd></>}
+        </dl>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">상태 변경</h2>
+        <form method="post" class="form">
+          <input type="hidden" name="op" value="status" />
+          <div class="field"><label>상태</label><select name="status">{BOOKING_STATUSES.map((s) => <option value={s} selected={b.status === s}>{STATUS_KO[s]}</option>)}</select></div>
+          <div class="field"><label>고객에게 함께 보낼 안내 (선택)</label><textarea name="note" rows="3"></textarea></div>
+          <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">상태 저장</button>
+        </form>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">결제 정보 (관리자 보정)</h2>
+        <form method="post" class="form">
+          <input type="hidden" name="op" value="payment" />
+          <div class="form__row">
+            <div class="field"><label>결제 상태</label><select name="payment_status">{(['unpaid', 'awaiting', 'paid', 'refunded'] as const).map((s) => <option value={s} selected={b.payment_status === s}>{PAYMENT_KO[s]}</option>)}</select></div>
+            <div class="field"><label>결제 방법</label><select name="method">{Object.entries(METHOD_KO).map(([k, v]) => <option value={k} selected={b.payment_method === k}>{v}</option>)}</select></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>청구 금액</label><input name="amount" value={bookingAmount(b)} inputmode="numeric" /></div>
+            <div class="field"><label>결제 금액</label><input name="paid_amount" value={b.paid_amount} inputmode="numeric" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>환불 금액</label><input name="refund_amount" value={b.refund_amount} inputmode="numeric" /></div>
+            <div class="field"><label>메모</label><input name="payment_note" value={b.payment_note} /></div>
+          </div>
+          <button class="btn btn--ghost btn--sm" type="submit" style="justify-self:start">결제 정보 저장</button>
+        </form>
+      </div>
     </div>
-    <div class="panel">
-      <h2 class="h3" style="margin-bottom:12px">메시지</h2>
-      <div class="thread">{messages.length === 0 && <p class="help">메시지가 없습니다.</p>}{messages.map((m) => <div class={`msg msg--${m.sender}`}>{m.body}<small>{m.sender === 'customer' ? '고객' : m.sender === 'host' ? '호스트' : '관리자'} · {fmtDate(m.created_at)}</small></div>)}</div>
-      <form method="post" class="form" style="margin-top:14px"><input type="hidden" name="op" value="message" /><div class="field"><textarea name="body" rows="3" placeholder="고객에게 보낼 메시지" required></textarea></div><button class="btn btn--sage btn--sm" type="submit" style="justify-self:start">보내기</button></form>
+    <div>
+      <div class="panel">
+        <h2 class="h3" style="margin-bottom:12px">메시지</h2>
+        <div class="thread">{messages.length === 0 && <p class="help">메시지가 없습니다.</p>}{messages.map((m) => <div class={`msg msg--${m.sender}`} style="white-space:pre-wrap">{m.body}<small>{m.sender === 'customer' ? '고객' : m.sender === 'host' ? '호스트' : '레스텔'} · {fmtDate(m.created_at)}</small></div>)}</div>
+        <form method="post" class="form" style="margin-top:14px"><input type="hidden" name="op" value="message" /><div class="field"><textarea name="body" rows="3" placeholder="고객에게 보낼 메시지" required></textarea></div><button class="btn btn--sage btn--sm" type="submit" style="justify-self:start">보내기</button></form>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:12px">진행 기록</h2>
+        <ul class="timeline"><li>고객 요청 접수<small>{fmtDate(b.created_at)}</small></li>{history.filter((h) => h.action !== 'booking.request').map((h) => <li>{h.action.replace('booking.', '')}{h.detail && <span class="small muted"> · {h.detail}</span>}<small>{fmtDate(h.at)} · {h.actor}</small></li>)}</ul>
+      </div>
     </div>
   </div>
 </Portal>

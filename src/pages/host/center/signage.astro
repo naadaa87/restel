@@ -1,0 +1,71 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { site } from '@/config/site';
+import { db, getSpace, getHost, parseJson } from '@/lib/db';
+import { redirectWith, COMPLIANCE } from '@/lib/portal';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/host/center/materials', undefined, '데이터베이스가 연결되지 않았습니다.');
+const kind = Astro.url.searchParams.get('kind') || 'space';
+const spaceId = Number(Astro.url.searchParams.get('space') || 0);
+const space = spaceId ? await getSpace(d, spaceId) : null;
+if (kind === 'space' && (!space || space.host_id !== me.id)) return redirectWith('/host/center/materials', undefined, '공간을 찾을 수 없습니다.');
+const host = await getHost(d, me.id);
+const nameKo = space ? parseJson<any>(space.name_json, {}).ko || space.slug : '';
+const nameEn = space ? parseJson<any>(space.name_json, {}).en || nameKo : '';
+const hours = space ? parseJson<any>(space.hours_json, {}) : {};
+const rulesKo = space ? parseJson<any>(space.rules_json, {}).ko || [] : [];
+const rulesEn = space ? parseJson<any>(space.rules_json, {}).en || [] : [];
+---
+<Portal title="안내문" kind="host" user={me} current="center">
+  <div class="no-print toolbar"><a class="small muted" href="/host/center/materials">← 자료실</a><button class="btn btn--primary btn--sm" onclick="window.print()">인쇄 / PDF 저장</button></div>
+  {kind === 'space' && space && (
+    <>
+      <div class="signage">
+        <img src="/brand/logo-full.png" alt="RESTEL" style="height:40px;margin-bottom:18px" />
+        <h1>{nameKo}</h1>
+        <p class="en" style="margin:0 0 18px">{nameEn} · Rest space rental</p>
+        <div class="callout callout--sage" style="margin-bottom:18px"><strong>이곳은 숙박시설이 아닌 휴식 공간대여입니다.</strong><br /><span class="en">This is a rest space rented by the hour, not a place to stay the night. Sessions end before midnight.</span></div>
+        <h2 class="h3">이용 안내 · How it works</h2>
+        <ol>
+          <li>세션 시간만큼 공간 전체를 빌립니다. 운영 시간 {hours.open || '07:00'}–{hours.close || '24:00'}.<br /><span class="en">You rent the whole space for your session. Hours {hours.open || '07:00'}–{hours.close || '24:00'}.</span></li>
+          <li>신발은 입구에서 벗고, 매트 위에서는 양말을 신어 주세요.<br /><span class="en">Shoes off at the entrance; socks on the mats, please.</span></li>
+          <li>담요와 매트 커버는 세션마다 새것으로 바꿉니다. 다 쓴 것은 바구니에 넣어 주세요.<br /><span class="en">Blankets and mat covers are fresh for every session. Drop used ones in the basket.</span></li>
+          <li>종료 10분 전 알림이 울립니다. 종료 시각에 맞춰 나가 주세요.<br /><span class="en">A chime rings 10 minutes before the end. Please leave at the end time.</span></li>
+          <li>19세 이상만 이용할 수 있고, 화기·흡연·음주는 금지입니다.<br /><span class="en">Guests must be 19+. No open flames, smoking or alcohol.</span></li>
+        </ol>
+        {(rulesKo.length > 0 || rulesEn.length > 0) && <><h2 class="h3">공간 규칙 · House rules</h2><ul>{rulesKo.map((r: string, i: number) => <li>{r}{rulesEn[i] && <><br /><span class="en">{rulesEn[i]}</span></>}</li>)}</ul></>}
+        <h2 class="h3">비상 연락 · Emergency</h2>
+        <p>화재·구급 119 · 경찰 112 · 호스트 {host?.phone || ''} · RESTEL {site.contact.phone}<br /><span class="en">Fire/Ambulance 119 · Police 112 · Host {host?.phone || ''} · RESTEL {site.contact.phone}</span></p>
+        <p class="small muted" style="margin-top:18px">{site.url} · 요청 조회 {site.url}/my</p>
+      </div>
+    </>
+  )}
+  {kind === 'checklist' && (
+    <div class="signage">
+      <h1>세션 점검표 · 일일</h1>
+      <p class="en">날짜: ________ 공간: ________ 담당: ________</p>
+      <h2 class="h3">세션 전</h2>
+      <ul>{['매트 커버·담요 교체, 베개 커버 교체', '환기 10분, 온도 설정(여름 24~26℃ / 겨울 20~22℃)', '조명 "은은함" 단계, 암막 상태 확인', '차림 코너 보충(물·차), 세면대 정리', '타이머·음원 재생 장치 확인', '도어락 비밀번호 변경·입장 안내 발송 확인'].map((t) => <li>☐ {t}</li>)}</ul>
+      <h2 class="h3">세션 후</h2>
+      <ul>{['사용한 커버·담요 수거, 바닥 청소', '분실물 확인, 전기 매트·히터 전원 차단', '쓰레기 처리, 환기', '이용 완료 처리(포털), 다음 세션 준비'].map((t) => <li>☐ {t}</li>)}</ul>
+      <p class="small muted">특이사항: ______________________________________________</p>
+    </div>
+  )}
+  {kind === 'safety' && (
+    <div class="signage">
+      <h1>안전·소방 점검표 · 분기</h1>
+      <p class="en">점검일: ________ 공간: ________ 점검자: ________</p>
+      <ul>{COMPLIANCE.filter((c) => c.group === '안전').map((c) => <li>☐ {c.text}</li>)}
+        <li>☐ 비상구·피난 통로에 장애물 없음, 내부에서 바로 열림</li>
+        <li>☐ 전기 콘센트·멀티탭 과부하 없음, 전기 매트 타이머 작동</li>
+        <li>☐ 양초·향초 등 화기 없음(전기 디퓨저만)</li>
+        <li>☐ 비상 연락처(119·호스트·RESTEL) 표시</li>
+        <li>☐ 점검 사진 촬영·보관(호스트 포털 문의로 제출 가능)</li>
+      </ul>
+      <p class="small muted">조치 필요 사항: ______________________________________________</p>
+    </div>
+  )}
+</Portal>

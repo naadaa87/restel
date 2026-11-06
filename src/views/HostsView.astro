@@ -7,49 +7,107 @@ interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
 const L = (p: string) => localizePath(p, lang);
+const h = t.hosts;
+const faqLd = h.faq?.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: h.faq.map((f: any) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [];
 ---
-<Base lang={lang} path="/hosts" title={t.hosts.title} description={t.hosts.lead}>
+<Base lang={lang} path="/hosts" title={h.title} description={h.lead} jsonLd={faqLd}>
   <section class="section">
     <div class="container split">
       <div>
         <span class="kicker">{t.nav.hosts}</span>
-        <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.hosts.title}</h1>
-        <p class="lead" style="margin:16px 0 24px">{t.hosts.lead}</p>
+        <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{h.title}</h1>
+        <p class="lead" style="margin:16px 0 24px">{h.lead}</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn btn--sage" href="/host/register">{t.hosts.cta}</a>
-          <a class="btn btn--ghost" href="/host/login">{t.hosts.ctaLogin}</a>
+          <a class="btn btn--sage" href="/host/register">{h.cta}</a>
+          <a class="btn btn--ghost" href="/host/login">{h.ctaLogin}</a>
         </div>
       </div>
       <img src="/images/sinchon/hall.webp" alt="" width="1400" height="1050" loading="lazy" />
     </div>
   </section>
+
   <section class="section section--paper">
     <div class="container">
-      <h2 class="h2 center">{t.hosts.whyTitle}</h2>
+      <h2 class="h2 center">{h.whyTitle}</h2>
       <div class="grid grid--3" style="margin-top:24px">
-        {t.hosts.why.map((w, i) => <div class="card"><span class="card__num">{i + 1}</span><h3 class="h3">{w.title}</h3><p class="muted" style="margin:0">{w.body}</p></div>)}
+        {h.why.map((w: any, i: number) => <div class="card"><span class="card__num">{i + 1}</span><h3 class="h3">{w.title}</h3><p class="muted" style="margin:0">{w.body}</p></div>)}
       </div>
     </div>
   </section>
-  <section class="section">
+
+  {h.roles && (
+    <section class="section">
+      <div class="container">
+        <h2 class="h2 center">{h.rolesTitle}</h2>
+        <div class="grid grid--2" style="margin-top:24px">
+          {h.roles.map((r: any, i: number) => <div class={`card ${i === 1 ? 'card--paper' : ''}`}><h3 class="h3" style={i === 1 ? 'color:var(--sage)' : 'color:var(--coral-dark)'}>{r.title}</h3><ul class="check" style="gap:10px">{r.items.map((x: string) => <li>{x}</li>)}</ul></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--paper">
     <div class="container grid grid--2">
       <div>
-        <h2 class="h2">{t.hosts.criteriaTitle}</h2>
-        <ul class="check" style="gap:10px">{t.hosts.criteria.map((c) => <li>{c}</li>)}</ul>
+        <h2 class="h2">{h.criteriaTitle}</h2>
+        <ul class="check" style="gap:10px">{h.criteria.map((c: string) => <li>{c}</li>)}</ul>
+        {h.fitGood && (
+          <div style="margin-top:26px">
+            <h3 class="h3">{h.fitTitle}</h3>
+            <div class="grid grid--2" style="gap:12px;margin-top:10px">
+              <div class="card" style="padding:18px"><strong style="color:var(--sage)">✓</strong><ul class="check" style="gap:6px;margin-top:8px;font-size:14px">{h.fitGood.map((x: string) => <li>{x}</li>)}</ul></div>
+              <div class="card" style="padding:18px;opacity:.85"><strong style="color:var(--coral-dark)">✕</strong><ul style="margin:8px 0 0 18px;padding:0;font-size:14px;color:var(--ink-2);display:grid;gap:6px">{h.fitBad.map((x: string) => <li>{x}</li>)}</ul></div>
+            </div>
+          </div>
+        )}
       </div>
       <div>
-        <h2 class="h2">{t.hosts.stepsTitle}</h2>
+        <h2 class="h2">{h.stepsTitle}</h2>
         <div class="grid" style="gap:12px">
-          {t.hosts.steps.map((s, i) => <div class="card card--paper" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start"><span class="card__num" style="margin:0;flex:none">{i + 1}</span><div><strong>{s.title}</strong><p class="muted" style="margin:2px 0 0">{s.body}</p></div></div>)}
+          {h.steps.map((s: any, i: number) => <div class="card" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start"><span class="card__num" style="margin:0;flex:none">{i + 1}</span><div><strong>{s.title}</strong><p class="muted" style="margin:2px 0 0">{s.body}</p></div></div>)}
         </div>
-        <div class="callout callout--sage" style="margin-top:18px"><strong>{t.hosts.feeTitle}</strong><p style="margin:6px 0 0">{t.hosts.feeBody}</p></div>
+        <div class="callout callout--sage" style="margin-top:18px"><strong>{h.feeTitle}</strong><p style="margin:6px 0 0">{h.feeBody}</p></div>
       </div>
     </div>
   </section>
+
+  {h.flow && (
+    <section class="section">
+      <div class="container">
+        <h2 class="h2 center">{h.flowTitle}</h2>
+        <div class="grid grid--3" style="margin-top:24px">
+          {h.flow.map((f: any, i: number) => <div class="card card--paper"><span class="card__num">{i + 1}</span><h3 class="h3">{f.title}</h3><p class="muted" style="margin:0">{f.body}</p></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {h.portal && (
+    <section class="section section--paper">
+      <div class="container">
+        <h2 class="h2 center">{h.portalTitle}</h2>
+        <div class="grid grid--3" style="margin-top:24px">
+          {h.portal.map((p: any) => <div class="card"><h3 class="h3" style="color:var(--coral-dark)">{p.title}</h3><p class="muted" style="margin:0">{p.body}</p></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {h.faq && (
+    <section class="section">
+      <div class="narrow">
+        <h2 class="h2 center">{h.faqTitle}</h2>
+        <div class="faq" style="margin-top:18px">
+          {h.faq.map((f: any) => <details><summary>{f.q}</summary><div class="faq__a">{f.a}</div></details>)}
+        </div>
+      </div>
+    </section>
+  )}
+
   <section class="section section--paper">
     <div class="narrow center">
-      <a class="btn btn--sage" href="/host/register">{t.hosts.cta}</a>
-      <p class="muted small" style="margin-top:14px">{t.hosts.contactNote} <a href={L('/contact')} style="text-decoration:underline">{t.nav.contact}</a></p>
+      <a class="btn btn--sage" href="/host/register">{h.cta}</a>
+      <p class="muted small" style="margin-top:14px">{h.contactNote} <a href={L('/contact')} style="text-decoration:underline">{t.nav.contact}</a></p>
     </div>
   </section>
 </Base>

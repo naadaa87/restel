@@ -1,0 +1,59 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, getHost, settlementRollup, listSettlementsForHost, getSettings } from '@/lib/db';
+import { flash, STATUS_KO, hostBank, maskAccount, todayKST } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const host = d ? await getHost(d, me.id) : null;
+const rollup = d ? await settlementRollup(d, me.id) : [];
+const settlements = d ? await listSettlementsForHost(d, me.id) : [];
+const settings = d ? await getSettings(d) : {};
+const rate = Number(settings.commission_rate || 15);
+const bank = hostBank(host);
+const byPeriod = Object.fromEntries(settlements.map((s) => [s.period, s]));
+const thisMonth = todayKST().slice(0, 7);
+const rows = rollup.map((r) => ({ ...r, commission: Math.round(r.gross * rate / 100), net: r.gross - Math.round(r.gross * rate / 100), s: byPeriod[r.period] }));
+const total = rows.reduce((a, r) => a + r.gross, 0);
+---
+<Portal title="정산" kind="host" user={me} current="settlement" msg={msg} err={err}>
+  <div class="toolbar"><h1 style="margin:0">정산</h1><a class="small" href="/host/center/guide#settlement">수수료·정산 안내 →</a></div>
+  <div class="grid grid--3" style="margin-bottom:18px">
+    <div class="stat"><b>{formatKRW(total)}</b><span>누적 완료 매출 (환불 차감)</span></div>
+    <div class="stat"><b>{rate}%</b><span>레스텔 수수료율 (입점비 없음)</span></div>
+    <div class="stat"><b>{bank.account ? maskAccount(bank.account) : '미등록'}</b><span>정산 계좌 {bank.bank ? `· ${bank.bank}` : ''} <a href="/host/settings#payment" style="text-decoration:underline">변경</a></span></div>
+  </div>
+  {!bank.account && <div class="alert alert--info" style="margin-bottom:14px">정산 계좌가 등록되지 않았습니다. <a href="/host/settings#payment" style="text-decoration:underline">설정 &gt; 결제·정산</a>에서 등록해 주세요. 계좌가 없으면 정산이 보류됩니다.</div>}
+  <div class="panel">
+    <h2 class="h3" style="margin-bottom:10px">월별 집계</h2>
+    <p class="help" style="margin-bottom:10px">"이용 완료"로 처리되고 결제 금액이 입력된 세션만 집계됩니다. 환불 금액은 차감, 노쇼는 0원입니다. 정산서는 다음 달 10일까지 발행되고 15일까지 지급됩니다(영업일 기준).</p>
+    {rows.length === 0 ? <p class="help">아직 완료된 세션이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>월</th><th>완료 세션</th><th>매출</th><th>수수료 ({rate}%)</th><th>정산 예정액</th><th>상태</th><th></th></tr></thead>
+        <tbody>{rows.map((r) => (
+          <tr>
+            <td><strong>{r.period}</strong>{r.period === thisMonth && <span class="small muted"> (진행 중)</span>}</td>
+            <td>{r.count}회</td>
+            <td>{formatKRW(r.gross)}</td>
+            <td>{r.s ? formatKRW(r.s.commission) : formatKRW(r.commission)}</td>
+            <td><strong>{r.s ? formatKRW(r.s.net) : formatKRW(r.net)}</strong></td>
+            <td>{r.s ? <span class={`status status--${r.s.status === 'paid' ? 'completed' : 'confirmed'}`}>{STATUS_KO[r.s.status]}{r.s.paid_at ? ` ${fmtDate(r.s.paid_at).slice(0, 12)}` : ''}</span> : <span class="status status--draft">{r.period === thisMonth ? '집계 중' : '정산서 대기'}</span>}</td>
+            <td><a class="small" href={`/host/settlement/${r.period}`}>내역 →</a></td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <h2 class="h3" style="margin-bottom:8px">정산 방식</h2>
+    <ul class="check" style="gap:8px">
+      <li>고객이 <strong>호스트 계좌·현장</strong>으로 결제한 세션: 호스트가 정산서의 수수료를 레스텔에 송금합니다.</li>
+      <li>고객이 <strong>레스텔(온라인 카드)</strong>로 결제한 세션(준비 중): 레스텔이 수수료를 제한 금액을 정산 계좌로 지급합니다.</li>
+      <li>사업자는 세금계산서, 개인은 원천징수로 처리합니다. 설정 &gt; 결제·정산의 "세금 처리"를 확인해 주세요.</li>
+      <li>정산서에 이견이 있으면 발행 후 7일 안에 호스트 센터 &gt; 문의로 알려 주세요.</li>
+    </ul>
+  </div>
+</Portal>

@@ -1,0 +1,50 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listNotices, listInquiriesForHost } from '@/lib/db';
+import { flash } from '@/lib/portal';
+import { hostGuide } from '@/data/hostGuide';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const notices = d ? (await listNotices(d, 'host')).slice(0, 5) : [];
+const inquiries = d ? (await listInquiriesForHost(d, me.id)).slice(0, 3) : [];
+---
+<Portal title="호스트 센터" kind="host" user={me} current="center" msg={msg} err={err}>
+  <h1>호스트 센터</h1>
+  <div class="grid grid--4" style="margin-bottom:18px">
+    <a class="stat" href="/host/center/guide"><b style="font-size:18px">운영 가이드</b><span>기준·세션 운영·안전·사진·응대·정산</span></a>
+    <a class="stat" href="/host/center/notices"><b style="font-size:18px">공지사항</b><span>레스텔 운영팀 안내</span></a>
+    <a class="stat" href="/host/center/inquiries"><b style="font-size:18px">1:1 문의</b><span>운영팀에 질문·요청</span></a>
+    <a class="stat" href="/host/center/materials"><b style="font-size:18px">자료실</b><span>로고·안내문·점검표</span></a>
+  </div>
+  <div class="grid grid--2">
+    <div>
+      <div class="panel">
+        <div class="toolbar"><h2 class="h3">운영 가이드</h2><a class="small" href="/host/center/guide">전체 →</a></div>
+        <div class="guide-toc">{hostGuide.map((s) => <a href={`/host/center/guide#${s.slug}`}>{s.title}<small>{s.summary}</small></a>)}</div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="toolbar"><h2 class="h3">공지사항</h2><a class="small" href="/host/center/notices">전체 →</a></div>
+        {notices.length === 0 ? <p class="help">아직 공지가 없습니다.</p> : notices.map((n) => <div class="notice-item" style="padding:10px 0"><h3>{n.pinned ? <span class="pin">고정</span> : null}<a href={`/host/center/notices#n${n.id}`}>{n.title}</a></h3><span class="small muted">{fmtDate(n.created_at)}</span></div>)}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="toolbar"><h2 class="h3">내 문의</h2><a class="btn btn--primary btn--sm" href="/host/center/inquiries#new">문의하기</a></div>
+        {inquiries.length === 0 ? <p class="help">보낸 문의가 없습니다. 입점·정산·응대 등 무엇이든 물어보세요.</p> : <table class="list"><tbody>{inquiries.map((q) => <tr><td><a href={`/host/center/inquiries#q${q.id}`}>{q.topic || '문의'}</a><br /><span class="small muted">{q.message.slice(0, 60)}</span></td><td style="text-align:right"><span class={`status status--${q.status}`}>{q.status === 'new' ? '접수' : q.status === 'replied' ? '답변 완료' : '종료'}</span><br /><span class="small muted">{fmtDate(q.created_at)}</span></td></tr>)}</tbody></table>}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:8px">빠른 도움</h2>
+        <ul class="check" style="gap:8px">
+          <li>새 요청은 <strong>24시간 안에</strong> 확정/불가로 응답해 주세요.</li>
+          <li>결제가 끝난 세션에는 <strong>입장 안내</strong>를 꼭 보내 주세요(도어락·주소).</li>
+          <li>세션이 끝나면 <strong>이용 완료</strong>로 바꿔야 정산에 집계됩니다.</li>
+          <li>휴무일은 공간 편집 &gt; 운영·안내에서 미리 막아 두세요.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</Portal>

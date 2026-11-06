@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listCompletedBookingsForPeriod, listSettlementsForHost, getSettings } from '@/lib/db';
+import { flash, redirectWith, STATUS_KO, METHOD_KO } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
+
+const me = (Astro.locals as any).host;
+const period = String(Astro.params.period || '');
+if (!/^\d{4}-\d{2}$/.test(period)) return redirectWith('/host/settlement');
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/host/settlement', undefined, '데이터베이스가 연결되지 않았습니다.');
+const { msg, err } = flash(Astro.url);
+const bookings = await listCompletedBookingsForPeriod(d, me.id, period);
+const settlement = (await listSettlementsForHost(d, me.id)).find((s) => s.period === period) || null;
+const settings = await getSettings(d);
+const rate = settlement?.commission_rate ?? Number(settings.commission_rate || 15);
+const gross = bookings.reduce((a, b) => a + (b.paid_amount - b.refund_amount), 0);
+const commission = Math.round(gross * rate / 100);
+---
+<Portal title={`정산 ${period}`} kind="host" user={me} current="settlement" msg={msg} err={err}>
+  <a class="small muted" href="/host/settlement">← 정산</a>
+  <div class="toolbar" style="margin-top:8px"><h1 style="margin:0">{period} 정산 내역</h1>{settlement && <span class={`status status--${settlement.status === 'paid' ? 'completed' : 'confirmed'}`}>{STATUS_KO[settlement.status]}</span>}</div>
+  <div class="grid grid--4" style="margin-bottom:18px">
+    <div class="stat"><b>{bookings.length}</b><span>완료 세션</span></div>
+    <div class="stat"><b>{formatKRW(settlement?.gross ?? gross)}</b><span>매출 (환불 차감)</span></div>
+    <div class="stat"><b>{formatKRW(settlement?.commission ?? commission)}</b><span>수수료 {rate}%</span></div>
+    <div class="stat"><b>{formatKRW(settlement?.net ?? gross - commission)}</b><span>정산액</span></div>
+  </div>
+  {settlement?.note && <div class="callout small" style="margin-bottom:14px">레스텔 메모: {settlement.note}</div>}
+  <div class="panel">
+    {bookings.length === 0 ? <p class="help">이 달에 완료된 세션이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>일시</th><th>번호</th><th>공간 · 세션</th><th>고객</th><th>결제</th><th>금액</th><th>환불</th><th>순액</th></tr></thead>
+        <tbody>{bookings.map((b) => <tr><td>{b.date} {b.start_time}</td><td><a href={`/host/bookings/${b.id}`}>{b.code}</a></td><td>{b.space_name}<br /><span class="small muted">{b.session_code} · {b.people}인</span></td><td>{b.name}</td><td class="small">{METHOD_KO[b.payment_method] || '—'}<br /><span class="muted">{b.paid_at ? fmtDate(b.paid_at) : ''}</span></td><td>{formatKRW(b.paid_amount)}</td><td>{b.refund_amount ? formatKRW(b.refund_amount) : '—'}</td><td><strong>{formatKRW(b.paid_amount - b.refund_amount)}</strong></td></tr>)}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

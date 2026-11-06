@@ -1,0 +1,121 @@
+---
+export const prerender = false;
+import { site } from '@/config/site';
+import Portal from '@/layouts/Portal.astro';
+import { db, getHost, updateHostStatus, listSpacesByHost, listBookingsForHost, listSettlementsForHost, listInquiriesForHost, parseJson, audit } from '@/lib/db';
+import { flash, redirectWith, str, STATUS_KO, PAYMENT_KO, BIZ_TYPES, SPACE_KINDS, PLEDGES, hostPayment, hostBank, spaceReadiness, bookingAmount } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const id = Number(Astro.params.id);
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const h = await getHost(d, id);
+if (!h) return redirectWith('/admin/hosts', undefined, '호스트를 찾을 수 없습니다.');
+const { msg, err } = flash(Astro.url);
+const back = `/admin/hosts/${id}`;
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith(back, undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const status = str(fd, 'status'); const note = str(fd, 'note');
+  if (['pending', 'approved', 'suspended'].includes(status)) {
+    await updateHostStatus(d, id, status, note);
+    await audit(d, `admin:${me.email}`, 'host.status', String(id), `${status} ${note}`);
+    if (status === 'approved' && h.status !== 'approved') await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 승인 완료', text: `${h.name}님, 레스텔 호스트 승인이 완료되었습니다. 공간 정보를 마무리하고 "검토 요청"을 눌러 주세요.\n${note ? '\n메모: ' + note + '\n' : ''}\n${env.SITE_URL || site.url}/host` });
+    if (status === 'suspended' && fd.get('notify')) await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 계정 안내', text: `${h.name}님, 레스텔 호스트 계정 상태가 변경되었습니다.\n${note ? '\n사유: ' + note + '\n' : ''}\n문의: ${env.SITE_URL || site.url}/host/center/inquiries` });
+    if (status === 'pending' && note && fd.get('notify')) await sendMail(env, { to: h.email, subject: '[RESTEL] 호스트 가입 보완 요청', text: `${h.name}님, 가입 검토 중 보완이 필요한 항목이 있습니다.\n\n${note}\n\n${env.SITE_URL || site.url}/host/settings` });
+    return redirectWith(back, `호스트 상태를 "${STATUS_KO[status]}"(으)로 바꿨습니다.`);
+  }
+  return redirectWith(back);
+}
+const spaces = await listSpacesByHost(d, id);
+const bookings = await listBookingsForHost(d, id);
+const settlements = await listSettlementsForHost(d, id);
+const inquiries = await listInquiriesForHost(d, id);
+const profile = parseJson<any>(h.profile_json, {});
+const pledge = parseJson<any>(h.pledge_json, {});
+const pay = hostPayment(h); const bank = hostBank(h);
+const bizLabel = BIZ_TYPES.find((b) => b.code === h.biz_type)?.label || h.biz_type || '—';
+const kindLabel = SPACE_KINDS.find((k) => k.code === h.space_kind)?.label || h.space_kind || '—';
+const completed = bookings.filter((b) => b.status === 'completed');
+const gross = completed.reduce((a, b) => a + b.paid_amount - b.refund_amount, 0);
+const payAccountText = pay.account ? [pay.bank, pay.account, '(' + pay.holder + ')'].join(' ') : '';
+const bankText = bank.account ? [bank.bank, bank.account, '(' + bank.holder + ')'].join(' ') : '';
+const methodsText = pay.methods.map((m) => m === 'transfer' ? '계좌이체' : m === 'onsite' ? '현장 결제' : m).join(', ');
+const pledgeLabel = pledge.agreedAt ? '동의 ' + fmtDate(pledge.agreedAt) : '기록 없음 (구버전 가입)';
+---
+<Portal title={`호스트 — ${h.name}`} kind="admin" user={me} current="hosts" msg={msg} err={err}>
+  <a class="small muted" href="/admin/hosts">← 호스트 목록</a>
+  <div class="toolbar" style="margin-top:8px"><div><h1 style="margin:0 0 4px">{h.name} <span class={`status status--${h.status}`}>{STATUS_KO[h.status]}</span></h1><span class="small muted">{h.company || '상호 없음'} · {h.email} · {h.phone} · 가입 {fmtDate(h.created_at)}{h.approved_at && ` · 승인 ${fmtDate(h.approved_at)}`}</span></div></div>
+  <div class="grid grid--4" style="margin-bottom:18px">
+    <div class="stat"><b>{spaces.length}</b><span>공간 (공개 {spaces.filter((s) => s.status === 'published').length} · 검토 대기 {spaces.filter((s) => s.status === 'submitted').length})</span></div>
+    <div class="stat"><b>{bookings.length}</b><span>예약 요청 (확정 {bookings.filter((b) => b.status === 'confirmed').length} · 완료 {completed.length})</span></div>
+    <div class="stat"><b>{formatKRW(gross)}</b><span>완료 매출 누적</span></div>
+    <div class="stat"><b>{settlements.filter((s) => s.status === 'issued').length}</b><span>미지급 정산서</span></div>
+  </div>
+  <div class="grid grid--2" style="align-items:start">
+    <div>
+      <div class="panel">
+        <h2 class="h3" style="margin-bottom:10px">심사 결정</h2>
+        <form method="post" class="form">
+          <div class="field"><label>상태</label><select name="status"><option value="pending" selected={h.status === 'pending'}>승인 대기 / 보완 요청</option><option value="approved" selected={h.status === 'approved'}>승인</option><option value="suspended" selected={h.status === 'suspended'}>정지</option></select></div>
+          <div class="field"><label>호스트에게 보이는 메모</label><textarea name="note" rows="3" placeholder="예: 사업자등록번호를 입력해 주세요 / 소방 완비증명 사진을 문의로 보내 주세요">{h.admin_note}</textarea></div>
+          <label class="checkbox"><input type="checkbox" name="notify" checked /> <span>보완 요청·정지 시 이메일로도 알림 (승인은 항상 발송)</span></label>
+          <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">저장</button>
+        </form>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">사업 정보</h2>
+        <dl class="kv">
+          <dt>사업 형태</dt><dd>{bizLabel}</dd>
+          <dt>사업자번호</dt><dd>{h.biz_no || '—'}</dd>
+          <dt>사업장 주소</dt><dd>{h.biz_address || '—'}</dd>
+          <dt>공간 형태</dt><dd>{kindLabel}</dd>
+          <dt>지역</dt><dd>{h.region || '—'}</dd>
+          <dt>웹·SNS</dt><dd>{profile.website ? <a href={profile.website} target="_blank" style="text-decoration:underline">{profile.website}</a> : '—'}</dd>
+          <dt>알게 된 경로</dt><dd>{profile.heard || '—'}</dd>
+          <dt>소개·계획</dt><dd style="white-space:pre-wrap">{profile.intro || '—'}</dd>
+        </dl>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">결제·정산 정보</h2>
+        <dl class="kv">
+          <dt>결제 방법</dt><dd>{methodsText || '—'}</dd>
+          <dt>고객 입금 계좌</dt><dd>{payAccountText || '—'}</dd>
+          <dt>입금 기한</dt><dd>{pay.deadlineHours}시간</dd>
+          <dt>정산 계좌</dt><dd>{bankText ? bankText : <span style="color:var(--coral-dark)">미등록</span>}</dd>
+          <dt>세금 처리</dt><dd>{bank.taxType === 'invoice' ? '세금계산서' : bank.taxType === 'withholding' ? '원천징수' : '—'}</dd>
+          <dt>환불 규정</dt><dd>{pay.refundPolicy || '레스텔 표준'}</dd>
+        </dl>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">운영 기준 서약 <span class={`status status--${pledge.agreedAt ? 'approved' : 'pending'}`}>{pledgeLabel}</span></h2>
+        <ul class="check" style="gap:6px;font-size:13.5px">{PLEDGES.map((p) => <li>{p.text}</li>)}</ul>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h2 class="h3" style="margin-bottom:10px">공간</h2>
+        {spaces.length === 0 ? <p class="help">등록한 공간이 없습니다.</p> : <table class="list"><tbody>{spaces.map((s) => (
+          <tr><td><a href={`/admin/spaces/${s.id}`}><strong>{(parseJson as any)(s.name_json, {}).ko || s.slug}</strong></a><br /><span class="small muted">/{s.slug} · 수정 {fmtDate(s.updated_at)}</span></td><td style="text-align:right"><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span>{spaceReadiness(s).length > 0 && <div class="small muted">미비 {spaceReadiness(s).length}</div>}</td></tr>
+        ))}</tbody></table>}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="toolbar"><h2 class="h3">최근 예약</h2><a class="small" href={`/admin/bookings?host=${id}`}>전체 →</a></div>
+        {bookings.length === 0 ? <p class="help">예약 요청이 없습니다.</p> : <table class="list"><tbody>{bookings.slice(0, 8).map((b) => <tr><td><a href={`/admin/bookings/${b.id}`}><strong>{b.code}</strong></a><br /><span class="small muted">{b.space_name} · {b.date} {b.start_time} · {formatKRW(bookingAmount(b))}</span></td><td style="text-align:right"><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span><span class={`pay-pill pay--${b.payment_status}`}>{PAYMENT_KO[b.payment_status]}</span></td></tr>)}</tbody></table>}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="toolbar"><h2 class="h3">정산서</h2><a class="small" href={`/admin/settlements?host=${id}`}>정산 관리 →</a></div>
+        {settlements.length === 0 ? <p class="help">발행된 정산서가 없습니다.</p> : <table class="list"><tbody>{settlements.map((s) => <tr><td><a href={`/admin/settlements/${s.id}`}><strong>{s.period}</strong></a> <span class="small muted">{s.booking_count}건</span></td><td>{formatKRW(s.net)}</td><td style="text-align:right"><span class={`status status--${s.status === 'paid' ? 'completed' : 'confirmed'}`}>{STATUS_KO[s.status]}</span></td></tr>)}</tbody></table>}
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <h2 class="h3" style="margin-bottom:10px">호스트 문의</h2>
+        {inquiries.length === 0 ? <p class="help">문의가 없습니다.</p> : <table class="list"><tbody>{inquiries.slice(0, 5).map((q) => <tr><td><a href={`/admin/inquiries/${q.id}`}>{q.topic || '문의'}</a><br /><span class="small muted">{q.message.slice(0, 60)}</span></td><td style="text-align:right"><span class={`status status--${q.status}`}>{STATUS_KO[q.status]}</span></td></tr>)}</tbody></table>}
+      </div>
+    </div>
+  </div>
+</Portal>

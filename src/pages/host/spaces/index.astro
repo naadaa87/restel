@@ -1,8 +1,8 @@
 ---
 export const prerender = false;
 import Portal from '@/layouts/Portal.astro';
-import { db, listSpacesByHost } from '@/lib/db';
-import { flash, STATUS_KO } from '@/lib/portal';
+import { db, listSpacesByHost, parseJson } from '@/lib/db';
+import { flash, STATUS_KO, spaceReadiness } from '@/lib/portal';
 import { fmtDate } from '@/lib/text';
 
 const me = (Astro.locals as any).host;
@@ -13,14 +13,15 @@ const spaces = d ? await listSpacesByHost(d, me.id) : [];
 <Portal title="내 공간" kind="host" user={me} current="spaces" msg={msg} err={err}>
   <div class="toolbar"><h1 style="margin:0">내 공간</h1><a class="btn btn--primary btn--sm" href="/host/spaces/new">+ 공간 등록</a></div>
   <div class="panel">
-    {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다.</p> : (
+    {spaces.length === 0 ? <p class="help">아직 등록한 공간이 없습니다. 공간 하나를 등록하면 사진·세션·휴무일·입장 안내를 설정하고 검토를 요청할 수 있습니다.</p> : (
       <table class="list">
-        <thead><tr><th>공간</th><th>지역</th><th>상태</th><th>수정일</th><th></th></tr></thead>
-        <tbody>{spaces.map((s) => { const n = JSON.parse(s.name_json || '{}'); const r = s.region?.startsWith('{') ? JSON.parse(s.region) : { ko: s.region }; return (
+        <thead><tr><th>공간</th><th>지역</th><th>세션 · 사진</th><th>상태</th><th>수정일</th><th></th></tr></thead>
+        <tbody>{spaces.map((s) => { const n = (parseJson as any)(s.name_json, {}); const r = s.region?.startsWith('{') ? (parseJson as any)(s.region, {}) : { ko: s.region }; const sessions = (parseJson as any)(s.sessions_json, []); const photos = (parseJson as any)(s.photos_json, []); const missing = spaceReadiness(s); return (
           <tr>
-            <td><a href={`/host/spaces/${s.id}`}><strong>{n.ko || n.en || s.slug}</strong></a><br /><span class="small muted">/{s.slug}</span></td>
+            <td><a href={`/host/spaces/${s.id}`}><strong>{n.ko || n.en || s.slug}</strong></a><br /><span class="small muted">/{s.slug}{n.en ? ` · ${n.en}` : ''}</span></td>
             <td>{r.ko || r.en || ''}</td>
-            <td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span>{s.admin_note && <div class="small muted">메모: {s.admin_note}</div>}</td>
+            <td class="small">{sessions.length}개 세션 · 사진 {photos.length}장</td>
+            <td><span class={`status status--${s.status}`}>{STATUS_KO[s.status]}</span>{s.admin_note && <div class="small" style="color:var(--coral-dark)">메모: {s.admin_note}</div>}{(s.status === 'draft' || s.status === 'rejected' || s.status === 'hidden') && missing.length > 0 && <div class="small muted">검토 요청 전 {missing.length}개 항목 필요</div>}</td>
             <td class="small muted">{fmtDate(s.updated_at)}</td>
             <td style="white-space:nowrap"><a class="btn btn--ghost btn--sm" href={`/host/spaces/${s.id}`}>편집</a> {s.status === 'published' && <a class="btn btn--ghost btn--sm" href={`/spaces/${s.slug}`} target="_blank">보기 ↗</a>}</td>
           </tr>); })}</tbody>

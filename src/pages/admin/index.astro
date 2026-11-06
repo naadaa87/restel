@@ -14,7 +14,6 @@ const pendingHosts = d ? (await listHosts(d)).filter((h) => h.status === 'pendin
 const submitted = d ? (await listAllSpaces(d)).filter((s) => s.status === 'submitted').slice(0, 5) : [];
 const env = (Astro.locals as any).runtime?.env || {};
 const warnings: string[] = [];
-if (!env.SESSION_SECRET) warnings.push('SESSION_SECRET 이 설정되지 않았습니다. 대시보드 Variables and Secrets 에 긴 임의 문자열을 등록해 주세요.');
 if (!env.RESEND_API_KEY) warnings.push('이메일 발송 키(RESEND_API_KEY)가 없어 알림 메일이 발송되지 않습니다. 예약 요청은 관리자 화면에서 확인하세요.');
 if (!(Astro.locals as any).runtime?.env?.MEDIA) warnings.push('R2(MEDIA)가 연결되지 않아 호스트 사진 업로드는 URL 방식만 가능합니다.');
 ---
@@ -27,7 +26,13 @@ if (!(Astro.locals as any).runtime?.env?.MEDIA) warnings.push('R2(MEDIA)가 연�
       <a class="stat" href="/admin/hosts"><b>{stats.hostsPending}</b><span>승인 대기 호스트 (승인됨 {stats.hostsApproved})</span></a>
       <a class="stat" href="/admin/spaces"><b>{stats.spacesSubmitted}</b><span>검토 요청 공간 (공개 {stats.spacesPublished})</span></a>
       <a class="stat" href="/admin/bookings?status=requested"><b>{stats.bookingsRequested}</b><span>새 예약 요청 (확정 {stats.bookingsConfirmed})</span></a>
-      <a class="stat" href="/admin/inquiries"><b>{stats.inquiriesNew}</b><span>새 문의</span></a>
+      <a class="stat" href="/admin/inquiries"><b>{stats.inquiriesNew + stats.hostInquiriesNew}</b><span>새 문의 (호스트 {stats.hostInquiriesNew})</span></a>
+    </div>
+    <div class="grid grid--4" style="margin:0 0 22px">
+      <a class="stat" href="/admin/settlements"><b>{stats.settlementsIssued}</b><span>미지급 정산서 (미발행 완료 세션 {stats.unsettled})</span></a>
+      <a class="stat" href="/admin/notices"><b>공지</b><span>호스트 공지 작성</span></a>
+      <a class="stat" href="/admin/bookings?status=confirmed"><b>{stats.bookingsConfirmed}</b><span>확정 세션</span></a>
+      <a class="stat" href="/admin/spaces"><b>{stats.spacesPublished}</b><span>공개 중 공간</span></a>
     </div>
   )}
   <div class="grid grid--2">
@@ -38,7 +43,7 @@ if (!(Astro.locals as any).runtime?.env?.MEDIA) warnings.push('R2(MEDIA)가 연�
     <div>
       <div class="panel">
         <div class="toolbar"><h2 class="h3">승인 대기 호스트</h2><a class="small" href="/admin/hosts">전체 →</a></div>
-        {pendingHosts.length === 0 ? <p class="help">대기 중인 호스트가 없습니다.</p> : <table class="list"><tbody>{pendingHosts.map((h) => <tr><td><strong>{h.name}</strong> <span class="small muted">{h.company}</span><br /><span class="small muted">{h.email} · {h.phone}</span></td><td class="small muted">{fmtDate(h.created_at)}</td></tr>)}</tbody></table>}
+        {pendingHosts.length === 0 ? <p class="help">대기 중인 호스트가 없습니다.</p> : <table class="list"><tbody>{pendingHosts.map((h) => <tr><td><a href={`/admin/hosts/${h.id}`}><strong>{h.name}</strong></a> <span class="small muted">{h.company}</span><br /><span class="small muted">{h.email} · {h.phone}</span></td><td class="small muted">{fmtDate(h.created_at)}</td></tr>)}</tbody></table>}
       </div>
       <div class="panel">
         <div class="toolbar"><h2 class="h3">검토 요청 공간</h2><a class="small" href="/admin/spaces">전체 →</a></div>

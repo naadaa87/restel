@@ -1,0 +1,55 @@
+---
+export const prerender = false;
+import { site } from '@/config/site';
+import Portal from '@/layouts/Portal.astro';
+import { db, getHost, createInquiry, listInquiriesForHost, audit } from '@/lib/db';
+import { flash, redirectWith, str } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { notifyAdmin } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).host;
+const env = (Astro.locals as any).runtime?.env || {};
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/host/center', undefined, '데이터베이스가 연결되지 않았습니다.');
+const { msg, err } = flash(Astro.url);
+const TOPICS = ['입점·검토', '예약·고객 응대', '결제·정산', '공간·안전 기준', '사이트 오류', '기타'];
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith('/host/center/inquiries', undefined, '잘못된 요청입니다.');
+  const fd = await Astro.request.formData();
+  const topic = str(fd, 'topic'), message = str(fd, 'message');
+  if (!message) return redirectWith('/host/center/inquiries#new', undefined, '문의 내용을 적어 주세요.');
+  const h = await getHost(d, me.id);
+  const id = await createInquiry(d, { kind: 'host', name: h?.name || me.email, email: me.email, phone: h?.phone || '', topic: topic.slice(0, 40), message: message.slice(0, 3000), host_id: me.id });
+  await audit(d, `host:${me.email}`, 'inquiry.create', String(id), topic);
+  await notifyAdmin(env, `호스트 문의 (${topic}) · ${h?.name || me.email}`, `${message}\n\n답변: ${env.SITE_URL || site.url}/admin/inquiries/${id}`);
+  return redirectWith('/host/center/inquiries', '문의를 보냈습니다. 영업일 기준 1~2일 안에 답변드립니다. 답변은 이 페이지와 이메일로 전달됩니다.');
+}
+const inquiries = await listInquiriesForHost(d, me.id);
+---
+<Portal title="1:1 문의" kind="host" user={me} current="center" msg={msg} err={err}>
+  <a class="small muted" href="/host/center">← 호스트 센터</a>
+  <h1 style="margin-top:8px">운영팀 1:1 문의</h1>
+  <div class="grid grid--2" style="align-items:start">
+    <div class="panel" id="new">
+      <h2 class="h3" style="margin-bottom:10px">새 문의</h2>
+      <form method="post" class="form">
+        <div class="field"><label>주제</label><select name="topic">{TOPICS.map((t) => <option value={t}>{t}</option>)}</select></div>
+        <div class="field"><label>내용</label><textarea name="message" rows="6" placeholder="공간 이름이나 요청 번호(RT-XXXXXX)를 함께 적어 주시면 빠르게 확인할 수 있습니다." required></textarea></div>
+        <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">보내기</button>
+      </form>
+      <p class="help" style="margin-top:10px">급한 운영 문제(고객이 입장하지 못함 등)는 레스텔 운영 연락처 {site.contact.phone}로 바로 연락해 주세요.</p>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">내 문의 내역</h2>
+      {inquiries.length === 0 ? <p class="help">보낸 문의가 없습니다.</p> : inquiries.map((q) => (
+        <div class="notice-item" id={`q${q.id}`}>
+          <h3><span class={`status status--${q.status}`} style="margin-right:6px">{q.status === 'new' ? '접수' : q.status === 'replied' ? '답변 완료' : '종료'}</span>{q.topic || '문의'}</h3>
+          <span class="small muted">{fmtDate(q.created_at)}</span>
+          <div class="body" style="margin-top:6px">{q.message}</div>
+          {q.reply && <div class="msg msg--admin" style="margin-top:10px;max-width:100%;white-space:pre-wrap">{q.reply}<small>레스텔 운영팀 · {q.replied_at ? fmtDate(q.replied_at) : ''}</small></div>}
+        </div>
+      ))}
+    </div>
+  </div>
+</Portal>

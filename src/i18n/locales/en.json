@@ -58,7 +58,12 @@
     "subtitle": "Not a hotel, not a motel, not a hostel. RESTEL is a Korean rest space you rent by the hour. Take off your shoes, step up onto the wooden platform, and find floor mats and blankets, soft light, and a warm cup of tea waiting.",
     "cta1": "Sessions & prices",
     "cta2": "See RESTEL Sinchon",
-    "heroPoints": ["Nap & rest", "Meditation & breathing", "Healing & reset", "Private space"],
+    "heroPoints": [
+      "Nap & rest",
+      "Meditation & breathing",
+      "Healing & reset",
+      "Private space"
+    ],
     "notHotel": {
       "kicker": "NOT A HOTEL",
       "title": "You don't check in. You come in to rest.",
@@ -136,10 +141,57 @@
     "title": "Sessions & prices",
     "lead": "RESTEL sells kinds of rest, not hours. Every session is the whole space, privately. Prices are for two people, with a small fee per extra person. All sessions end before midnight.",
     "items": {
-      "nap60": { "name": "Nap 60", "ko": "A one-hour nap", "for": "Lunch breaks · between meetings · exam season", "desc": "The perfect hour to close your eyes. Mats, blankets and a wake-up light are ready.", "includes": ["Whole space", "2 mats & blankets", "1 tea per person", "Sound channel", "Wake-up light 10 min before the end"] },
-      "rest180": { "name": "Rest 180", "ko": "Three hours of rest", "for": "Couples · travellers · a half-day recovery", "desc": "Three unhurried hours for a nap, a meditation and a cup of tea.", "includes": ["Whole space", "2 mats & blankets", "2 teas per person", "Guided meditation", "Tea snacks"] },
-      "dayrest": { "name": "Day Rest", "ko": "A day of rest", "for": "Families · small groups · a long reset", "desc": "Up to 8 hours within opening hours, with quiet games, books and tea.", "includes": ["Whole space", "4 mats & blankets", "Unlimited tea", "Meditation & tea set", "Board games & books"] },
-      "krest90": { "name": "K-REST 90", "ko": "Korean rest experience", "for": "Travellers · 2 people or more", "desc": "A tea guide, a 20-minute guided meditation and ondol-style floor rest, in 90 minutes.", "includes": ["Tea guide (video & cards)", "20-min guided meditation", "Mat & blanket rest", "K-REST guide cards"] }
+      "nap60": {
+        "name": "Nap 60",
+        "ko": "A one-hour nap",
+        "for": "Lunch breaks · between meetings · exam season",
+        "desc": "The perfect hour to close your eyes. Mats, blankets and a wake-up light are ready.",
+        "includes": [
+          "Whole space",
+          "2 mats & blankets",
+          "1 tea per person",
+          "Sound channel",
+          "Wake-up light 10 min before the end"
+        ]
+      },
+      "rest180": {
+        "name": "Rest 180",
+        "ko": "Three hours of rest",
+        "for": "Couples · travellers · a half-day recovery",
+        "desc": "Three unhurried hours for a nap, a meditation and a cup of tea.",
+        "includes": [
+          "Whole space",
+          "2 mats & blankets",
+          "2 teas per person",
+          "Guided meditation",
+          "Tea snacks"
+        ]
+      },
+      "dayrest": {
+        "name": "Day Rest",
+        "ko": "A day of rest",
+        "for": "Families · small groups · a long reset",
+        "desc": "Up to 8 hours within opening hours, with quiet games, books and tea.",
+        "includes": [
+          "Whole space",
+          "4 mats & blankets",
+          "Unlimited tea",
+          "Meditation & tea set",
+          "Board games & books"
+        ]
+      },
+      "krest90": {
+        "name": "K-REST 90",
+        "ko": "Korean rest experience",
+        "for": "Travellers · 2 people or more",
+        "desc": "A tea guide, a 20-minute guided meditation and ondol-style floor rest, in 90 minutes.",
+        "includes": [
+          "Tea guide (video & cards)",
+          "20-min guided meditation",
+          "Mat & blanket rest",
+          "K-REST guide cards"
+        ]
+      }
     },
     "priceFrom": "from {price}",
     "perPerson": "per person",
@@ -196,39 +248,20 @@
     "title": "K-REST — Korean rest",
     "lead": "For travellers, RESTEL is a way to experience how Koreans rest. We picked the parts people find unfamiliar or curious, and kept them short.",
     "cards": {
-      "ondol": {
-        "title": "Ondol & floor culture",
-        "summary": "Why Koreans rest on the floor",
-        "body": "Ondol is Korea's traditional heated floor. A warm floor naturally invites people to sit and lie down, and it shaped a culture of sleeping, eating and resting on the floor without beds. RESTEL's raised wooden platform carries this floor culture into the city. The moment you step up without shoes, your body sits lower and your breathing slows."
-      },
-      "yo": {
-        "title": "Mats, blankets & pillows",
-        "summary": "A mat instead of a yo, a blanket instead of a duvet",
-        "body": "A traditional Korean bed is a yo (padded mat) laid on the floor and a duvet on top. Because RESTEL is a space for rest, not sleepovers, we use folding mats and blankets. The buckwheat-hull pillow is a Korean classic: cool, firm, and quietly rustling when you move."
-      },
-      "jjimjilbang": {
-        "title": "The jjimjilbang way of resting",
-        "summary": "Resting on a shared wooden floor",
-        "body": "A jjimjilbang is a Korean bathhouse where people lie down on a wide heated floor after bathing, with baked eggs, sweet rice punch and a towel folded into 'sheep ears'. RESTEL reinterprets that floor rest as private and quiet. Pair it with a bathhouse visit and your day of rest is complete."
-      },
-      "tea": {
-        "title": "A cup of tea",
-        "summary": "Jujube, barley, brown-rice green tea",
-        "body": "Korean tea isn't only leaf tea. Everyday favourites are made from grains and fruit: jujube tea simmered for hours, nutty roasted barley tea, green tea blended with roasted brown rice. The RESTEL tea corner has all three and a few small sweets, with a card showing how to brew each."
-      },
-      "stillness": {
-        "title": "Stillness & meditation",
-        "summary": "Temple quiet, in the city",
-        "body": "In Korea's mountain temples a day passes with dawn chanting, 108 bows and tea talk. RESTEL distils that quiet into 10- and 20-minute guided meditations you can play through the room speaker in several languages. Counting your breath is enough."
-      },
-      "hanok": {
-        "title": "The lines of a hanok",
-        "summary": "A roof-tile ridge and a moon gate",
-        "body": "Along the wall of RESTEL Sinchon runs a line of black roof tiles, and in the centre an arched niche shaped like a moon holds a soft glow. It's a modern compression of the hanok roofline and gate. It makes a lovely photo, but better still: lie down facing the light."
-      }
+      "ondol": { "title": "Ondol & floor culture", "summary": "Why Koreans rest on the floor", "body": "Ondol is Korea's traditional heated floor. A warm floor naturally invites people to sit and lie down, and it shaped a culture of sleeping, eating and resting on the floor without beds. RESTEL's raised wooden platform carries this floor culture into the city. The moment you step up without shoes, your body sits lower and your breathing slows." },
+      "yo": { "title": "Mats, blankets & pillows", "summary": "A mat instead of a yo, a blanket instead of a duvet", "body": "A traditional Korean bed is a yo (padded mat) laid on the floor and a duvet on top. Because RESTEL is a space for rest, not sleepovers, we use folding mats and blankets. The buckwheat-hull pillow is a Korean classic: cool, firm, and quietly rustling when you move." },
+      "jjimjilbang": { "title": "The jjimjilbang way of resting", "summary": "Resting on a shared wooden floor", "body": "A jjimjilbang is a Korean bathhouse where people lie down on a wide heated floor after bathing, with baked eggs, sweet rice punch and a towel folded into 'sheep ears'. RESTEL reinterprets that floor rest as private and quiet. Pair it with a bathhouse visit and your day of rest is complete." },
+      "tea": { "title": "A cup of tea", "summary": "Jujube, barley, brown-rice green tea", "body": "Korean tea isn't only leaf tea. Everyday favourites are made from grains and fruit: jujube tea simmered for hours, nutty roasted barley tea, green tea blended with roasted brown rice. The RESTEL tea corner has all three and a few small sweets, with a card showing how to brew each." },
+      "stillness": { "title": "Stillness & meditation", "summary": "Temple quiet, in the city", "body": "In Korea's mountain temples a day passes with dawn chanting, 108 bows and tea talk. RESTEL distils that quiet into 10- and 20-minute guided meditations you can play through the room speaker in several languages. Counting your breath is enough." },
+      "hanok": { "title": "The lines of a hanok", "summary": "A roof-tile ridge and a moon gate", "body": "Along the wall of RESTEL Sinchon runs a line of black roof tiles, and in the centre an arched niche shaped like a moon holds a soft glow. It's a modern compression of the hanok roofline and gate. It makes a lovely photo, but better still: lie down facing the light." }
     },
     "pairTitle": "Korean rest to pair with your visit",
-    "pairs": ["Bathhouses & saunas (HANTANG guide)", "Urban templestay", "Tea ceremony", "A hanok walk"]
+    "pairs": [
+      "Bathhouses & saunas (HANTANG guide)",
+      "Urban templestay",
+      "Tea ceremony",
+      "A hanok walk"
+    ]
   },
   "guide": {
     "title": "How to rest at RESTEL",
@@ -266,7 +299,7 @@
   },
   "hosts": {
     "title": "Become a RESTEL host",
-    "lead": "Party rooms, studios and vacant units sit empty on weekday afternoons. Convert yours into a rest space that meets the RESTEL standard. We provide request handling, multilingual exposure, content and operating rules.",
+    "lead": "Turn an under-used party room, studio or vacant unit into a rest space that meets the RESTEL standard. RESTEL brings exposure in seven languages, request handling, payment and entry templates, monthly settlement and the operating rules.",
     "whyTitle": "Why RESTEL",
     "why": [
       { "title": "Fill empty weekday hours", "body": "Party rooms run at 20–30% occupancy off-peak. Weekday nap and meditation demand sits on the other side of the clock." },
@@ -295,7 +328,70 @@
     "feeBody": "There is no listing fee. A commission (15% by default) applies to requests that come through RESTEL. Conversion work and the standard kit are quoted separately.",
     "cta": "Start as a host",
     "ctaLogin": "Already have an account? Log in",
-    "contactNote": "Questions? Use the contact page."
+    "contactNote": "Questions? Use the contact page.",
+    "rolesTitle": "Who does what",
+    "roles": [
+      {
+        "title": "The host",
+        "items": [
+          "Fits the space to the RESTEL standard: folding mats and blankets, three lighting levels, blackout, fire safety",
+          "Sets sessions, prices and closed days, and uploads photos",
+          "Answers requests within 24 hours, confirms payment, sends entry instructions",
+          "Resets the space between sessions and marks sessions complete"
+        ]
+      },
+      {
+        "title": "RESTEL",
+        "items": [
+          "Presents the space to international and Korean guests through a seven-language site and K-REST content",
+          "Provides request intake, a guest tracking page and message templates in seven languages",
+          "Provides the rest-space operating standard, printable signs, checklists and a service guide",
+          "Issues monthly settlements and supports hosts one-to-one through the Host Center"
+        ]
+      }
+    ],
+    "flowTitle": "From request to settlement",
+    "flow": [
+      { "title": "Request", "body": "A guest picks a session, date and group size. You are notified in the portal and by email." },
+      { "title": "Confirm or decline", "body": "Check availability, set the amount and payment method, confirm. The message is drafted in the guest's language." },
+      { "title": "Payment", "body": "Bank transfer is confirmed by you; on-site payment is taken at arrival. Online card payment is being added." },
+      { "title": "Entry instructions", "body": "Send the address, door code and house notes. A reminder the day before reduces no-shows." },
+      { "title": "Session and reset", "body": "Chime ten minutes before the end, reset time between sessions, mark complete." },
+      { "title": "Monthly settlement", "body": "Commission (15% by default) applies to completed sessions; a settlement statement is issued the following month." }
+    ],
+    "fitTitle": "Which spaces fit",
+    "fitGood": [
+      "Party rooms and meeting spaces with quiet weekday afternoons",
+      "Studios with daylight and blackout",
+      "Quiet second-floor-or-higher units of 10–40 m²",
+      "Idle hours at yoga and meditation studios",
+      "Within a ten-minute walk of a station, in areas visitors already go"
+    ],
+    "fitBad": [
+      "Spaces that want to keep hotel-style bedding as is",
+      "Spaces that depend on selling showers or laundry",
+      "Spaces that only pay off after midnight",
+      "Basements without ventilation or fire-safety fittings",
+      "Spaces listed on accommodation platforms as a place to stay the night"
+    ],
+    "portalTitle": "What the host portal does",
+    "portal": [
+      { "title": "Listing in seven languages", "body": "Write Korean and English; the page appears in all seven languages." },
+      { "title": "Sessions, prices, closed days", "body": "Weekday and weekend prices per session, extra guests, closed weekdays and dates, reset time." },
+      { "title": "Calendar and to-do", "body": "Monthly calendar, today's sessions, messages awaiting a reply, unpaid sessions." },
+      { "title": "Payment and entry templates", "body": "Confirmation, payment, entry, reminder and cancellation messages in the guest's language." },
+      { "title": "Settlement", "body": "Monthly revenue, commission and payout, session by session." },
+      { "title": "Host Center", "body": "Operating guide, notices, one-to-one support, printable signs and checklists." }
+    ],
+    "faqTitle": "Questions hosts ask",
+    "faq": [
+      { "q": "Is there a listing fee or monthly fee?", "a": "No. Commission (15% by default) applies only to completed sessions that came through RESTEL." },
+      { "q": "Do I need an accommodation licence?", "a": "RESTEL operates as rest-space rental, not accommodation. The condition is to keep the standard: hourly sessions ending before midnight, no beds, adults only. Fire-safety requirements for multi-use premises are confirmed with the local fire station." },
+      { "q": "Can I keep running my party room?", "a": "Yes. We recommend RESTEL sessions by day and party use in the evening. Tidy away party props and lighting during sessions." },
+      { "q": "I am worried about international guests.", "a": "Confirmation, payment, entry and reminder messages are templated in seven languages, and amounts and times are sent as numbers. The RESTEL team helps when needed." },
+      { "q": "How do I get paid?", "a": "Phase one uses bank transfer or payment on site. After confirming, you send payment details; once paid, you send entry instructions. Online card payment is being added." },
+      { "q": "How long does approval take?", "a": "Business details are checked within three working days of signing up, and a space review is answered within three working days of the request. Anything to fix is shown in the portal." }
+    ]
   },
   "book": {
     "title": "Request a session",
@@ -318,14 +414,11 @@
     "contactOrEmail": "Please provide a phone number or an email address.",
     "estimate": "Estimated total",
     "estimateNote": "Includes {base} people; extra-person fees applied. The final amount is confirmed in our message.",
-    "done": {
-      "title": "Your request has been received",
-      "body": "Request code {code}. We'll check availability and reach you at the contact you gave. Use the link below to follow progress and messages.",
-      "cta": "View request status",
-      "home": "Back to home"
-    },
+    "done": { "title": "Your request has been received", "body": "Request code {code}. We'll check availability and reach you at the contact you gave. Use the link below to follow progress and messages.", "cta": "View request status", "home": "Back to home" },
     "error": "We couldn't send your request. Please try again shortly or use the contact page.",
-    "dbUnavailable": "Online requests are temporarily unavailable. Please contact us by KakaoTalk or email."
+    "dbUnavailable": "Online requests are temporarily unavailable. Please contact us by KakaoTalk or email.",
+    "closedDate": "That date is a closed day for this space. Please pick another date.",
+    "pastDate": "Past dates cannot be selected."
   },
   "request": {
     "title": "Check your request",
@@ -335,12 +428,29 @@
     "find": "Find",
     "notFound": "We couldn't find a matching request.",
     "status": "Status",
-    "statuses": { "requested": "Received", "confirmed": "Confirmed", "declined": "Unavailable", "cancelled": "Cancelled", "completed": "Completed" },
+    "statuses": { "requested": "Received", "confirmed": "Confirmed", "declined": "Unavailable", "cancelled": "Cancelled", "completed": "Completed", "noshow": "No-show" },
     "messages": "Messages",
     "reply": "Send a message",
     "replyPh": "A note for the host",
     "cancel": "Cancel request",
-    "cancelConfirm": "Cancel this request?"
+    "cancelConfirm": "Cancel this request?",
+    "senders": { "customer": "You", "host": "Host", "admin": "RESTEL" },
+    "payment": {
+      "title": "Payment",
+      "amount": "Amount",
+      "method": "Method",
+      "methods": { "transfer": "Bank transfer", "onsite": "Pay on site", "card": "Card" },
+      "pending": "The host will send details shortly",
+      "bank": "Account",
+      "holder": "Holder",
+      "deadline": "Pay by",
+      "deadlineNote": "within {hours} hours of confirmation",
+      "onsite": "On site",
+      "onsiteNote": "Pay by card or cash when you arrive.",
+      "paid": "Payment received",
+      "refunded": "Refund issued",
+      "refundDefault": "Cancellation: 100% refund up to 48 hours before, 50% up to 24 hours before, none after that."
+    }
   },
   "contact": {
     "title": "Contact",

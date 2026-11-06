@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listSpacesByHost } from '@/lib/db';
+import { flash } from '@/lib/portal';
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const spaces = d ? await listSpacesByHost(d, me.id) : [];
+const files = [
+  { name: 'RESTEL 로고 (가로형, WebP)', href: '/brand/logo-full.webp', note: '밝은 바탕용. 흰색 또는 연한 바탕에 사용' },
+  { name: 'RESTEL 로고 (가로형, PNG)', href: '/brand/logo-full.png', note: '인쇄·문서용' },
+  { name: 'Rt 심볼 (WebP)', href: '/brand/logo-mark.webp', note: '아이콘·스티커용' },
+  { name: '마스코트 거위 (PNG)', href: '/brand/mascot.png', note: '안내문·SNS 장식용' },
+];
+---
+<Portal title="자료실" kind="host" user={me} current="center" msg={msg} err={err}>
+  <a class="small muted" href="/host/center">← 호스트 센터</a>
+  <h1 style="margin-top:8px">자료실</h1>
+  <div class="grid grid--2" style="align-items:start">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">공간 안내문 (인쇄용)</h2>
+      <p class="help" style="margin-bottom:10px">A4로 인쇄해 입구와 쉼의 자리 근처에 붙여 두세요. "숙박시설이 아닌 휴식 공간대여" 안내와 이용 규칙, 비상 연락처가 한국어·영어로 함께 들어갑니다.</p>
+      {spaces.length === 0 ? <p class="help">공간을 먼저 등록하면 공간 이름이 들어간 안내문을 만들 수 있습니다.</p> : (
+        <ul class="check" style="gap:8px">{spaces.map((s) => <li><a href={`/host/center/signage?space=${s.id}`} target="_blank" style="text-decoration:underline">{JSON.parse(s.name_json || '{}').ko || s.slug} 안내문 열기 ↗</a></li>)}</ul>
+      )}
+      <h2 class="h3" style="margin:18px 0 10px">점검표</h2>
+      <ul class="check" style="gap:8px">
+        <li><a href="/host/center/signage?kind=checklist" target="_blank" style="text-decoration:underline">세션 전·후 점검표 (일일) ↗</a></li>
+        <li><a href="/host/center/signage?kind=safety" target="_blank" style="text-decoration:underline">안전·소방 분기 점검표 ↗</a></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">브랜드 자산</h2>
+      <p class="help" style="margin-bottom:10px">레스텔 파트너 공간임을 표시할 때 사용합니다. 로고 색을 바꾸거나 변형하지 말고, 밝은 바탕에 두어 주세요. "레스텔 ○○"처럼 지점명을 붙일 때는 로고 오른쪽에 같은 굵기로 적습니다.</p>
+      <table class="list"><tbody>{files.map((f) => <tr><td><a href={f.href} download style="text-decoration:underline">{f.name}</a><br /><span class="small muted">{f.note}</span></td><td style="text-align:right"><img src={f.href} alt="" style="height:36px" /></td></tr>)}</tbody></table>
+      <h2 class="h3" style="margin:18px 0 8px">쓰는 말 / 쓰지 않는 말</h2>
+      <table class="list"><thead><tr><th>이렇게</th><th>이렇게는 아님</th></tr></thead><tbody>
+        <tr><td>세션 · 쉼 · 휴식 공간</td><td class="muted">객실 · 룸 · 숙소</td></tr>
+        <tr><td>입장 안내 · 종료 시각</td><td class="muted">체크인 · 체크아웃</td></tr>
+        <tr><td>접이식 매트 · 담요</td><td class="muted">침대 · 이불 · 침구 완비</td></tr>
+        <tr><td>하루 쉼 (Day Rest)</td><td class="muted">1박 · 데이유즈</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</Portal>

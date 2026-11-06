@@ -9,7 +9,11 @@ const { lang, data } = Astro.props;
 const t = getDict(lang);
 const L = (p: string) => localizePath(p, lang);
 const b = data.booking;
+const pay = data.payment;
 const statusLabel = (s: string) => (t.request.statuses as any)[s] || s;
+const tp = t.request.payment || {};
+const methodLabel = (m: string) => (tp.methods as any)?.[m] || m;
+const senderLabel = (s: string) => (t.request.senders as any)?.[s] || s;
 ---
 <Base lang={lang} path="/my" title={t.request.title} description={t.request.lead} noindex>
   <section class="section">
@@ -37,13 +41,29 @@ const statusLabel = (s: string) => (t.request.statuses as any)[s] || s;
             <dt>{t.book.session}</dt><dd>{(t.sessions.items as any)[b.session_code]?.name || b.session_code}</dd>
             <dt>{t.book.date}</dt><dd>{b.date} {b.start_time} (KST)</dd>
             <dt>{t.book.people}</dt><dd>{b.people}</dd>
-            <dt>{t.book.estimate}</dt><dd>{b.est_amount ? formatKRW(b.est_amount) : '—'}</dd>
+            <dt>{pay ? tp.amount : t.book.estimate}</dt><dd>{formatKRW(pay ? pay.amount : b.est_amount || 0)}</dd>
             <dt>{t.book.note}</dt><dd>{b.note || '—'}</dd>
           </dl>
+          {pay && (
+            <div class="pay-box">
+              <strong>{tp.title}</strong>
+              {pay.status === 'paid' && <p style="margin:6px 0 0">{tp.paid} · {formatKRW(pay.paidAmount || pay.amount)}</p>}
+              {pay.status === 'refunded' && <p style="margin:6px 0 0">{tp.refunded} · {formatKRW(pay.refundAmount)}</p>}
+              {(pay.status === 'unpaid' || pay.status === 'awaiting') && b.status === 'confirmed' && (
+                <dl class="kv">
+                  <dt>{tp.amount}</dt><dd><strong>{formatKRW(pay.amount)}</strong></dd>
+                  <dt>{tp.method}</dt><dd>{pay.method ? methodLabel(pay.method) : tp.pending}</dd>
+                  {pay.method === 'transfer' && pay.account && <><dt>{tp.bank}</dt><dd>{pay.bank} {pay.account}<br /><span class="small muted">{tp.holder}: {pay.holder}</span></dd><dt>{tp.deadline}</dt><dd>{(tp.deadlineNote || '').replace('{hours}', String(pay.deadlineHours || 24))}</dd></>}
+                  {pay.method === 'onsite' && <><dt>{tp.onsite}</dt><dd>{pay.onsiteNote || tp.onsiteNote}</dd></>}
+                </dl>
+              )}
+              <p class="small muted" style="margin:8px 0 0">{pay.refundPolicy || tp.refundDefault}</p>
+            </div>
+          )}
           <h3 class="h3" style="margin:24px 0 10px">{t.request.messages}</h3>
           <div class="thread">
             {data.messages.length === 0 && <p class="muted small">—</p>}
-            {data.messages.map((m: any) => <div class={`msg msg--${m.sender}`}>{m.body}<small>{m.sender} · {fmtDate(m.created_at, lang)}</small></div>)}
+            {data.messages.map((m: any) => <div class={`msg msg--${m.sender}`} style="white-space:pre-wrap">{m.body}<small>{senderLabel(m.sender)} · {fmtDate(m.created_at, lang)}</small></div>)}
           </div>
           {data.canAct ? (
             <>

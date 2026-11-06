@@ -2,35 +2,70 @@
 export const prerender = false;
 import Portal from '@/layouts/Portal.astro';
 import { db, listBookingsForHost } from '@/lib/db';
-import { flash, STATUS_KO } from '@/lib/portal';
+import { flash, STATUS_KO, PAYMENT_KO, METHOD_KO, BOOKING_STATUSES, todayKST, bookingAmount } from '@/lib/portal';
 import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
 
 const me = (Astro.locals as any).host;
 const d = await db(Astro.locals);
 const { msg, err } = flash(Astro.url);
-const filter = Astro.url.searchParams.get('status') || '';
+const status = Astro.url.searchParams.get('status') || '';
+const filter = Astro.url.searchParams.get('filter') || '';
+const date = Astro.url.searchParams.get('date') || '';
+const q = (Astro.url.searchParams.get('q') || '').trim().toLowerCase();
+const today = todayKST();
 let bookings = d ? await listBookingsForHost(d, me.id) : [];
-if (filter) bookings = bookings.filter((b) => b.status === filter);
-const tabs = ['', 'requested', 'confirmed', 'completed', 'declined', 'cancelled'];
+const all = bookings;
+if (status) bookings = bookings.filter((b) => b.status === status);
+if (filter === 'unanswered') bookings = bookings.filter((b) => b.last_sender === 'customer' && (b.status === 'requested' || b.status === 'confirmed'));
+if (filter === 'unpaid') bookings = bookings.filter((b) => b.status === 'confirmed' && b.payment_status !== 'paid');
+if (filter === 'entry') bookings = bookings.filter((b) => b.status === 'confirmed' && b.payment_status === 'paid' && !b.entry_sent_at);
+if (filter === 'past') bookings = bookings.filter((b) => b.status === 'confirmed' && b.date < today);
+if (filter === 'upcoming') bookings = bookings.filter((b) => (b.status === 'confirmed' || b.status === 'requested') && b.date >= today).sort((a, b) => (a.date + a.start_time).localeCompare(b.date + b.start_time));
+if (date) bookings = bookings.filter((b) => b.date === date);
+if (q) bookings = bookings.filter((b) => [b.code, b.name, b.phone, b.email, b.space_name].join(' ').toLowerCase().includes(q));
+const counts = Object.fromEntries(BOOKING_STATUSES.map((s) => [s, all.filter((b) => b.status === s).length]));
+const filterLabels: Record<string, string> = { unanswered: '답장 필요', unpaid: '결제 미완료', entry: '입장 안내 전', past: '지난 세션 처리', upcoming: '다가오는 세션' };
+const active = (s: string) => (status === s ? 'border-color:var(--coral);color:var(--coral-dark)' : '');
 ---
-<Portal title="예약 요청" kind="host" user={me} current="bookings" msg={msg} err={err}>
-  <h1>예약 요청</h1>
-  <div class="tabs">{tabs.map((s) => <a class={`btn btn--ghost btn--sm ${filter === s ? 'is-active' : ''}`} style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={s ? `?status=${s}` : '/host/bookings'}>{s ? STATUS_KO[s] : '전체'}</a>)}</div>
+<Portal title="예약" kind="host" user={me} current="bookings" msg={msg} err={err} badges={{ bookings: counts.requested }}>
+  <div class="toolbar">
+    <h1 style="margin:0">예약</h1>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a class="btn btn--ghost btn--sm" href={`/host/bookings/calendar?month=${(date || today).slice(0, 7)}`}>달력 보기</a>
+      <a class="btn btn--ghost btn--sm" href="/host/bookings?filter=upcoming">다가오는 세션</a>
+    </div>
+  </div>
+  <div class="tabs" style="margin-bottom:8px">
+    <a class="btn btn--ghost btn--sm" style={!status && !filter ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href="/host/bookings">전체 {all.length}</a>
+    {BOOKING_STATUSES.map((s) => <a class="btn btn--ghost btn--sm" style={active(s)} href={`?status=${s}`}>{STATUS_KO[s]} {counts[s] ? counts[s] : ''}</a>)}
+  </div>
+  <form method="get" class="inline-form" style="margin-bottom:14px">
+    {filter && <input type="hidden" name="filter" value={filter} />}
+    <input name="q" value={q} placeholder="요청 번호·이름·연락처 검색" style="min-width:240px" />
+    <input type="date" name="date" value={date} />
+    <button class="btn btn--ghost btn--sm" type="submit">찾기</button>
+    {(filter || date || q) && <a class="small muted" href="/host/bookings">초기화</a>}
+    {filter && <span class="status status--requested">{filterLabels[filter] || filter}</span>}
+  </form>
   <div class="panel">
     {bookings.length === 0 ? <p class="help">표시할 요청이 없습니다.</p> : (
+      <div style="overflow-x:auto">
       <table class="list">
-        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>상태</th><th>접수</th></tr></thead>
+        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>금액 · 결제</th><th>상태</th><th>접수</th></tr></thead>
         <tbody>{bookings.map((b) => (
           <tr>
-            <td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a></td>
+            <td><a href={`/host/bookings/${b.id}`}><strong>{b.code}</strong></a>{b.last_sender === 'customer' && (b.status === 'requested' || b.status === 'confirmed') && <><br /><span class="small" style="color:var(--coral-dark)">● 답장 필요</span></>}</td>
             <td>{b.space_name}<br /><span class="small muted">{b.session_code}</span></td>
-            <td>{b.date} {b.start_time}</td>
+            <td>{b.date}<br /><strong>{b.start_time}</strong></td>
             <td>{b.people}</td>
             <td>{b.name}<br /><span class="small muted">{b.phone || b.email} · {b.lang}</span></td>
-            <td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></td>
+            <td>{formatKRW(bookingAmount(b))}<br /><span class={`pay-pill pay--${b.payment_status}`} style="margin:4px 0 0">{PAYMENT_KO[b.payment_status]}</span> <span class="small muted">{b.payment_method ? METHOD_KO[b.payment_method] : ''}</span></td>
+            <td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span>{b.status === 'confirmed' && b.payment_status === 'paid' && !b.entry_sent_at && <><br /><span class="small muted">입장 안내 전</span></>}</td>
             <td class="small muted">{fmtDate(b.created_at)}</td>
           </tr>))}</tbody>
       </table>
+      </div>
     )}
   </div>
 </Portal>

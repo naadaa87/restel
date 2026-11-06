@@ -1,7 +1,7 @@
 ---
 // 호스트·관리자 공용 공간 편집 폼
 import { localeList } from '@/i18n';
-import { SESSION_CODES, spaceToForm } from '@/lib/portal';
+import { SESSION_CODES, COMPLIANCE, spaceToForm } from '@/lib/portal';
 import type { SpaceRow } from '@/lib/db';
 
 interface Props { space: SpaceRow | null; action: string; photoAction?: string; isAdmin?: boolean }
@@ -9,15 +9,19 @@ const { space, action, photoAction, isAdmin = false } = Astro.props;
 const f = spaceToForm(space);
 const rows = Array.from({ length: 6 }, (_, i) => f.sessions[i] || null);
 const ph = {
-  ko: { name: '예: 레스텔 성수', tagline: '한 줄 소개', desc: '문단은 빈 줄로 구분합니다.\n\n숙박 어휘(1박·체크인·객실·침대)는 쓰지 않습니다.', features: '한 줄에 하나씩\n예: 접이식 매트·담요\n조명 3단계', rules: '한 줄에 하나씩', directions: '한 줄에 하나씩', region: '예: 서울 성수' },
-  en: { name: 'e.g. RESTEL Seongsu', tagline: 'One-line tagline', desc: 'Separate paragraphs with a blank line.', features: 'One per line', rules: 'One per line', directions: 'One per line', region: 'e.g. Seongsu, Seoul' },
+  ko: { name: '예: 레스텔 성수', tagline: '한 줄 소개', desc: '문단은 빈 줄로 구분합니다.\n\n숙박 어휘(1박·체크인·객실·침대)는 쓰지 않습니다.', features: '한 줄에 하나씩\n예: 접이식 매트·담요\n조명 3단계', rules: '한 줄에 하나씩', directions: '한 줄에 하나씩', region: '예: 서울 성수', entry: '예: 2층 도어락 비밀번호 1234# (세션마다 바뀝니다)\n신발은 입구 신발장에, 매트 위에서는 양말 착용\n종료 10분 전 알림이 울립니다' },
+  en: { name: 'e.g. RESTEL Seongsu', tagline: 'One-line tagline', desc: 'Separate paragraphs with a blank line.', features: 'One per line', rules: 'One per line', directions: 'One per line', region: 'e.g. Seongsu, Seoul', entry: 'e.g. 2F door lock code 1234# (changes every session)\nShoes off at the entrance, socks on the mats\nA chime rings 10 minutes before the end' },
 };
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const groups = [...new Set(COMPLIANCE.map((c) => c.group))];
 ---
 <form method="post" action={action} class="form" data-tabs>
   <div class="tabs">
     <button class="is-active">기본 정보</button>
     <button>소개 (다국어)</button>
     <button>세션·요금</button>
+    <button>운영·안내</button>
+    <button>레스텔 기준 점검</button>
     <button>사진</button>
   </div>
 
@@ -26,7 +30,7 @@ const ph = {
       <div class="field"><label>주소 슬러그 (URL) <span class="help">영문 소문자·숫자·하이픈. 비우면 자동 생성</span></label><input name="slug" value={f.slug} placeholder="seongsu" /></div>
       <div class="field"><label>면적·구성 메모</label><input name="area" value={f.area} placeholder="약 40㎡ + 테라스" /></div>
     </div>
-    <div class="field"><label>주소 (상세 주소는 확정 안내에서 전달되므로 동까지만 적어도 됩니다)</label><input name="address" value={f.address} placeholder="서울특별시 성동구 성수동" /></div>
+    <div class="field"><label>주소 <span class="req">*</span> <span class="help">공개 페이지에는 동까지만 표시되고, 상세 주소는 입장 안내에서 전달됩니다</span></label><input name="address" value={f.address} placeholder="서울특별시 성동구 성수동 ○○로 12, 2층" /></div>
     <div class="form__row">
       <div class="field"><label>위도 (lat)</label><input name="lat" value={f.lat} placeholder="37.5445" inputmode="decimal" /><div class="hint">구글 지도에서 위치를 우클릭하면 좌표가 보입니다.</div></div>
       <div class="field"><label>경도 (lng)</label><input name="lng" value={f.lng} placeholder="127.0560" inputmode="decimal" /></div>
@@ -37,13 +41,13 @@ const ph = {
     </div>
     <div class="form__row">
       <div class="field"><label>운영 시작</label><input name="open" value={f.open} placeholder="07:00" /></div>
-      <div class="field"><label>운영 종료 (자정 이전 권장)</label><input name="close" value={f.close} placeholder="24:00" /></div>
+      <div class="field"><label>운영 종료 (자정 이전)</label><input name="close" value={f.close} placeholder="24:00" /><div class="hint">마지막 세션은 자정 전에 끝나야 합니다.</div></div>
     </div>
-    <div class="callout callout--sage small">레스텔 기준: 침대 없음(접이식 매트·담요), 조명 3단계, 암막, 세션은 자정 전 종료, 숙박 어휘 금지. 자세한 기준은 <a href="/hosts" target="_blank" style="text-decoration:underline">호스트 안내</a>를 확인해 주세요.</div>
+    <div class="callout callout--sage small">레스텔 기준: 침대 없음(접이식 매트·담요), 조명 3단계, 암막, 세션은 자정 전 종료, 숙박 어휘 금지. 자세한 기준은 <a href="/host/center/guide" target="_blank" style="text-decoration:underline">운영 가이드</a>를 확인해 주세요.</div>
   </div>
 
   <div class="tabpanel panel" data-tabs>
-    <p class="help">한국어는 필수, 영어는 권장입니다. 비운 언어는 영어 → 한국어 순으로 자동 대체되어 노출됩니다.</p>
+    <p class="help">한국어는 필수, 영어는 외국인 노출을 위해 필수에 가깝습니다. 비운 언어는 영어 → 한국어 순으로 자동 대체되어 노출됩니다.</p>
     <div class="tabs">{localeList.map((l, i) => <button class={i === 0 ? 'is-active' : ''}>{l.native}</button>)}</div>
     {localeList.map((l, i) => {
       const v = (f.i18n as any)[l.code]; const p = (ph as any)[l.code] || ph.en;
@@ -66,7 +70,7 @@ const ph = {
   </div>
 
   <div class="tabpanel panel">
-    <p class="help">세션은 "시간"이 아니라 "쉼의 종류"입니다. 가격은 원(KRW), 기본 인원 기준이며 K-REST 90처럼 1인 단위 가격은 "1인 가격" 체크. 비워 둔 줄은 저장되지 않습니다.</p>
+    <p class="help">세션은 "시간"이 아니라 "쉼의 종류"입니다. 가격은 원(KRW), 기본 인원 기준이며 K-REST 90처럼 1인 단위 가격은 "1인 가격" 체크. 비워 둔 줄은 저장되지 않습니다. 세션 끝나는 시각이 자정을 넘지 않도록 시작 시간대를 정해 주세요.</p>
     <div style="overflow-x:auto">
       <table class="list" style="min-width:980px">
         <thead><tr><th>세션</th><th>직접 입력 이름</th><th>길이(분)</th><th>최대(분)</th><th>평일 가격</th><th>주말 가격</th><th>기본 인원</th><th>최대 인원</th><th>추가 1인</th><th>1인 가격</th><th>시작 시간대</th></tr></thead>
@@ -89,31 +93,59 @@ const ph = {
         </tbody>
       </table>
     </div>
+    <div class="callout small" style="margin-top:12px">권장 요금대(2026 기준, 기본 2인): Nap 60 15,000~20,000원 · Rest 180 36,000~45,000원 · Day Rest 80,000~100,000원 · K-REST 90 1인 35,000~45,000원 · 추가 인원 5,000~8,000원. 주말은 평일의 110~115%.</div>
+  </div>
+
+  <div class="tabpanel panel">
+    <h3 class="h3" style="margin-bottom:8px">휴무</h3>
+    <div class="form__row">
+      <div class="field"><label>매주 쉬는 요일</label><div style="display:flex;gap:10px;flex-wrap:wrap;padding:8px 0">{WD.map((w, i) => <label class="checkbox" style="gap:6px"><input type="checkbox" name={`closed_w${i}`} checked={f.closedWeekdays.includes(i)} /> {w}</label>)}</div></div>
+      <div class="field"><label>세션 사이 정리 시간 (분)</label><input name="buffer_min" value={f.buffer_min} inputmode="numeric" /><div class="hint">매트 커버 교체·환기·조명 복구 시간. 기본 60분, 30분 미만은 권장하지 않습니다.</div></div>
+    </div>
+    <div class="field"><label>휴무일 (날짜, 한 줄에 하나씩 YYYY-MM-DD)</label><textarea name="blocked_dates" rows="4" placeholder="2026-12-25&#10;2027-01-01">{f.blockedDates.join('\n')}</textarea><div class="hint">휴무일에는 고객이 요청을 보낼 수 없고 달력에 빗금으로 표시됩니다. 외부 플랫폼 예약이 잡힌 날도 여기에 적어 두세요.</div></div>
+    <h3 class="h3" style="margin:18px 0 8px">입장 안내 (고객에게 결제 후 자동으로 보내는 내용)</h3>
+    <p class="help">도어락 비밀번호, 층·호수, 신발·소음 규칙 등 "확정된 고객에게만" 알려야 하는 내용을 적습니다. 예약 상세의 "입장 안내 보내기"를 누르면 고객 언어에 맞는 안내문에 자동으로 들어갑니다. 공개 페이지에는 표시되지 않습니다.</p>
+    <div data-tabs>
+      <div class="tabs">{localeList.map((l, i) => <button class={i === 0 ? 'is-active' : ''}>{l.native}</button>)}</div>
+      {localeList.map((l, i) => (
+        <div class={`tabpanel ${i === 0 ? 'is-active' : ''}`}><div class="field"><textarea name={`entry_${l.code}`} rows="5" placeholder={((ph as any)[l.code] || ph.en).entry}>{(f.i18n as any)[l.code].entry}</textarea></div></div>
+      ))}
+    </div>
+  </div>
+
+  <div class="tabpanel panel">
+    <p class="help">레스텔로 공개되려면 <strong>필수(●)</strong> 항목이 모두 갖춰져야 합니다. 체크한 내용은 검토 때 사진과 함께 확인하며, 사실과 다르면 공개가 중단될 수 있습니다.</p>
+    {groups.map((g) => (
+      <div style="margin-top:14px">
+        <h3 class="h3" style="margin-bottom:8px">{g}</h3>
+        <div class="pledge">{COMPLIANCE.filter((c) => c.group === g).map((c) => <label><input type="checkbox" name={`c_${c.key}`} checked={!!f.compliance[c.key]} /> <span>{c.required ? <strong style="color:var(--coral-dark)">● </strong> : <span class="muted">○ </span>}{c.text}</span></label>)}</div>
+      </div>
+    ))}
+    <div class="field" style="margin-top:14px"><label>검토 담당자에게 전할 메모 (선택)</label><textarea name="c_note" rows="3" placeholder="예: 소방 완비증명은 11월 중 발급 예정, 샤워실은 잠가 두고 안내하지 않습니다.">{f.compliance.note || ''}</textarea></div>
   </div>
 
   <div class="tabpanel panel">
     {space ? (
       <>
-        <p class="help">사진은 가로 1600px, 2MB 이하 WebP/JPG 권장. 첫 번째 사진이 대표 사진입니다. 업로드는 아래 별도 버튼으로 진행됩니다(저장과 무관).</p>
+        <p class="help">사진은 가로 1600px, 2MB 이하 WebP/JPG 권장. 첫 번째 사진이 대표 사진입니다. 공개 조건: 3장 이상. 침대·호텔식 침구·샤워 부스가 보이는 사진은 쓰지 않습니다. 업로드는 아래 "사진 관리" 영역에서 진행됩니다(저장과 무관).</p>
         {f.photos.length > 0 && (
           <div class="photos-grid" style="margin-bottom:14px">
             {f.photos.map((p: any, i: number) => <figure><img src={p.sm || p.src} alt="" /><button type="submit" form={`del-photo-${i}`} title="삭제">✕</button></figure>)}
           </div>
         )}
-        <p class="help">사진 추가/삭제는 폼 아래 "사진 관리" 영역에서 합니다.</p>
       </>
     ) : <p class="help">공간을 먼저 저장하면 사진을 올릴 수 있습니다.</p>}
   </div>
 
   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
     <button class="btn btn--primary" type="submit">저장</button>
-    <span class="help">저장 후 "검토 요청"을 눌러야 관리자 검토가 시작됩니다.</span>
+    <span class="help">{isAdmin ? '관리자 수정은 즉시 반영됩니다.' : '저장 후 "검토 요청"을 눌러야 레스텔 검토가 시작됩니다.'}</span>
   </div>
 </form>
 
 {space && photoAction && (
   <div class="panel" style="margin-top:18px">
-    <h2 class="h3" style="margin-bottom:10px">사진 관리</h2>
+    <h2 class="h3" style="margin-bottom:10px">사진 관리 <span class="small muted">({f.photos.length}장)</span></h2>
     <form method="post" action={photoAction} enctype="multipart/form-data" class="inline-form">
       <input type="hidden" name="op" value="upload" />
       <input type="file" name="photos" accept="image/*" multiple />
@@ -127,6 +159,6 @@ const ph = {
     {f.photos.map((p: any, i: number) => (
       <form id={`del-photo-${i}`} method="post" action={photoAction} data-confirm="이 사진을 삭제할까요?"><input type="hidden" name="op" value="delete" /><input type="hidden" name="index" value={i} /></form>
     ))}
-    <p class="help" style="margin-top:10px">R2 저장소가 연결되어 있지 않으면 파일 업로드 대신 URL 추가를 사용하세요.</p>
+    <p class="help" style="margin-top:10px">사진 저장소가 연결되어 있지 않으면 파일 업로드 대신 URL 추가를 사용하세요. 촬영 요령은 <a href="/host/center/guide#photos" target="_blank" style="text-decoration:underline">운영 가이드 &gt; 사진 촬영</a>을 참고하세요.</p>
   </div>
 )}

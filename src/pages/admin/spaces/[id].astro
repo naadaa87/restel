@@ -4,7 +4,7 @@ import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import SpaceForm from '@/components/SpaceForm.astro';
 import { db, getSpace, updateSpace, updateSpaceStatus, deleteSpace, slugExists, audit, getHost, parseJson } from '@/lib/db';
-import { spaceFromForm, redirectWith, flash, STATUS_KO, str } from '@/lib/portal';
+import { spaceFromForm, spaceReadiness, redirectWith, flash, STATUS_KO, str, COMPLIANCE } from '@/lib/portal';
 import { sameOrigin } from '@/lib/auth';
 import { sendMail } from '@/lib/email';
 import { rowToView } from '@/lib/spaces';
@@ -41,6 +41,10 @@ if (Astro.request.method === 'POST') {
 const name = JSON.parse(space.name_json || '{}').ko || space.slug;
 const view = rowToView(space, 'ko');
 const photos = parseJson<any[]>(space.photos_json, []);
+const compliance = parseJson<any>(space.compliance_json, {});
+const missing = spaceReadiness(space);
+const blocked = parseJson<any>(space.blocked_json, {});
+const entry = parseJson<any>(space.entry_json, {});
 ---
 <Portal title={`공간 검토 — ${name}`} kind="admin" user={me} current="spaces" msg={msg} err={err}>
   <a class="small muted" href="/admin/spaces">← 공간 목록</a>
@@ -57,10 +61,12 @@ const photos = parseJson<any[]>(space.photos_json, []);
         <div class="field"><label>호스트에게 남길 메모</label><textarea name="note" rows="3" placeholder="예: 조명 3단계 사진과 암막 확인 사진을 추가해 주세요.">{space.admin_note}</textarea></div>
         <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">결정 저장</button>
       </form>
-      <h3 class="h3" style="margin:18px 0 8px;font-size:16px">레스텔 기준 체크</h3>
-      <ul class="check" style="gap:6px;font-size:14px">
-        <li>침대 없음 · 접이식 매트/담요 명시</li><li>조명 3단계 · 암막</li><li>세션 자정 전 종료</li><li>숙박 어휘(1박·체크인·객실) 없음</li><li>소화기·비상등·피난안내도</li><li>사진 3장 이상, 실제 공간</li>
-      </ul>
+      <h3 class="h3" style="margin:18px 0 8px;font-size:16px">호스트 자가 점검 결과 {missing.length === 0 ? <span class="status status--approved">필수 항목 충족</span> : <span class="status status--pending">미비 {missing.length}</span>}</h3>
+      {missing.length > 0 && <ul class="small" style="margin:0 0 10px 18px;color:var(--coral-dark)">{missing.map((m) => <li>{m}</li>)}</ul>}
+      <table class="list" style="font-size:13px"><tbody>{COMPLIANCE.map((c) => <tr><td style="width:24px">{compliance[c.key] ? '✓' : '—'}</td><td>{c.required ? <strong style="color:var(--coral-dark)">● </strong> : '○ '}{c.text}</td></tr>)}</tbody></table>
+      {compliance.note && <p class="small" style="margin-top:8px"><strong>호스트 메모:</strong> {compliance.note}</p>}
+      <p class="small muted" style="margin-top:8px">휴무 요일 {(blocked.weekdays || []).length ? (blocked.weekdays || []).map((w: number) => ['일','월','화','수','목','금','토'][w]).join('·') : '없음'} · 휴무일 {(blocked.dates || []).length}일 · 정리 {space.buffer_min}분 · 입장 안내 {Object.keys(entry).length}개 언어</p>
+      <p class="small muted">검토자 확인: 사진에 침대·호텔식 침구·샤워 부스가 없는지, 운영 종료가 자정 이전인지, 세션 가격이 권장 범위인지, 영어 소개가 있는지.</p>
     </div>
     <div class="panel">
       <h2 class="h3" style="margin-bottom:10px">미리보기(한국어)</h2>

@@ -1,0 +1,24 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listNotices } from '@/lib/db';
+import { flash } from '@/lib/portal';
+import { fmtDate } from '@/lib/text';
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const notices = d ? await listNotices(d, 'host') : [];
+---
+<Portal title="공지사항" kind="host" user={me} current="center" msg={msg} err={err}>
+  <a class="small muted" href="/host/center">← 호스트 센터</a>
+  <h1 style="margin-top:8px">공지사항</h1>
+  <div class="panel">
+    {notices.length === 0 ? <p class="help">아직 공지가 없습니다.</p> : notices.map((n) => (
+      <div class="notice-item" id={`n${n.id}`}>
+        <h3>{n.pinned ? <span class="pin">고정</span> : null}{n.title}</h3>
+        <span class="small muted">{fmtDate(n.created_at)}{n.updated_at !== n.created_at && ` · 수정 ${fmtDate(n.updated_at)}`}</span>
+        <div class="body" style="margin-top:8px">{n.body}</div>
+      </div>
+    ))}
+  </div>
+</Portal>

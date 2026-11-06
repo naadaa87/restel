@@ -5,55 +5,117 @@ import Portal from '@/layouts/Portal.astro';
 import { db, getHostByEmail, createHost, audit } from '@/lib/db';
 import { hashPassword, signSession, setCookieHeader, cookieName, sameOrigin } from '@/lib/auth';
 import { notifyAdmin } from '@/lib/email';
-import { str } from '@/lib/portal';
+import { str, BIZ_TYPES, SPACE_KINDS, HEARD_FROM, PLEDGES } from '@/lib/portal';
 
 const env = (Astro.locals as any).runtime?.env || {};
 if ((Astro.locals as any).host) return Astro.redirect('/host');
 let err = '';
+let errStep = 0;
 const v: Record<string, string> = {};
+const checked: Record<string, boolean> = {};
 if (Astro.request.method === 'POST') {
   const fd = await Astro.request.formData();
-  for (const k of ['email', 'name', 'phone', 'company']) v[k] = str(fd, k);
+  for (const k of ['email', 'name', 'phone', 'company', 'biz_type', 'biz_no', 'biz_address', 'space_kind', 'region', 'website', 'heard', 'intro']) v[k] = str(fd, k);
+  for (const p of PLEDGES) checked[p.key] = !!fd.get(`pledge_${p.key}`);
   const pw = str(fd, 'password'), pw2 = str(fd, 'password2');
   const d = await db(Astro.locals);
+  const missingPledge = PLEDGES.filter((p) => !checked[p.key]);
   if (!d) err = '데이터베이스가 아직 연결되지 않았습니다.';
-  else if (!sameOrigin(Astro.request) || fd.get('website')) err = '잘못된 요청입니다.';
-  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) err = '이메일 형식을 확인해 주세요.';
-  else if (pw.length < 8) err = '비밀번호는 8자 이상이어야 합니다.';
-  else if (pw !== pw2) err = '비밀번호가 서로 다릅니다.';
-  else if (!v.name) err = '이름(담당자)을 입력해 주세요.';
-  else if (!fd.get('agree')) err = '레스텔 기준과 약관에 동의해 주세요.';
-  else if (await getHostByEmail(d, v.email)) err = '이미 가입된 이메일입니다. 로그인해 주세요.';
+  else if (!sameOrigin(Astro.request) || fd.get('website_hp')) err = '잘못된 요청입니다.';
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) { err = '이메일 형식을 확인해 주세요.'; errStep = 0; }
+  else if (pw.length < 8) { err = '비밀번호는 8자 이상이어야 합니다.'; errStep = 0; }
+  else if (pw !== pw2) { err = '비밀번호가 서로 다릅니다.'; errStep = 0; }
+  else if (!v.name) { err = '담당자 이름을 입력해 주세요.'; errStep = 0; }
+  else if (!v.phone) { err = '연락처를 입력해 주세요. 예약 요청 알림과 확인에 필요합니다.'; errStep = 0; }
+  else if (!v.biz_type) { err = '사업 형태를 선택해 주세요.'; errStep = 1; }
+  else if (!v.space_kind) { err = '현재 운영 중인 공간 형태를 선택해 주세요.'; errStep = 1; }
+  else if (missingPledge.length) { err = `레스텔 운영 기준 ${missingPledge.length}개 항목에 아직 동의하지 않았습니다. 모든 항목에 동의해야 가입할 수 있습니다.`; errStep = 2; }
+  else if (!fd.get('agree')) { err = '이용약관과 개인정보처리방침에 동의해 주세요.'; errStep = 2; }
+  else if (await getHostByEmail(d, v.email)) { err = '이미 가입된 이메일입니다. 로그인해 주세요.'; errStep = 0; }
   else {
-    const id = await createHost(d, { email: v.email, password_hash: await hashPassword(pw), name: v.name, phone: v.phone, company: v.company });
-    await audit(d, `host:${v.email}`, 'host.register', String(id));
-    await notifyAdmin(env, `새 호스트 가입 · ${v.name}`, `${v.email} / ${v.phone} / ${v.company}\n승인: ${env.SITE_URL || site.url}/admin/hosts`);
+    const pledge = { agreedAt: new Date().toISOString(), items: Object.fromEntries(PLEDGES.map((p) => [p.key, true])), version: 1 };
+    const profile = { website: v.website, heard: v.heard, intro: v.intro, notifyEmail: !!fd.get('notify_email') };
+    const id = await createHost(d, { email: v.email, password_hash: await hashPassword(pw), name: v.name, phone: v.phone, company: v.company, biz_type: v.biz_type, biz_no: v.biz_no, biz_address: v.biz_address, space_kind: v.space_kind, region: v.region, pledge_json: JSON.stringify(pledge), profile_json: JSON.stringify(profile) });
+    await audit(d, `host:${v.email}`, 'host.register', String(id), `${v.company} / ${v.space_kind} / ${v.region}`);
+    await notifyAdmin(env, `새 호스트 가입 · ${v.name}`, `${v.email} / ${v.phone} / ${v.company}\n형태: ${v.biz_type} · ${v.space_kind} · ${v.region}\n승인: ${env.SITE_URL || site.url}/admin/hosts/${id}`);
     const token = await signSession(env, { t: 'host', id, email: v.email.toLowerCase(), name: v.name, exp: Date.now() + 30 * 86400 * 1000 });
-    return new Response(null, { status: 303, headers: { Location: '/host?msg=' + encodeURIComponent('가입이 완료되었습니다. 공간을 등록해 주세요. 관리자 승인 후 공개됩니다.'), 'Set-Cookie': setCookieHeader(cookieName('host'), token, 30 * 86400, Astro.url.protocol === 'https:') } });
+    return new Response(null, { status: 303, headers: { Location: '/host?welcome=1', 'Set-Cookie': setCookieHeader(cookieName('host'), token, 30 * 86400, Astro.url.protocol === 'https:') } });
   }
 }
 ---
 <Portal title="호스트 가입" kind="host" err={err}>
-  <div class="auth" style="max-width:520px">
-    <div class="panel">
-      <h1>호스트 가입</h1>
-      <p class="help" style="margin-bottom:16px">가입 후 바로 공간을 등록할 수 있고, 레스텔 검토·승인을 거쳐 지점 목록에 공개됩니다. 입점비는 없습니다.</p>
+  <div class="auth" style="max-width:720px;margin:0 auto">
+    <div class="panel" data-wizard={errStep}>
+      <h1 style="margin-bottom:6px">레스텔 호스트 가입</h1>
+      <p class="help" style="margin-bottom:18px">휴식 공간대여 파트너로 입점하는 첫 단계입니다. 입점비는 없고, 가입 후 바로 공간을 등록할 수 있습니다. 레스텔 검토·승인을 거쳐 지점 목록에 공개됩니다.</p>
+      <ul class="wizard__nav">
+        <li>계정</li><li>사업·공간 정보</li><li>레스텔 운영 기준 서약</li><li>확인·가입</li>
+      </ul>
       <form method="post" class="form">
-        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
-        <div class="field"><label>이메일 <span class="req">*</span></label><input type="email" name="email" value={v.email || ''} required autocomplete="username" /></div>
-        <div class="form__row">
-          <div class="field"><label>비밀번호 (8자 이상) <span class="req">*</span></label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
-          <div class="field"><label>비밀번호 확인 <span class="req">*</span></label><input type="password" name="password2" required minlength="8" autocomplete="new-password" /></div>
+        <input type="text" name="website_hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+
+        <div class="wizard__step is-active">
+          <h2 class="h3">1. 계정 정보</h2>
+          <div class="field"><label>이메일 <span class="req">*</span></label><input type="email" name="email" value={v.email || ''} required autocomplete="username" /><div class="hint">로그인 아이디이자 예약 요청 알림을 받는 주소입니다.</div></div>
+          <div class="form__row">
+            <div class="field"><label>비밀번호 (8자 이상) <span class="req">*</span></label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
+            <div class="field"><label>비밀번호 확인 <span class="req">*</span></label><input type="password" name="password2" required minlength="8" autocomplete="new-password" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>담당자 이름 <span class="req">*</span></label><input name="name" value={v.name || ''} required /></div>
+            <div class="field"><label>연락처 <span class="req">*</span></label><input name="phone" value={v.phone || ''} placeholder="010-0000-0000" required /><div class="hint">고객에게는 공개되지 않고, 입장 안내 문의 번호로만 쓸 수 있습니다.</div></div>
+          </div>
+          <div class="wizard__actions"><span></span><button type="button" class="btn btn--primary" data-next>다음</button></div>
         </div>
-        <div class="form__row">
-          <div class="field"><label>담당자 이름 <span class="req">*</span></label><input name="name" value={v.name || ''} required /></div>
-          <div class="field"><label>연락처</label><input name="phone" value={v.phone || ''} placeholder="010-0000-0000" /></div>
+
+        <div class="wizard__step">
+          <h2 class="h3">2. 사업·공간 정보</h2>
+          <div class="form__row">
+            <div class="field"><label>사업 형태 <span class="req">*</span></label>
+              <select name="biz_type" required><option value="">선택</option>{BIZ_TYPES.map((b) => <option value={b.code} selected={v.biz_type === b.code}>{b.label}</option>)}</select>
+              <div class="hint">개인도 가입할 수 있습니다. 정산 시 사업자는 세금계산서, 개인은 원천징수로 처리됩니다.</div></div>
+            <div class="field"><label>상호·법인명</label><input name="company" value={v.company || ''} placeholder="예: 쏘플파티룸 성수점" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>사업자등록번호</label><input name="biz_no" value={v.biz_no || ''} placeholder="000-00-00000" inputmode="numeric" /><div class="hint">개인은 비워 두셔도 됩니다. 정산 전까지 입력하면 됩니다.</div></div>
+            <div class="field"><label>사업장 주소</label><input name="biz_address" value={v.biz_address || ''} placeholder="시·구·동까지" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>현재 운영 중인 공간 형태 <span class="req">*</span></label>
+              <select name="space_kind" required><option value="">선택</option>{SPACE_KINDS.map((k) => <option value={k.code} selected={v.space_kind === k.code}>{k.label}</option>)}</select></div>
+            <div class="field"><label>공간 위치(지역)</label><input name="region" value={v.region || ''} placeholder="예: 서울 성수, 부산 전포" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label>웹사이트·인스타그램</label><input name="website" value={v.website || ''} placeholder="https://" /></div>
+            <div class="field"><label>레스텔을 알게 된 경로</label><select name="heard"><option value="">선택</option>{HEARD_FROM.map((h) => <option value={h} selected={v.heard === h}>{h}</option>)}</select></div>
+          </div>
+          <div class="field"><label>공간 소개와 전환 계획 (검토 참고용)</label><textarea name="intro" rows="4" placeholder="예: 성수동 25평 파티룸, 평일 낮 공실이 많아 낮잠·명상 세션으로 전환하려고 합니다. 암막과 조명은 갖춰져 있고 매트는 준비 예정입니다.">{v.intro || ''}</textarea></div>
+          <div class="wizard__actions"><button type="button" class="btn btn--ghost" data-prev>이전</button><button type="button" class="btn btn--primary" data-next>다음</button></div>
         </div>
-        <div class="field"><label>상호·법인명</label><input name="company" value={v.company || ''} /></div>
-        <label class="checkbox"><input type="checkbox" name="agree" required /> <span><a href="/hosts" target="_blank" style="text-decoration:underline">레스텔 기준</a>(침대 없음·조명 3단계·자정 전 종료·숙박 어휘 금지 등)과 <a href="/terms" target="_blank" style="text-decoration:underline">이용약관</a>·<a href="/privacy" target="_blank" style="text-decoration:underline">개인정보처리방침</a>에 동의합니다.</span></label>
-        <button class="btn btn--sage btn--block" type="submit">가입하고 공간 등록하기</button>
+
+        <div class="wizard__step">
+          <h2 class="h3">3. 레스텔 운영 기준 서약</h2>
+          <div class="callout callout--sage small">레스텔은 숙박시설이 아닌 <strong>휴식 공간대여</strong>입니다. 아래 기준은 호스트와 레스텔 모두를 지키는 약속이며, 모든 항목에 동의해야 가입할 수 있습니다. 승인 후에도 기준을 어기면 노출이 중단될 수 있습니다.</div>
+          <div class="pledge">
+            {PLEDGES.map((p) => <label><input type="checkbox" name={`pledge_${p.key}`} checked={!!checked[p.key]} required /> <span>{p.text}</span></label>)}
+          </div>
+          <label class="checkbox"><input type="checkbox" name="agree" required /> <span><a href="/terms" target="_blank" style="text-decoration:underline">이용약관</a>·<a href="/privacy" target="_blank" style="text-decoration:underline">개인정보처리방침</a>과 <a href="/hosts" target="_blank" style="text-decoration:underline">호스트 입점 안내</a>의 수수료·정산 조건(입점비 없음, 성사 세션 수수료 기본 15%)에 동의합니다.</span></label>
+          <div class="wizard__actions"><button type="button" class="btn btn--ghost" data-prev>이전</button><button type="button" class="btn btn--primary" data-next>다음</button></div>
+        </div>
+
+        <div class="wizard__step">
+          <h2 class="h3">4. 가입 후 진행 순서</h2>
+          <ol style="padding-left:20px;display:grid;gap:8px;font-size:15px;color:var(--ink-2)">
+            <li><strong>승인 대기</strong> 상태로 포털에 들어갑니다. 레스텔이 영업일 기준 3일 안에 사업 정보를 확인합니다.</li>
+            <li>승인을 기다리는 동안 <strong>공간 등록·사진·세션 요금·레스텔 기준 점검</strong>을 미리 끝낼 수 있습니다.</li>
+            <li>공간의 <strong>검토 요청</strong>을 누르면 레스텔이 사진과 정보를 보고 보완 항목을 안내하거나 공개합니다.</li>
+            <li>공개되면 7개 언어 사이트에 "레스텔 파트너"로 노출되고 예약 요청이 들어옵니다. 확정·결제·입장 안내·정산은 포털에서 처리합니다.</li>
+          </ol>
+          <label class="checkbox"><input type="checkbox" name="notify_email" checked /> <span>새 예약 요청·고객 메시지·승인 결과를 이메일로 받겠습니다.</span></label>
+          <div class="wizard__actions"><button type="button" class="btn btn--ghost" data-prev>이전</button><button class="btn btn--sage" type="submit">가입하고 공간 등록하기</button></div>
+        </div>
       </form>
-      <p class="small muted" style="margin-top:16px">이미 계정이 있나요? <a href="/host/login" style="text-decoration:underline">로그인</a></p>
+      <p class="small muted" style="margin-top:16px">이미 계정이 있나요? <a href="/host/login" style="text-decoration:underline">로그인</a> · 입점 조건이 궁금하면 <a href="/hosts" style="text-decoration:underline">호스트 입점 안내</a></p>
     </div>
   </div>
 </Portal>

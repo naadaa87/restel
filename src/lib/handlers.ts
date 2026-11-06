@@ -3,7 +3,8 @@ import type { Locale } from '@/config/site';
 import { site } from '@/config/site';
 import { localizePath } from '@/i18n';
 import { db, createBooking, createInquiry, getBookingByCode, listMessages, addMessage, updateBookingStatus, normalizeContact, getHost, audit } from './db';
-import { estimate, type SpaceView } from './spaces';
+import { estimate, isClosedDate, type SpaceView } from './spaces';
+import { hostPayment } from './portal';
 import { sendMail, notifyAdmin, bookingSummaryText } from './email';
 import { sameOrigin } from './auth';
 
@@ -37,6 +38,11 @@ export async function handleBookingPost(ctx: { request: Request; locals: any; re
   const ses = space.sessions.find((s) => s.code === values.session);
   if (!ses) errors.push(t.book.session);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date)) errors.push(t.book.date);
+  else {
+    const todayKst = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date());
+    if (values.date < todayKst) errors.push(t.book.pastDate || t.book.date);
+    else if (isClosedDate(space, values.date)) errors.push(t.book.closedDate || t.book.date);
+  }
   if (!/^\d{2}:\d{2}$/.test(values.start)) errors.push(t.book.start);
   const people = Math.max(1, Math.min(Number(values.people || 2), space.capacityMax));
   if (!values.name) errors.push(t.book.name);
@@ -114,5 +120,12 @@ export async function handleMyRequest(ctx: { request: Request; locals: any; url:
     b.status = 'cancelled';
   }
   out.booking = b; out.messages = await listMessages(d, b.id); out.canAct = !!matches;
+  // 결제 안내(파트너 공간은 호스트 설정, 직영은 메시지로 안내)
+  if (b.status === 'confirmed' || b.status === 'completed') {
+    const amount = b.amount_due || b.est_amount || 0;
+    let pay: any = { status: b.payment_status, method: b.payment_method, amount, paidAmount: b.paid_amount, refundAmount: b.refund_amount };
+    if (b.host_id) { const h = await getHost(d, b.host_id); const hp = hostPayment(h); if (b.payment_method === 'transfer') Object.assign(pay, { bank: hp.bank, holder: hp.holder, account: hp.account, deadlineHours: hp.deadlineHours }); if (b.payment_method === 'onsite') pay.onsiteNote = hp.onsiteNote; pay.refundPolicy = hp.refundPolicy; }
+    out.payment = pay;
+  }
   return out;
 }

@@ -1,0 +1,51 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listBookingsForHostByDateRange, listSpacesByHost, parseJson } from '@/lib/db';
+import { flash, monthGrid, todayKST, STATUS_KO } from '@/lib/portal';
+
+const me = (Astro.locals as any).host;
+const d = await db(Astro.locals);
+const { msg, err } = flash(Astro.url);
+const today = todayKST();
+const month = /^\d{4}-\d{2}$/.test(Astro.url.searchParams.get('month') || '') ? Astro.url.searchParams.get('month')! : today.slice(0, 7);
+const spaceFilter = Astro.url.searchParams.get('space') || '';
+const g = monthGrid(month);
+const spaces = d ? await listSpacesByHost(d, me.id) : [];
+let bookings = d ? await listBookingsForHostByDateRange(d, me.id, g.from, g.to) : [];
+if (spaceFilter) bookings = bookings.filter((b) => b.space_slug === spaceFilter);
+const byDate: Record<string, typeof bookings> = {};
+for (const b of bookings) (byDate[b.date] ||= []).push(b);
+// 휴무일(선택한 공간 또는 전체 공간의 합집합)
+const targetSpaces = spaceFilter ? spaces.filter((s) => s.slug === spaceFilter) : spaces;
+const closedDates = new Set<string>(); const closedWeekdays = new Set<number>();
+for (const s of targetSpaces) { const bl = parseJson<any>(s.blocked_json, {}); (bl.dates || []).forEach((x: string) => closedDates.add(x)); (bl.weekdays || []).forEach((w: number) => closedWeekdays.add(w)); }
+const isClosed = (c: { date: string; weekday: number }) => closedDates.has(c.date) || (targetSpaces.length > 0 && closedWeekdays.has(c.weekday) && targetSpaces.every((s) => (parseJson<any>(s.blocked_json, {}).weekdays || []).includes(c.weekday)));
+const stat = (s: string) => bookings.filter((b) => b.status === s).length;
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+---
+<Portal title={`달력 ${g.label}`} kind="host" user={me} current="bookings" msg={msg} err={err}>
+  <div class="toolbar">
+    <div style="display:flex;gap:10px;align-items:center"><a class="btn btn--ghost btn--sm" href={`?month=${g.prev}${spaceFilter ? '&space=' + spaceFilter : ''}`}>‹</a><h1 style="margin:0">{g.label}</h1><a class="btn btn--ghost btn--sm" href={`?month=${g.next}${spaceFilter ? '&space=' + spaceFilter : ''}`}>›</a><a class="small" href={`?month=${today.slice(0, 7)}`}>이번 달</a></div>
+    <form method="get" class="inline-form"><input type="hidden" name="month" value={month} />
+      <select name="space" onchange="this.form.submit()"><option value="">모든 공간</option>{spaces.map((s) => <option value={s.slug} selected={spaceFilter === s.slug}>{JSON.parse(s.name_json || '{}').ko || s.slug}</option>)}</select>
+      <a class="btn btn--ghost btn--sm" href="/host/bookings">목록 보기</a></form>
+  </div>
+  <p class="small muted" style="margin-bottom:10px">확정 {stat('confirmed')} · 접수 {stat('requested')} · 완료 {stat('completed')} · 빗금은 휴무일입니다. 휴무일은 공간 편집 &gt; 운영·안내 탭에서 바꿀 수 있습니다.</p>
+  <div class="panel" style="padding:12px">
+    <table class="cal">
+      <thead><tr>{WD.map((w) => <th>{w}</th>)}</tr></thead>
+      <tbody>
+        {Array.from({ length: g.cells.length / 7 }, (_, r) => (
+          <tr>{g.cells.slice(r * 7, r * 7 + 7).map((c) => c ? (
+            <td class={`${c.date === today ? 'is-today' : ''} ${isClosed(c) ? 'is-closed' : ''}`}>
+              <div class="cal__day"><span style={c.weekday === 0 ? 'color:#B23A2A' : c.weekday === 6 ? 'color:#2A5BB2' : ''}>{c.day}</span><a class="small muted" href={`/host/bookings?date=${c.date}`}>목록</a></div>
+              {(byDate[c.date] || []).slice(0, 4).map((b) => <a class={`ev ev--${b.status}`} href={`/host/bookings/${b.id}`} title={`${b.code} ${STATUS_KO[b.status]} · ${b.name} ${b.people}인`}>{b.start_time} {b.name}{b.people > 1 ? ` +${b.people - 1}` : ''}</a>)}
+              {(byDate[c.date] || []).length > 4 && <a class="cal__more small" href={`/host/bookings?date=${c.date}`}>+{(byDate[c.date] || []).length - 4}건 더</a>}
+            </td>
+          ) : <td class="is-empty"></td>)}</tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</Portal>

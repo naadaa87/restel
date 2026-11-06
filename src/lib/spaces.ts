@@ -25,6 +25,8 @@ export interface SpaceView {
   operator: string;
   hostId: number | null;
   hostEmail?: string;
+  blocked: { dates: string[]; weekdays: number[] };
+  bufferMin: number;
 }
 
 export function pickI18n(obj: any, lang: Locale, fallback = ''): string {
@@ -48,6 +50,7 @@ export function flagshipToView(f: (typeof flagships)[number], lang: Locale): Spa
     directions: f.directions[lang] || f.directions.en, address: f.address[lang] || f.address.en, lat: f.lat, lng: f.lng,
     photos: f.photos.map((p) => ({ src: p.src, sm: p.sm, alt: p.alt[lang] || p.alt.en })),
     sessions: f.sessions, hours: f.hours, capacityBase: f.capacityBase, capacityMax: f.capacityMax, area: f.areaM2, operator: f.operator, hostId: null,
+    blocked: { dates: [], weekdays: [] }, bufferMin: 60,
   };
 }
 
@@ -59,12 +62,14 @@ export function rowToView(r: SpaceRow, lang: Locale): SpaceView {
     extraPersonPrice: Number(s.extraPersonPrice || 0), perPerson: !!s.perPerson, startWindow: s.startWindow || '',
   }));
   const hours = parseJson<any>(r.hours_json, {});
+  const bl = parseJson<any>(r.blocked_json, {});
   return {
     slug: r.slug, type: 'partner', region: pickI18n(parseJson(r.region, r.region), lang, r.region), name: pickI18n(parseJson(r.name_json, {}), lang, r.slug),
     tagline: pickI18n(parseJson(r.tagline_json, {}), lang), description: pickI18nList(parseJson(r.desc_json, {}), lang), features: pickI18nList(parseJson(r.features_json, []), lang),
     rules: pickI18nList(parseJson(r.rules_json, {}), lang), directions: pickI18nList(parseJson(r.directions_json, {}), lang), address: r.address, lat: r.lat, lng: r.lng,
     photos, sessions, hours: { open: hours.open || '07:00', close: hours.close || '24:00' }, capacityBase: r.capacity_base, capacityMax: r.capacity_max, area: r.area,
     operator: r.host_name || 'Partner', hostId: r.host_id, hostEmail: r.host_email,
+    blocked: { dates: Array.isArray(bl.dates) ? bl.dates : [], weekdays: Array.isArray(bl.weekdays) ? bl.weekdays : [] }, bufferMin: Number(r.buffer_min || 60),
   };
 }
 
@@ -90,9 +95,12 @@ export function minPrice(s: SpaceView) {
   return prices.length ? Math.min(...prices) : 0;
 }
 
+/** YYYY-MM-DD 의 요일 (0=일). 시간대 영향을 받지 않도록 UTC 자정으로 계산 */
+export function weekdayOf(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00Z').getUTCDay();
+}
 export function isWeekend(dateStr: string) {
-  const d = new Date(dateStr + 'T00:00:00+09:00');
-  const day = d.getUTCDay();
+  const day = weekdayOf(dateStr);
   return day === 0 || day === 6;
 }
 
@@ -103,4 +111,11 @@ export function estimate(s: SpaceView, code: string, people: number, dateStr: st
   if (ses.perPerson) return base * Math.max(people, 1);
   const extra = Math.max(0, people - ses.basePeople) * ses.extraPersonPrice;
   return base + extra;
+}
+
+/** 휴무일·휴무 요일 여부 */
+export function isClosedDate(s: SpaceView, dateStr: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  if (s.blocked.dates.includes(dateStr)) return true;
+  return s.blocked.weekdays.includes(weekdayOf(dateStr));
 }

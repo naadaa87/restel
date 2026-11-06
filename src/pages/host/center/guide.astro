@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { hostGuide } from '@/data/hostGuide';
+import { flash } from '@/lib/portal';
+const me = (Astro.locals as any).host;
+const { msg, err } = flash(Astro.url);
+---
+<Portal title="운영 가이드" kind="host" user={me} current="center" msg={msg} err={err}>
+  <a class="small muted" href="/host/center">← 호스트 센터</a>
+  <h1 style="margin-top:8px">레스텔 호스트 운영 가이드</h1>
+  <div class="grid" style="grid-template-columns:260px 1fr;gap:24px;align-items:start">
+    <div class="panel sticky" style="padding:14px">
+      <div class="guide-toc">{hostGuide.map((s) => <a href={`#${s.slug}`} style="padding:9px 12px">{s.title}</a>)}</div>
+      <p class="small muted" style="margin:12px 0 0">인쇄해서 공간에 두셔도 됩니다. <a href="/host/center/materials" style="text-decoration:underline">자료실</a>에 안내문 양식이 있습니다.</p>
+    </div>
+    <div class="panel guide">
+      {hostGuide.map((s) => (
+        <section id={s.slug} style="padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:10px">
+          <h2>{s.title}</h2>
+          <p class="muted" style="margin-top:-4px">{s.summary}</p>
+          {s.blocks.map((b) => (
+            <div>
+              {b.h && <h3>{b.h}</h3>}
+              {b.p && b.p.map((p) => <p>{p}</p>)}
+              {b.list && <ul class="check" style="gap:6px;margin:6px 0 10px">{b.list.map((li) => <li>{li}</li>)}</ul>}
+              {b.note && <div class="note">{b.note}</div>}
+            </div>
+          ))}
+        </section>
+      ))}
+      <p class="small muted">이 가이드는 레스텔 운영 기준(2026-11)을 반영합니다. 법령·소방 기준은 지역과 건물에 따라 다를 수 있으므로 관할 기관 확인이 우선합니다.</p>
+    </div>
+  </div>
+</Portal>

@@ -1,0 +1,94 @@
+---
+export const prerender = false;
+import { site } from '@/config/site';
+import Portal from '@/layouts/Portal.astro';
+import { db, listHosts, settlementRollup, listCompletedBookingsForPeriod, listAllSettlements, upsertSettlement, markSettlementPaid, getSettlement, getSettings, getHost, audit } from '@/lib/db';
+import { flash, redirectWith, str, num, STATUS_KO, hostBank, todayKST } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { sendMail } from '@/lib/email';
+import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
+
+const me = (Astro.locals as any).admin;
+const env = (Astro.locals as any).runtime?.env || {};
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+const settings = await getSettings(d);
+const defaultRate = Number(settings.commission_rate || 15);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith('/admin/settlements', undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const op = str(fd, 'op');
+  if (op === 'issue') {
+    const hostId = num(fd, 'host_id'); const period = str(fd, 'period'); const rate = num(fd, 'rate', defaultRate);
+    if (!hostId || !/^\d{4}-\d{2}$/.test(period)) return redirectWith('/admin/settlements', undefined, '호스트와 월을 확인해 주세요.');
+    const rows = await listCompletedBookingsForPeriod(d, hostId, period);
+    const gross = rows.reduce((a, b) => a + b.paid_amount - b.refund_amount, 0);
+    const sid = await upsertSettlement(d, { host_id: hostId, period, gross, commission_rate: rate, booking_ids: rows.map((r) => r.id), note: str(fd, 'note') });
+    await audit(d, `admin:${me.email}`, 'settlement.issue', String(sid), `${hostId} ${period} ${gross}`);
+    const h = await getHost(d, hostId);
+    if (h?.email && fd.get('notify')) await sendMail(env, { to: h.email, subject: `[RESTEL] ${period} 정산서 발행`, text: `${h.name}님, ${period} 정산서가 발행되었습니다.\n매출 ${formatKRW(gross)} · 수수료 ${rate}% · 정산액 ${formatKRW(gross - Math.round(gross * rate / 100))}\n\n${env.SITE_URL || site.url}/host/settlement/${period}` });
+    return redirectWith('/admin/settlements', `${period} 정산서를 발행했습니다 (완료 ${rows.length}건, 매출 ${formatKRW(gross)}).`);
+  }
+  if (op === 'paid') {
+    const sid = num(fd, 'id'); const s = await getSettlement(d, sid);
+    if (!s) return redirectWith('/admin/settlements', undefined, '정산서를 찾을 수 없습니다.');
+    await markSettlementPaid(d, sid, str(fd, 'note') || s.note);
+    await audit(d, `admin:${me.email}`, 'settlement.paid', String(sid), `${s.host_id} ${s.period} ${s.net}`);
+    const h = await getHost(d, s.host_id);
+    if (h?.email) await sendMail(env, { to: h.email, subject: `[RESTEL] ${s.period} 정산 지급 완료`, text: `${h.name}님, ${s.period} 정산 ${formatKRW(s.net)}이(가) 지급 처리되었습니다.\n\n${env.SITE_URL || site.url}/host/settlement/${s.period}` });
+    return redirectWith('/admin/settlements', '지급 완료로 표시했습니다.');
+  }
+  return redirectWith('/admin/settlements');
+}
+const hostFilter = Number(Astro.url.searchParams.get('host') || 0);
+const hosts = (await listHosts(d)).filter((h) => h.status !== 'pending' || h.booking_count > 0);
+const issued = await listAllSettlements(d);
+const issuedKey = new Set(issued.map((s) => `${s.host_id}:${s.period}`));
+const thisMonth = todayKST().slice(0, 7);
+// 발행 대기: 완료 매출이 있는데 정산서가 없는 (호스트, 월)
+const pending: { host: typeof hosts[number]; period: string; count: number; gross: number; bankOk: boolean }[] = [];
+for (const h of hosts) {
+  if (hostFilter && h.id !== hostFilter) continue;
+  const roll = await settlementRollup(d, h.id);
+  for (const r of roll) if (!issuedKey.has(`${h.id}:${r.period}`) && r.period < thisMonth && r.count > 0) pending.push({ host: h, period: r.period, count: r.count, gross: r.gross, bankOk: !!hostBank(h).account });
+}
+const list = hostFilter ? issued.filter((s) => s.host_id === hostFilter) : issued;
+---
+<Portal title="정산" kind="admin" user={me} current="settlements" msg={msg} err={err}>
+  <div class="toolbar"><h1 style="margin:0">정산 관리</h1><span class="small muted">기본 수수료율 {defaultRate}% (설정에서 변경) · 이번 달({thisMonth})은 마감 후 발행</span></div>
+  {hostFilter > 0 && <p class="small"><a href="/admin/settlements" style="text-decoration:underline">전체 호스트 보기</a></p>}
+  <div class="panel">
+    <h2 class="h3" style="margin-bottom:10px">발행 대기 (지난 달까지 완료 매출이 있는 호스트)</h2>
+    {pending.length === 0 ? <p class="help">발행할 정산이 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>호스트</th><th>월</th><th>완료</th><th>매출</th><th>수수료율</th><th>정산 계좌</th><th>발행</th></tr></thead>
+        <tbody>{pending.map((p) => (
+          <tr>
+            <td><a href={`/admin/hosts/${p.host.id}`}><strong>{p.host.name}</strong></a><br /><span class="small muted">{p.host.company}</span></td>
+            <td>{p.period}</td><td>{p.count}건</td><td>{formatKRW(p.gross)}</td>
+            <td colspan="3"><form method="post" class="inline-form"><input type="hidden" name="op" value="issue" /><input type="hidden" name="host_id" value={p.host.id} /><input type="hidden" name="period" value={p.period} />
+              <input name="rate" value={defaultRate} style="width:60px" inputmode="numeric" />% <span class={`small ${p.bankOk ? 'muted' : ''}`} style={p.bankOk ? '' : 'color:var(--coral-dark)'}>{p.bankOk ? '계좌 등록됨' : '계좌 미등록'}</span>
+              <input name="note" placeholder="메모(선택)" style="width:160px" /><label class="small"><input type="checkbox" name="notify" checked /> 메일</label><button class="btn btn--primary btn--sm" type="submit">정산서 발행</button></form></td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <h2 class="h3" style="margin-bottom:10px">발행된 정산서</h2>
+    {list.length === 0 ? <p class="help">발행된 정산서가 없습니다.</p> : (
+      <table class="list">
+        <thead><tr><th>월</th><th>호스트</th><th>건수</th><th>매출</th><th>수수료</th><th>정산액</th><th>상태</th><th></th></tr></thead>
+        <tbody>{list.map((s) => (
+          <tr>
+            <td><a href={`/admin/settlements/${s.id}`}><strong>{s.period}</strong></a></td>
+            <td>{s.host_name}<br /><span class="small muted">{s.host_email}</span></td>
+            <td>{s.booking_count}</td><td>{formatKRW(s.gross)}</td><td>{formatKRW(s.commission)} <span class="small muted">({s.commission_rate}%)</span></td><td><strong>{formatKRW(s.net)}</strong></td>
+            <td><span class={`status status--${s.status === 'paid' ? 'completed' : 'confirmed'}`}>{STATUS_KO[s.status]}</span><br /><span class="small muted">{s.status === 'paid' && s.paid_at ? fmtDate(s.paid_at) : `발행 ${fmtDate(s.created_at)}`}</span></td>
+            <td>{s.status === 'issued' && <form method="post" class="inline-form" data-confirm="지급 완료로 표시할까요? 호스트에게 메일이 발송됩니다."><input type="hidden" name="op" value="paid" /><input type="hidden" name="id" value={s.id} /><input name="note" placeholder="송금 메모" style="width:120px" /><button class="btn btn--ghost btn--sm" type="submit">지급 완료</button></form>}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+  </div>
+</Portal>

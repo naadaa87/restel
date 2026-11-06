@@ -1,0 +1,58 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import { db, listNotices, getNotice, createNotice, updateNotice, deleteNotice, audit } from '@/lib/db';
+import { flash, redirectWith, str, num } from '@/lib/portal';
+import { sameOrigin } from '@/lib/auth';
+import { fmtDate } from '@/lib/text';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
+const { msg, err } = flash(Astro.url);
+if (Astro.request.method === 'POST') {
+  if (!sameOrigin(Astro.request)) return redirectWith('/admin/notices', undefined, '잘못된 요청');
+  const fd = await Astro.request.formData();
+  const op = str(fd, 'op'); const id = num(fd, 'id');
+  if (op === 'delete' && id) { await deleteNotice(d, id); await audit(d, `admin:${me.email}`, 'notice.delete', String(id)); return redirectWith('/admin/notices', '공지를 삭제했습니다.'); }
+  const n = { title: str(fd, 'title').slice(0, 120), body: str(fd, 'body').slice(0, 5000), audience: str(fd, 'audience') === 'all' ? 'all' : 'host', pinned: fd.get('pinned') ? 1 : 0 };
+  if (!n.title) return redirectWith('/admin/notices', undefined, '제목을 입력해 주세요.');
+  if (op === 'update' && id) { await updateNotice(d, id, n); await audit(d, `admin:${me.email}`, 'notice.update', String(id)); return redirectWith('/admin/notices', '공지를 수정했습니다.'); }
+  const nid = await createNotice(d, n); await audit(d, `admin:${me.email}`, 'notice.create', String(nid));
+  return redirectWith('/admin/notices', '공지를 등록했습니다. 호스트 포털 대시보드와 호스트 센터에 표시됩니다.');
+}
+const editId = Number(Astro.url.searchParams.get('edit') || 0);
+const editing = editId ? await getNotice(d, editId) : null;
+const notices = await listNotices(d);
+---
+<Portal title="공지" kind="admin" user={me} current="notices" msg={msg} err={err}>
+  <h1>호스트 공지</h1>
+  <div class="grid grid--2" style="align-items:start">
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">{editing ? `공지 수정 #${editing.id}` : '새 공지'}</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="op" value={editing ? 'update' : 'create'} />
+        {editing && <input type="hidden" name="id" value={editing.id} />}
+        <div class="field"><label>제목</label><input name="title" value={editing?.title || ''} required /></div>
+        <div class="field"><label>내용</label><textarea name="body" rows="8">{editing?.body || ''}</textarea></div>
+        <div class="form__row">
+          <div class="field"><label>대상</label><select name="audience"><option value="host" selected={!editing || editing.audience === 'host'}>호스트 포털</option><option value="all" selected={editing?.audience === 'all'}>호스트 포털 (전체 표시)</option></select></div>
+          <label class="checkbox" style="align-self:end;padding-bottom:12px"><input type="checkbox" name="pinned" checked={!!editing?.pinned} /> <span>상단 고정</span></label>
+        </div>
+        <div style="display:flex;gap:8px"><button class="btn btn--primary btn--sm" type="submit">{editing ? '수정 저장' : '등록'}</button>{editing && <a class="btn btn--ghost btn--sm" href="/admin/notices">취소</a>}</div>
+      </form>
+      <p class="help" style="margin-top:10px">예: 정산 일정, 기준 변경, 시즌 프로모션, 점검 안내. 긴 운영 지침은 호스트 센터 운영 가이드(코드)에 두고, 공지는 변경 사항 위주로 적어 주세요.</p>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">공지 목록</h2>
+      {notices.length === 0 ? <p class="help">등록된 공지가 없습니다.</p> : notices.map((n) => (
+        <div class="notice-item">
+          <h3>{n.pinned ? <span class="pin">고정</span> : null}{n.title}</h3>
+          <span class="small muted">{fmtDate(n.created_at)} · {n.audience}</span>
+          <div class="body small" style="margin-top:6px;max-height:80px;overflow:hidden">{n.body}</div>
+          <div style="display:flex;gap:8px;margin-top:8px"><a class="btn btn--ghost btn--sm" href={`/admin/notices?edit=${n.id}`}>수정</a><form method="post" data-confirm="이 공지를 삭제할까요?"><input type="hidden" name="op" value="delete" /><input type="hidden" name="id" value={n.id} /><button class="btn btn--ghost btn--sm" type="submit">삭제</button></form></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Portal>

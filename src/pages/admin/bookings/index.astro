@@ -2,35 +2,42 @@
 export const prerender = false;
 import Portal from '@/layouts/Portal.astro';
 import { db, listAllBookings } from '@/lib/db';
-import { flash, redirectWith, STATUS_KO } from '@/lib/portal';
+import { flash, redirectWith, STATUS_KO, PAYMENT_KO, METHOD_KO, BOOKING_STATUSES, bookingAmount } from '@/lib/portal';
 import { fmtDate } from '@/lib/text';
+import { formatKRW } from '@/i18n';
 
 const me = (Astro.locals as any).admin;
 const d = await db(Astro.locals);
 if (!d) return redirectWith('/admin', undefined, 'D1 미연결');
 const { msg, err } = flash(Astro.url);
 const filter = Astro.url.searchParams.get('status') || '';
-const bookings = await listAllBookings(d, filter || undefined);
-const tabs = ['', 'requested', 'confirmed', 'completed', 'declined', 'cancelled'];
+const hostId = Number(Astro.url.searchParams.get('host') || 0);
+const q = (Astro.url.searchParams.get('q') || '').trim().toLowerCase();
+let bookings = await listAllBookings(d, filter || undefined);
+if (hostId) bookings = bookings.filter((b) => b.host_id === hostId);
+if (q) bookings = bookings.filter((b) => [b.code, b.name, b.phone, b.email, b.space_name].join(' ').toLowerCase().includes(q));
 ---
-<Portal title="예약 요청" kind="admin" user={me} current="bookings" msg={msg} err={err}>
-  <div class="toolbar"><h1 style="margin:0">예약 요청 (전체)</h1><a class="btn btn--ghost btn--sm" href="/admin/bookings/export.csv">CSV 내보내기</a></div>
-  <div class="tabs">{tabs.map((s) => <a class="btn btn--ghost btn--sm" style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={s ? `?status=${s}` : '/admin/bookings'}>{s ? STATUS_KO[s] : '전체'}</a>)}</div>
+<Portal title="예약" kind="admin" user={me} current="bookings" msg={msg} err={err}>
+  <div class="toolbar"><h1 style="margin:0">예약 (전체)</h1><a class="btn btn--ghost btn--sm" href="/admin/bookings/export.csv">CSV 내보내기</a></div>
+  <div class="tabs"><a class="btn btn--ghost btn--sm" style={!filter ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href="/admin/bookings">전체</a>{BOOKING_STATUSES.map((s) => <a class="btn btn--ghost btn--sm" style={filter === s ? 'border-color:var(--coral);color:var(--coral-dark)' : ''} href={`?status=${s}`}>{STATUS_KO[s]}</a>)}</div>
+  <form method="get" class="inline-form" style="margin-bottom:14px"><input name="q" value={q} placeholder="번호·이름·연락처·공간 검색" style="min-width:260px" />{hostId > 0 && <input type="hidden" name="host" value={hostId} />}<button class="btn btn--ghost btn--sm" type="submit">찾기</button>{(q || hostId > 0) && <a class="small muted" href="/admin/bookings">초기화</a>}</form>
   <div class="panel">
     {bookings.length === 0 ? <p class="help">표시할 요청이 없습니다.</p> : (
+      <div style="overflow-x:auto">
       <table class="list">
-        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>예상</th><th>상태</th><th>접수</th></tr></thead>
+        <thead><tr><th>번호</th><th>공간 · 세션</th><th>일시(KST)</th><th>인원</th><th>고객</th><th>금액 · 결제</th><th>상태</th><th>접수</th></tr></thead>
         <tbody>{bookings.map((b) => (
           <tr>
             <td><a href={`/admin/bookings/${b.id}`}><strong>{b.code}</strong></a>{b.host_id ? <div class="small muted">파트너</div> : <div class="small" style="color:var(--coral-dark)">직영</div>}</td>
             <td>{b.space_name}<br /><span class="small muted">{b.session_code}</span></td>
             <td>{b.date} {b.start_time}</td><td>{b.people}</td>
             <td>{b.name}<br /><span class="small muted">{b.phone || b.email} · {b.lang}</span></td>
-            <td>{b.est_amount ? `₩${b.est_amount.toLocaleString('ko-KR')}` : '—'}</td>
+            <td>{formatKRW(bookingAmount(b))}<br /><span class={`pay-pill pay--${b.payment_status}`} style="margin:4px 0 0">{PAYMENT_KO[b.payment_status]}</span> <span class="small muted">{b.payment_method ? METHOD_KO[b.payment_method] : ''}</span></td>
             <td><span class={`status status--${b.status}`}>{STATUS_KO[b.status]}</span></td>
             <td class="small muted">{fmtDate(b.created_at)}</td>
           </tr>))}</tbody>
       </table>
+      </div>
     )}
   </div>
 </Portal>

@@ -4,7 +4,7 @@ import { site } from '@/config/site';
 import Portal from '@/layouts/Portal.astro';
 import SpaceForm from '@/components/SpaceForm.astro';
 import { db, getSpace, updateSpace, updateSpaceStatus, deleteSpace, slugExists, audit, getHost } from '@/lib/db';
-import { spaceFromForm, redirectWith, flash, STATUS_KO, str } from '@/lib/portal';
+import { spaceFromForm, spaceReadiness, redirectWith, flash, STATUS_KO, str } from '@/lib/portal';
 import { sameOrigin } from '@/lib/auth';
 import { notifyAdmin } from '@/lib/email';
 
@@ -22,11 +22,13 @@ if (Astro.request.method === 'POST') {
   const op = str(fd, 'op');
   if (!sameOrigin(Astro.request)) return redirectWith(`/host/spaces/${id}`, undefined, '잘못된 요청입니다.');
   if (op === 'submit') {
+    const missing = spaceReadiness(space);
+    if (missing.length) return redirectWith(`/host/spaces/${id}`, undefined, '검토 요청 전에 채워야 할 항목: ' + missing.join(' · '));
     await updateSpaceStatus(d, id, 'submitted');
     await audit(d, `host:${me.email}`, 'space.submit', String(id));
     const h = await getHost(d, me.id);
     await notifyAdmin(env, `공간 검토 요청 · ${JSON.parse(space.name_json || '{}').ko || space.slug}`, `호스트: ${h?.name} (${me.email})\n검토: ${env.SITE_URL || site.url}/admin/spaces/${id}`);
-    return redirectWith(`/host/spaces/${id}`, '검토를 요청했습니다. 승인되면 지점 목록에 공개됩니다.');
+    return redirectWith(`/host/spaces/${id}`, '검토를 요청했습니다. 영업일 기준 3일 안에 결과를 알려 드립니다. 승인되면 지점 목록에 공개됩니다.');
   }
   if (op === 'hide') { await updateSpaceStatus(d, id, 'hidden'); await audit(d, `host:${me.email}`, 'space.hide', String(id)); return redirectWith(`/host/spaces/${id}`, '공간을 숨겼습니다. 다시 공개하려면 검토 요청을 눌러 주세요.'); }
   if (op === 'delete') {
@@ -41,18 +43,27 @@ if (Astro.request.method === 'POST') {
   await audit(d, `host:${me.email}`, 'space.update', String(id));
   // 공개 중인 공간을 수정하면 재검토 상태로
   if (space.status === 'published') await updateSpaceStatus(d, id, 'submitted');
-  return redirectWith(`/host/spaces/${id}`, space.status === 'published' ? '저장되었습니다. 공개 중인 공간은 수정 후 재검토를 거쳐 다시 공개됩니다.' : '저장되었습니다.');
+  return redirectWith(`/host/spaces/${id}`, space.status === 'published' ? '저장되었습니다. 공개 중인 공간은 수정 후 재검토를 거쳐 다시 공개됩니다(휴무일·입장 안내만 바꿔도 동일).' : '저장되었습니다.');
 }
 const name = JSON.parse(space.name_json || '{}').ko || space.slug;
+const missing = spaceReadiness(space);
+const canSubmit = space.status === 'draft' || space.status === 'hidden' || space.status === 'rejected';
 ---
 <Portal title={`공간 편집 — ${name}`} kind="host" user={me} current="spaces" msg={msg} err={err}>
-  <div class="toolbar">
-    <div><h1 style="margin:0 0 4px">{name}</h1><span class={`status status--${space.status}`}>{STATUS_KO[space.status]}</span> <span class="small muted">/{space.slug}</span>{space.admin_note && <div class="small" style="margin-top:6px;color:var(--coral-dark)">관리자 메모: {space.admin_note}</div>}</div>
+  <a class="small muted" href="/host/spaces">← 내 공간</a>
+  <div class="toolbar" style="margin-top:8px">
+    <div><h1 style="margin:0 0 4px">{name}</h1><span class={`status status--${space.status}`}>{STATUS_KO[space.status]}</span> <span class="small muted">/{space.slug}</span>{space.admin_note && <div class="small" style="margin-top:6px;color:var(--coral-dark)">레스텔 검토 메모: {space.admin_note}</div>}</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      {(space.status === 'draft' || space.status === 'hidden' || space.status === 'rejected') && <form method="post" style="margin:0"><input type="hidden" name="op" value="submit" /><button class="btn btn--sage btn--sm" type="submit">검토 요청</button></form>}
-      {space.status === 'published' && <><a class="btn btn--ghost btn--sm" href={`/spaces/${space.slug}`} target="_blank">공개 페이지 ↗</a><form method="post" style="margin:0" data-confirm="공개를 중단하고 숨길까요?"><input type="hidden" name="op" value="hide" /><button class="btn btn--ghost btn--sm" type="submit">숨기기</button></form></>}
+      {canSubmit && <form method="post" style="margin:0"><input type="hidden" name="op" value="submit" /><button class="btn btn--sage btn--sm" type="submit" disabled={missing.length > 0} title={missing.length ? '필수 항목을 먼저 채워 주세요' : ''}>검토 요청</button></form>}
+      {space.status === 'submitted' && <span class="small muted" style="align-self:center">레스텔이 검토 중입니다</span>}
+      {space.status === 'published' && <><a class="btn btn--ghost btn--sm" href={`/spaces/${space.slug}`} target="_blank">공개 페이지 ↗</a><a class="btn btn--ghost btn--sm" href={`/host/bookings/calendar?space=${space.slug}`}>달력</a><form method="post" style="margin:0" data-confirm="공개를 중단하고 숨길까요?"><input type="hidden" name="op" value="hide" /><button class="btn btn--ghost btn--sm" type="submit">숨기기</button></form></>}
       {space.status !== 'published' && space.status !== 'submitted' && <form method="post" style="margin:0" data-confirm="정말 삭제할까요? 되돌릴 수 없습니다."><input type="hidden" name="op" value="delete" /><button class="btn btn--ghost btn--sm" type="submit">삭제</button></form>}
     </div>
   </div>
+  {canSubmit && (missing.length > 0 ? (
+    <div class="alert alert--info" style="margin-bottom:14px"><strong>검토 요청 전에 채울 항목</strong><ul style="margin:6px 0 0 18px">{missing.map((m) => <li>{m}</li>)}</ul></div>
+  ) : (
+    <div class="alert alert--ok" style="margin-bottom:14px">필수 항목이 모두 채워졌습니다. "검토 요청"을 누르면 레스텔이 확인합니다.</div>
+  ))}
   <SpaceForm space={space} action={`/host/spaces/${id}`} photoAction={`/host/spaces/${id}/photos`} />
 </Portal>

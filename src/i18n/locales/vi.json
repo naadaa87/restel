@@ -58,7 +58,12 @@
     "subtitle": "Không phải khách sạn, không phải motel, không phải hostel. RESTEL là không gian nghỉ ngơi kiểu Hàn Quốc cho thuê theo giờ. Cởi giày, bước lên bục gỗ, và nệm cùng chăn trên sàn, ánh sáng dịu, một tách trà ấm đang chờ bạn.",
     "cta1": "Xem gói & giá",
     "cta2": "Xem RESTEL Sinchon",
-    "heroPoints": ["Chợp mắt · Nghỉ ngơi", "Thiền · Hít thở", "Chữa lành · Nạp năng lượng", "Không gian riêng tư"],
+    "heroPoints": [
+      "Chợp mắt · Nghỉ ngơi",
+      "Thiền · Hít thở",
+      "Chữa lành · Nạp năng lượng",
+      "Không gian riêng tư"
+    ],
     "notHotel": {
       "kicker": "NOT A HOTEL",
       "title": "Không cần check-in. Bạn bước vào để nghỉ.",
@@ -136,10 +141,57 @@
     "title": "Gói & giá",
     "lead": "RESTEL bán \"loại nghỉ ngơi\", không bán giờ. Mọi gói đều là trọn không gian riêng tư. Giá cho hai người, thêm phí nhỏ cho mỗi người thêm. Mọi gói kết thúc trước nửa đêm.",
     "items": {
-      "nap60": { "name": "Nap 60", "ko": "Chợp mắt một giờ", "for": "Giờ nghỉ trưa · giữa các cuộc hẹn · mùa thi", "desc": "Một giờ vừa đủ để nhắm mắt. Nệm, chăn và đèn đánh thức đã sẵn sàng.", "includes": ["Trọn không gian", "2 nệm & chăn", "1 tách trà/người", "Kênh âm thanh", "Đèn đánh thức 10 phút trước khi kết thúc"] },
-      "rest180": { "name": "Rest 180", "ko": "Ba giờ nghỉ ngơi", "for": "Cặp đôi · du khách · hồi phục nửa ngày", "desc": "Ba giờ không vội cho một giấc ngủ, một buổi thiền và một tách trà.", "includes": ["Trọn không gian", "2 nệm & chăn", "2 tách trà/người", "Thiền có hướng dẫn", "Bánh kèm trà"] },
-      "dayrest": { "name": "Day Rest", "ko": "Một ngày nghỉ ngơi", "for": "Gia đình · nhóm nhỏ · nạp năng lượng dài", "desc": "Tối đa 8 giờ trong giờ mở cửa, với trò chơi yên tĩnh, sách và trà.", "includes": ["Trọn không gian", "4 nệm & chăn", "Trà không giới hạn", "Bộ thiền & trà", "Board game & sách"] },
-      "krest90": { "name": "K-REST 90", "ko": "Trải nghiệm nghỉ ngơi kiểu Hàn", "for": "Du khách · từ 2 người", "desc": "Hướng dẫn pha trà, 20 phút thiền có hướng dẫn và nghỉ trên sàn kiểu ondol, gói gọn trong 90 phút.", "includes": ["Hướng dẫn trà (video & thẻ)", "Thiền có hướng dẫn 20 phút", "Nghỉ trên nệm & chăn", "Thẻ hướng dẫn K-REST"] }
+      "nap60": {
+        "name": "Nap 60",
+        "ko": "Chợp mắt một giờ",
+        "for": "Giờ nghỉ trưa · giữa các cuộc hẹn · mùa thi",
+        "desc": "Một giờ vừa đủ để nhắm mắt. Nệm, chăn và đèn đánh thức đã sẵn sàng.",
+        "includes": [
+          "Trọn không gian",
+          "2 nệm & chăn",
+          "1 tách trà/người",
+          "Kênh âm thanh",
+          "Đèn đánh thức 10 phút trước khi kết thúc"
+        ]
+      },
+      "rest180": {
+        "name": "Rest 180",
+        "ko": "Ba giờ nghỉ ngơi",
+        "for": "Cặp đôi · du khách · hồi phục nửa ngày",
+        "desc": "Ba giờ không vội cho một giấc ngủ, một buổi thiền và một tách trà.",
+        "includes": [
+          "Trọn không gian",
+          "2 nệm & chăn",
+          "2 tách trà/người",
+          "Thiền có hướng dẫn",
+          "Bánh kèm trà"
+        ]
+      },
+      "dayrest": {
+        "name": "Day Rest",
+        "ko": "Một ngày nghỉ ngơi",
+        "for": "Gia đình · nhóm nhỏ · nạp năng lượng dài",
+        "desc": "Tối đa 8 giờ trong giờ mở cửa, với trò chơi yên tĩnh, sách và trà.",
+        "includes": [
+          "Trọn không gian",
+          "4 nệm & chăn",
+          "Trà không giới hạn",
+          "Bộ thiền & trà",
+          "Board game & sách"
+        ]
+      },
+      "krest90": {
+        "name": "K-REST 90",
+        "ko": "Trải nghiệm nghỉ ngơi kiểu Hàn",
+        "for": "Du khách · từ 2 người",
+        "desc": "Hướng dẫn pha trà, 20 phút thiền có hướng dẫn và nghỉ trên sàn kiểu ondol, gói gọn trong 90 phút.",
+        "includes": [
+          "Hướng dẫn trà (video & thẻ)",
+          "Thiền có hướng dẫn 20 phút",
+          "Nghỉ trên nệm & chăn",
+          "Thẻ hướng dẫn K-REST"
+        ]
+      }
     },
     "priceFrom": "từ {price}",
     "perPerson": "mỗi người",
@@ -204,7 +256,12 @@
       "hanok": { "title": "Đường nét của hanok", "summary": "Hàng ngói mái và cổng trăng", "body": "Dọc bức tường của RESTEL Sinchon là một hàng ngói đen chạy dài như bờ tường, và ở giữa là hốc vòm hình trăng ôm lấy ánh sáng dịu. Đó là cách nén hiện đại đường mái và cổng của nhà hanok. Chụp ảnh rất đẹp, nhưng tốt hơn nữa: hãy nằm xuống hướng về phía ánh sáng." }
     },
     "pairTitle": "Nghỉ ngơi kiểu Hàn nên kết hợp",
-    "pairs": ["Nhà tắm & sauna (hướng dẫn HANTANG)", "Templestay trong thành phố", "Trà đạo", "Dạo bước khu hanok"]
+    "pairs": [
+      "Nhà tắm & sauna (hướng dẫn HANTANG)",
+      "Templestay trong thành phố",
+      "Trà đạo",
+      "Dạo bước khu hanok"
+    ]
   },
   "guide": {
     "title": "Hướng dẫn nghỉ ngơi tại RESTEL",
@@ -242,7 +299,7 @@
   },
   "hosts": {
     "title": "Trở thành chủ không gian RESTEL",
-    "lead": "Phòng tiệc, studio và mặt bằng trống thường bỏ không vào buổi chiều ngày thường. Hãy chuyển đổi theo tiêu chuẩn RESTEL. Chúng tôi cung cấp xử lý yêu cầu, hiển thị đa ngôn ngữ, nội dung và quy tắc vận hành.",
+    "lead": "Biến phòng tiệc, studio hoặc mặt bằng trống nhiều giờ rảnh thành không gian nghỉ ngơi theo tiêu chuẩn RESTEL. RESTEL lo phần hiển thị bằng 7 ngôn ngữ, tiếp nhận yêu cầu, mẫu hướng dẫn thanh toán và vào không gian, đối soát hàng tháng và quy tắc vận hành.",
     "whyTitle": "Vì sao chọn RESTEL",
     "why": [
       { "title": "Lấp đầy giờ trống ngày thường", "body": "Phòng tiệc chỉ đạt 20–30% công suất mùa thấp điểm. Nhu cầu chợp mắt và thiền ngày thường nằm ở phía bên kia của đồng hồ." },
@@ -271,7 +328,70 @@
     "feeBody": "Không có phí đăng. Hoa hồng (mặc định 15%) áp dụng cho các yêu cầu đến qua RESTEL. Thi công chuyển đổi và bộ tiêu chuẩn được báo giá riêng.",
     "cta": "Bắt đầu làm chủ không gian",
     "ctaLogin": "Đã có tài khoản? Đăng nhập",
-    "contactNote": "Có câu hỏi? Dùng trang liên hệ."
+    "contactNote": "Có câu hỏi? Dùng trang liên hệ.",
+    "rolesTitle": "Ai làm gì",
+    "roles": [
+      {
+        "title": "Chủ không gian",
+        "items": [
+          "Sắp xếp không gian theo tiêu chuẩn RESTEL: nệm gấp và chăn, ánh sáng 3 mức, rèm chắn sáng, thiết bị phòng cháy",
+          "Thiết lập phiên, giá, ngày nghỉ và tải ảnh lên",
+          "Trả lời yêu cầu trong 24 giờ, xác nhận thanh toán, gửi hướng dẫn vào không gian",
+          "Dọn dẹp giữa các phiên, thay vỏ nệm, đánh dấu hoàn tất"
+        ]
+      },
+      {
+        "title": "RESTEL",
+        "items": [
+          "Giới thiệu không gian đến khách quốc tế và Hàn Quốc qua website 7 ngôn ngữ và nội dung K-REST",
+          "Cung cấp tiếp nhận yêu cầu, trang theo dõi cho khách và mẫu tin nhắn 7 ngôn ngữ",
+          "Cung cấp tiêu chuẩn vận hành không gian nghỉ, bảng thông báo in, danh sách kiểm tra và hướng dẫn chăm sóc khách",
+          "Phát hành bảng đối soát hàng tháng và hỗ trợ 1:1 qua Trung tâm chủ không gian"
+        ]
+      }
+    ],
+    "flowTitle": "Từ yêu cầu đến đối soát",
+    "flow": [
+      { "title": "Tiếp nhận yêu cầu", "body": "Khách chọn phiên, ngày và số người. Bạn được thông báo trên cổng và qua email." },
+      { "title": "Xác nhận hoặc từ chối", "body": "Kiểm tra lịch, đặt số tiền và hình thức thanh toán rồi xác nhận. Tin nhắn được soạn sẵn bằng ngôn ngữ của khách." },
+      { "title": "Xác nhận thanh toán", "body": "Chuyển khoản do bạn xác nhận; thanh toán tại chỗ nhận khi khách đến. Thanh toán thẻ trực tuyến đang được bổ sung." },
+      { "title": "Hướng dẫn vào không gian", "body": "Gửi địa chỉ, mã khóa cửa và lưu ý. Nhắc trước một ngày giúp giảm khách không đến." },
+      { "title": "Phiên và dọn dẹp", "body": "Chuông báo 10 phút trước khi kết thúc, thời gian dọn dẹp giữa các phiên, đánh dấu hoàn tất." },
+      { "title": "Đối soát hàng tháng", "body": "Phí hoa hồng (mặc định 15%) áp dụng cho các phiên đã hoàn tất; bảng đối soát được phát hành vào tháng sau." }
+    ],
+    "fitTitle": "Không gian nào phù hợp",
+    "fitGood": [
+      "Phòng tiệc và không gian họp vắng vào buổi chiều ngày thường",
+      "Studio có ánh sáng tự nhiên và rèm chắn sáng",
+      "Mặt bằng yên tĩnh từ tầng 2 trở lên, 10–40 m²",
+      "Giờ trống của studio yoga và thiền",
+      "Cách ga đi bộ dưới 10 phút, trong khu du khách hay lui tới"
+    ],
+    "fitBad": [
+      "Không gian muốn giữ nguyên chăn ga kiểu khách sạn",
+      "Không gian phải dựa vào việc bán dịch vụ tắm hoặc giặt",
+      "Không gian chỉ có lãi khi mở sau nửa đêm",
+      "Tầng hầm không thông gió hoặc khó lắp thiết bị phòng cháy",
+      "Không gian đang được đăng trên nền tảng lưu trú như chỗ ngủ qua đêm"
+    ],
+    "portalTitle": "Cổng chủ không gian làm được gì",
+    "portal": [
+      { "title": "Đăng tin 7 ngôn ngữ", "body": "Chỉ cần viết tiếng Hàn và tiếng Anh, trang sẽ hiển thị ở cả 7 ngôn ngữ." },
+      { "title": "Phiên, giá, ngày nghỉ", "body": "Giá ngày thường/cuối tuần theo phiên, phụ phí thêm người, ngày nghỉ trong tuần và theo ngày, thời gian dọn dẹp." },
+      { "title": "Lịch và việc cần làm", "body": "Lịch tháng, phiên hôm nay, tin nhắn chờ trả lời, phiên chưa thanh toán." },
+      { "title": "Mẫu thanh toán và vào không gian", "body": "Tin nhắn xác nhận, thanh toán, vào không gian, nhắc nhở và hủy bằng ngôn ngữ của khách." },
+      { "title": "Đối soát", "body": "Doanh thu, hoa hồng và số tiền nhận hàng tháng, chi tiết từng phiên." },
+      { "title": "Trung tâm chủ không gian", "body": "Hướng dẫn vận hành, thông báo, hỏi đáp 1:1, bảng thông báo và danh sách kiểm tra để in." }
+    ],
+    "faqTitle": "Câu hỏi thường gặp trước khi tham gia",
+    "faq": [
+      { "q": "Có phí đăng tin hay phí hàng tháng không?", "a": "Không. Hoa hồng (mặc định 15%) chỉ áp dụng cho các phiên đã hoàn tất đến từ RESTEL." },
+      { "q": "Có cần giấy phép lưu trú không?", "a": "RESTEL vận hành như dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú. Điều kiện là giữ tiêu chuẩn: phiên theo giờ kết thúc trước nửa đêm, không có giường, chỉ dành cho người lớn. Yêu cầu phòng cháy cho cơ sở đa dụng được xác nhận với trạm cứu hỏa địa phương." },
+      { "q": "Tôi có thể tiếp tục vận hành phòng tiệc không?", "a": "Có. Chúng tôi khuyến nghị phiên RESTEL ban ngày và dùng làm phòng tiệc buổi tối. Trong phiên hãy cất đồ trang trí và đèn tiệc." },
+      { "q": "Tôi lo về khách nước ngoài.", "a": "Tin nhắn xác nhận, thanh toán, vào không gian và nhắc nhở có mẫu sẵn 7 ngôn ngữ; số tiền và giờ được gửi bằng con số. Đội ngũ RESTEL hỗ trợ khi cần." },
+      { "q": "Nhận tiền như thế nào?", "a": "Giai đoạn đầu dùng chuyển khoản hoặc thanh toán tại chỗ. Sau khi xác nhận, bạn gửi hướng dẫn thanh toán; khi đã thanh toán, bạn gửi hướng dẫn vào không gian. Thanh toán thẻ trực tuyến đang được bổ sung." },
+      { "q": "Phê duyệt mất bao lâu?", "a": "Thông tin kinh doanh được kiểm tra trong 3 ngày làm việc sau khi đăng ký, và kết quả xét duyệt không gian được trả lời trong 3 ngày làm việc sau khi gửi. Mục cần bổ sung sẽ hiển thị trên cổng." }
+    ]
   },
   "book": {
     "title": "Gửi yêu cầu đặt chỗ",
@@ -294,14 +414,11 @@
     "contactOrEmail": "Vui lòng cung cấp số điện thoại hoặc email.",
     "estimate": "Tổng ước tính",
     "estimateNote": "Bao gồm {base} người; đã tính phí người thêm. Số tiền cuối cùng sẽ được xác nhận trong tin nhắn.",
-    "done": {
-      "title": "Đã nhận yêu cầu của bạn",
-      "body": "Mã yêu cầu {code}. Chúng tôi sẽ kiểm tra và liên hệ qua thông tin bạn cung cấp. Dùng liên kết bên dưới để theo dõi tiến trình và tin nhắn.",
-      "cta": "Xem trạng thái yêu cầu",
-      "home": "Về trang chủ"
-    },
+    "done": { "title": "Đã nhận yêu cầu của bạn", "body": "Mã yêu cầu {code}. Chúng tôi sẽ kiểm tra và liên hệ qua thông tin bạn cung cấp. Dùng liên kết bên dưới để theo dõi tiến trình và tin nhắn.", "cta": "Xem trạng thái yêu cầu", "home": "Về trang chủ" },
     "error": "Không gửi được yêu cầu. Vui lòng thử lại sau hoặc dùng trang liên hệ.",
-    "dbUnavailable": "Tạm thời không nhận yêu cầu trực tuyến. Vui lòng liên hệ qua KakaoTalk hoặc email."
+    "dbUnavailable": "Tạm thời không nhận yêu cầu trực tuyến. Vui lòng liên hệ qua KakaoTalk hoặc email.",
+    "closedDate": "Ngày đã chọn là ngày nghỉ của không gian này. Vui lòng chọn ngày khác.",
+    "pastDate": "Không thể chọn ngày đã qua."
   },
   "request": {
     "title": "Tra cứu yêu cầu",
@@ -311,12 +428,29 @@
     "find": "Tìm",
     "notFound": "Không tìm thấy yêu cầu phù hợp.",
     "status": "Trạng thái",
-    "statuses": { "requested": "Đã nhận", "confirmed": "Đã xác nhận", "declined": "Không có chỗ", "cancelled": "Đã hủy", "completed": "Hoàn tất" },
+    "statuses": { "requested": "Đã nhận", "confirmed": "Đã xác nhận", "declined": "Không có chỗ", "cancelled": "Đã hủy", "completed": "Hoàn tất", "noshow": "Không đến" },
     "messages": "Tin nhắn",
     "reply": "Gửi tin nhắn",
     "replyPh": "Lời nhắn cho chủ không gian",
     "cancel": "Hủy yêu cầu",
-    "cancelConfirm": "Hủy yêu cầu này?"
+    "cancelConfirm": "Hủy yêu cầu này?",
+    "senders": { "customer": "Tôi", "host": "Chủ không gian", "admin": "RESTEL" },
+    "payment": {
+      "title": "Thanh toán",
+      "amount": "Số tiền",
+      "method": "Hình thức",
+      "methods": { "transfer": "Chuyển khoản", "onsite": "Thanh toán tại chỗ", "card": "Thẻ" },
+      "pending": "Chủ không gian sẽ sớm gửi hướng dẫn",
+      "bank": "Tài khoản",
+      "holder": "Chủ tài khoản",
+      "deadline": "Hạn thanh toán",
+      "deadlineNote": "trong vòng {hours} giờ sau khi xác nhận",
+      "onsite": "Tại chỗ",
+      "onsiteNote": "Thanh toán bằng thẻ hoặc tiền mặt khi đến.",
+      "paid": "Đã nhận thanh toán",
+      "refunded": "Đã hoàn tiền",
+      "refundDefault": "Hủy: hoàn 100% trước 48 giờ, 50% trước 24 giờ, sau đó không hoàn."
+    }
   },
   "contact": {
     "title": "Liên hệ",

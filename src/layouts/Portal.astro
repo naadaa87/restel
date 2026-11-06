@@ -1,19 +1,23 @@
 ---
 import '@/styles/global.css';
-interface Props { title: string; kind: 'host' | 'admin'; user?: { email: string; name?: string } | null; current?: string; msg?: string | null; err?: string | null }
-const { title, kind, user, current = '', msg, err } = Astro.props;
+interface Props { title: string; kind: 'host' | 'admin'; user?: { email: string; name?: string } | null; current?: string; msg?: string | null; err?: string | null; badges?: Record<string, number> }
+const { title, kind, user, current = '', msg, err, badges = {} } = Astro.props;
 const hostNav = [
   { href: '/host', label: '대시보드', key: 'dash' },
+  { href: '/host/bookings', label: '예약', key: 'bookings' },
   { href: '/host/spaces', label: '내 공간', key: 'spaces' },
-  { href: '/host/bookings', label: '예약 요청', key: 'bookings' },
+  { href: '/host/settlement', label: '정산', key: 'settlement' },
+  { href: '/host/center', label: '호스트 센터', key: 'center' },
   { href: '/host/settings', label: '설정', key: 'settings' },
 ];
 const adminNav = [
   { href: '/admin', label: '대시보드', key: 'dash' },
   { href: '/admin/hosts', label: '호스트', key: 'hosts' },
   { href: '/admin/spaces', label: '공간', key: 'spaces' },
-  { href: '/admin/bookings', label: '예약 요청', key: 'bookings' },
+  { href: '/admin/bookings', label: '예약', key: 'bookings' },
+  { href: '/admin/settlements', label: '정산', key: 'settlements' },
   { href: '/admin/inquiries', label: '문의', key: 'inquiries' },
+  { href: '/admin/notices', label: '공지', key: 'notices' },
   { href: '/admin/settings', label: '설정', key: 'settings' },
   { href: '/admin/logs', label: '기록', key: 'logs' },
 ];
@@ -35,7 +39,7 @@ const nav = kind === 'host' ? hostNav : adminNav;
         <a class="logo" href={kind === 'host' ? '/host' : '/admin'}><img src="/brand/logo-mark.webp" alt="" width="50" height="28" /><span>RESTEL <span class="muted" style="font-weight:500;letter-spacing:0">{kind === 'host' ? '호스트 포털' : '총괄 관리자'}</span></span></a>
         {user && (
           <nav class="portal__nav">
-            {nav.map((n) => <a href={n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}</a>)}
+            {nav.map((n) => <a href={n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}{badges[n.key] ? <span class="nav-badge">{badges[n.key]}</span> : null}</a>)}
           </nav>
         )}
         <div style="display:flex;gap:10px;align-items:center">
@@ -55,8 +59,26 @@ const nav = kind === 'host' ? hostNav : adminNav;
       document.querySelectorAll('[data-tabs]').forEach(function (root) {
         var btns = root.querySelectorAll(':scope > .tabs > button'), panels = root.querySelectorAll(':scope > .tabpanel');
         btns.forEach(function (b, i) { b.addEventListener('click', function (e) { e.preventDefault(); btns.forEach(function (x) { x.classList.remove('is-active'); }); panels.forEach(function (p) { p.classList.remove('is-active'); }); b.classList.add('is-active'); panels[i].classList.add('is-active'); }); });
+        // #hash 로 탭 열기 (예: /host/settings#payment)
+        if (location.hash) { var idx = Array.prototype.findIndex.call(panels, function (p) { return p.id === location.hash.slice(1); }); if (idx >= 0) btns[idx].click(); }
       });
       document.querySelectorAll('form[data-confirm]').forEach(function (f) { f.addEventListener('submit', function (e) { if (!confirm(f.getAttribute('data-confirm'))) e.preventDefault(); }); });
+      // 단계형 폼(가입 마법사)
+      document.querySelectorAll('[data-wizard]').forEach(function (root) {
+        var steps = root.querySelectorAll('.wizard__step'), dots = root.querySelectorAll('.wizard__nav li'); var cur = 0;
+        function show(i) { cur = i; steps.forEach(function (s, k) { s.classList.toggle('is-active', k === i); }); dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); d.classList.toggle('is-done', k < i); }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function valid(i) { var ok = true; steps[i].querySelectorAll('input,select,textarea').forEach(function (el) { if (!el.checkValidity()) { el.reportValidity(); ok = false; } }); return ok; }
+        root.querySelectorAll('[data-next]').forEach(function (b) { b.addEventListener('click', function () { if (valid(cur)) show(Math.min(cur + 1, steps.length - 1)); }); });
+        root.querySelectorAll('[data-prev]').forEach(function (b) { b.addEventListener('click', function () { show(Math.max(cur - 1, 0)); }); });
+        root.querySelector('form').addEventListener('submit', function (e) { for (var i = 0; i < steps.length; i++) { if (!valid(i)) { e.preventDefault(); show(i); return; } } });
+        var errStep = root.getAttribute('data-wizard'); show(errStep && !isNaN(+errStep) ? +errStep : 0);
+      });
+      // 템플릿 불러오기
+      document.querySelectorAll('[data-template-select]').forEach(function (sel) {
+        var target = document.querySelector(sel.getAttribute('data-template-select')); var data = {};
+        try { data = JSON.parse(sel.getAttribute('data-templates') || '{}'); } catch (e) {}
+        sel.addEventListener('change', function () { if (sel.value && data[sel.value] && target) { if (!target.value || confirm('입력 중인 내용을 템플릿으로 바꿀까요?')) target.value = data[sel.value]; } });
+      });
     </script>
   </body>
 </html>

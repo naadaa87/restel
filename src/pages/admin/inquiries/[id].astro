@@ -6,6 +6,7 @@ import { flash, redirectWith, str, STATUS_KO } from '@/lib/portal';
 import { sameOrigin } from '@/lib/auth';
 import { sendMail } from '@/lib/email';
 import { fmtDate } from '@/lib/text';
+import { site } from '@/config/site';
 
 const me = (Astro.locals as any).admin;
 const env = (Astro.locals as any).runtime?.env || {};
@@ -21,7 +22,7 @@ if (Astro.request.method === 'POST') {
   const status = str(fd, 'status'); const reply = str(fd, 'reply');
   await updateInquiry(d, id, ['new', 'replied', 'closed'].includes(status) ? status : q.status, reply);
   await audit(d, `admin:${me.email}`, 'inquiry.update', String(id), status);
-  if (reply && q.email && fd.get('send')) await sendMail(env, { to: q.email, subject: 'RESTEL 문의 답변', text: `${q.name}님, 문의 주셔서 감사합니다.\n\n${reply}\n\n— RESTEL` });
+  if (reply && q.email && fd.get('send')) await sendMail(env, { to: q.email, subject: q.kind === 'host' ? `[RESTEL] 호스트 문의 답변 · ${q.topic || ''}` : 'RESTEL 문의 답변', text: `${q.name}님, 문의 주셔서 감사합니다.\n\n${reply}\n\n— RESTEL${q.kind === 'host' ? `\n${env.SITE_URL || site.url}/host/center/inquiries#q${q.id}` : ''}` });
   return redirectWith(`/admin/inquiries/${id}`, '저장했습니다.');
 }
 ---
@@ -30,15 +31,15 @@ if (Astro.request.method === 'POST') {
   <div class="grid grid--2" style="margin-top:8px">
     <div class="panel">
       <h2 class="h3" style="margin-bottom:10px">{q.name} <span class={`status status--${q.status}`}>{STATUS_KO[q.status]}</span></h2>
-      <dl class="kv"><dt>이메일</dt><dd>{q.email || '—'}</dd><dt>연락처</dt><dd>{q.phone || '—'}</dd><dt>종류</dt><dd>{q.topic || q.kind}</dd><dt>접수</dt><dd>{fmtDate(q.created_at)}</dd></dl>
+      <dl class="kv"><dt>종류</dt><dd>{q.kind === 'host' ? <span>호스트 1:1 문의 {q.host_id && <a href={`/admin/hosts/${q.host_id}`} style="text-decoration:underline">호스트 보기 →</a>}</span> : '고객·입점 문의'}</dd><dt>이메일</dt><dd>{q.email || '—'}</dd><dt>연락처</dt><dd>{q.phone || '—'}</dd><dt>주제</dt><dd>{q.topic || '—'}</dd><dt>접수</dt><dd>{fmtDate(q.created_at)}</dd></dl>
       <p style="white-space:pre-wrap;margin-top:14px;padding:14px;background:var(--paper);border-radius:12px">{q.message}</p>
     </div>
     <div class="panel">
       <h2 class="h3" style="margin-bottom:10px">답변·처리</h2>
       <form method="post" class="form">
         <div class="field"><label>상태</label><select name="status">{['new', 'replied', 'closed'].map((s) => <option value={s} selected={q.status === s}>{STATUS_KO[s]}</option>)}</select></div>
-        <div class="field"><label>답변 내용 (기록용)</label><textarea name="reply" rows="6">{q.reply}</textarea></div>
-        <label class="checkbox"><input type="checkbox" name="send" /> <span>답변을 고객 이메일로도 발송 (이메일 설정 필요)</span></label>
+        <div class="field"><label>답변 내용 {q.kind === 'host' ? <span class="help">(호스트 센터 &gt; 문의 내역에 그대로 표시됩니다)</span> : <span class="help">(기록용)</span>}</label><textarea name="reply" rows="6">{q.reply}</textarea></div>
+        <label class="checkbox"><input type="checkbox" name="send" checked={q.kind === 'host'} /> <span>답변을 이메일로도 발송 (이메일 설정 필요)</span></label>
         <button class="btn btn--primary btn--sm" type="submit" style="justify-self:start">저장</button>
       </form>
     </div>
