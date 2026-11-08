@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // 브랜드 언어 가이드 검사: 숙박 어휘가 "레스텔 자신을 설명하는 문장"에 쓰였는지 찾아낸다.
-// 사용: node scripts/check-forbidden-words.mjs  (기본: src/i18n, src/data, src/views)
+// 사용: node scripts/check-forbidden-words.mjs  (기본: src/i18n, src/data, src/views, src/content)
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 
-const targets = process.argv.slice(2).length ? process.argv.slice(2) : ['src/i18n/locales', 'src/data', 'src/views'];
+const targets = process.argv.slice(2).length ? process.argv.slice(2) : ['src/i18n/locales', 'src/data', 'src/views', 'src/content'];
 const forbidden = [
   /1박|2박|숙박\s?패키지|투숙|체크인|체크아웃|객실|침실|침구\s?완비|룸서비스|조식|올나이트|밤타임/g,
   /\bcheck[- ]?in\b|\bcheck[- ]?out\b|\bovernight stay\b|\bhotel room\b|\bbed(s)?\b|\bduvet\b|\blodging\b/gi,

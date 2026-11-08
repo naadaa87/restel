@@ -2,8 +2,11 @@
 export const site = {
   name: 'RESTEL',
   nameKo: '레스텔',
-  // 대표 주소: Cloudflare 빌드 변수 SITE_URL로 바꾼다(도메인 연결 전에는 workers.dev 주소). astro.config.mjs 참고
-  url: String(import.meta.env.SITE || 'https://restel.naadaa87.workers.dev').replace(/\/+$/, ''),
+  // 대표 주소: 공식 도메인 restel.kr (astro.config.mjs의 SITE_URL). 검색엔진에는 이 주소만 노출한다.
+  url: String(import.meta.env.SITE || 'https://restel.kr').replace(/\/+$/, ''),
+  domain: 'restel.kr',
+  // 같은 사이트가 열리지만 검색에는 잡히지 않아야 하는 보조 주소(noindex 처리)
+  secondaryHosts: ['www.restel.kr', 'restel.naadaa87.workers.dev'],
   // 연락처 (공개)
   contact: {
     email: 'spaceblank0100@gmail.com',
@@ -25,6 +28,8 @@ export const site = {
     naver: '',
     bing: '',
   },
+  // IndexNow 키 — 네이버·빙에 새 글·수정 사항을 바로 알릴 때 쓴다. public/<키>.txt 파일과 짝을 이룬다(바꾸지 마세요)
+  indexNowKey: '3d57aa9b549fbab261e74a73c9b2f2ca',
   // Cloudflare Web Analytics 토큰 (대시보드 → Analytics & Logs → Web Analytics)
   cfAnalyticsToken: '',
   // 플래그십 지점 좌표 (지도 링크용)

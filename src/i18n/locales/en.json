@@ -4,7 +4,7 @@
     "tagline": "Rest, the Korean way.",
     "titleSuffix": " | RESTEL — Korean Rest Space in Seoul",
     "description": "RESTEL is a Korean rest space you rent by the hour in Sinchon, Seoul. Book a private room for a nap, meditation, healing and a quiet reset. Floor mats, soft lighting, warm tea. Not a hotel — a rest space rental.",
-    "keywords": "rest space Seoul, nap room Seoul, Korean rest space, hourly rest space, meditation space Seoul, wellness space Sinchon, nap place Hongdae, quiet room Seoul, ondol floor rest, RESTEL, rest space rental",
+    "keywords": "nap room Seoul, where to nap in Seoul, rest space Seoul, places to rest in Seoul, quiet place Hongdae, Sinchon things to do, rest before flight Seoul, jet lag Seoul, Korean wellness experience, meditation Seoul, hourly rest space, RESTEL, rest space rental",
     "ogTitle": "RESTEL — A Korean rest space you rent by the hour"
   },
   "nav": {
@@ -14,6 +14,7 @@
     "sessions": "Sessions & Prices",
     "krest": "K-REST",
     "guide": "How to Rest",
+    "journal": "Journal",
     "faq": "FAQ",
     "hosts": "For Hosts",
     "contact": "Contact",
@@ -95,6 +96,19 @@
     "hostsTitle": "Turn your space into a RESTEL",
     "hostsBody": "Party rooms, studios and vacant units sit empty most weekday afternoons. Convert them into a rest space that meets the RESTEL standard — we handle requests, multilingual listing and content with you.",
     "hostsCta": "Host information",
+    "whereTitle": "Easy to reach",
+    "whereSub": "Five minutes on foot from Sinchon Station, one stop from Hongdae and from Ewha.",
+    "where": [
+      { "title": "Sinchon Station, Line 2 — about 5 min walk", "body": "The exact address and entry details arrive with your confirmation." },
+      { "title": "One stop from Hongik Univ. (Hongdae)", "body": "Hongik University Station is on the AREX airport line, so it is an easy stop before your flight or on the day you land." },
+      { "title": "Near Yonsei, Ewha and Sogang", "body": "A quiet break after walking the campuses or the Sinchon–Ewha streets." },
+      { "title": "Open 07:00–24:00 (KST)", "body": "From early morning until just before midnight. Every session ends before midnight." }
+    ],
+    "journalPicks": [
+      "before-late-flight-seoul",
+      "jet-lag-first-day-seoul",
+      "korean-way-to-rest"
+    ],
     "faqTitle": "Frequently asked questions"
   },
   "about": {
@@ -294,7 +308,10 @@
       { "q": "How is a request confirmed?", "a": "Send a request and we'll check availability and message you (email or KakaoTalk). Once payment is complete, we send your entry code." },
       { "q": "What is the refund policy?", "a": "100% refund up to 48 hours before the start, 50% up to 24 hours before, no refund after that. Changes are free before confirmation." },
       { "q": "Can I bring food?", "a": "Light snacks and drinks are fine. Please avoid cooking, alcohol and strong-smelling food." },
-      { "q": "Can I list my own space on RESTEL?", "a": "Yes. Apply on the host page. We share the RESTEL standard (lighting, blackout, mats, signage, safety) and list your space once approved." }
+      { "q": "Can I list my own space on RESTEL?", "a": "Yes. Apply on the host page. We share the RESTEL standard (lighting, blackout, mats, signage, safety) and list your space once approved." },
+      { "q": "Can I come on my own?", "a": "Yes. Prices are per space, so you have the whole room to yourself at the base rate. A solo session is a perfectly good way to use it." },
+      { "q": "Where is it, and which station is closest?", "a": "About 5 minutes on foot from Sinchon Station on Line 2. Hongik University Station (Hongdae, AREX airport line) and Ewha Womans University Station are each one stop away. The full address and door code come with your confirmation." },
+      { "q": "Can I drop in before my flight or between sightseeing?", "a": "Yes — Nap 60 or Rest 180 work well. From Hongik University Station the AREX all-stop train takes around an hour to Incheon Airport, so count back from your departure time. If you have large bags, mention them in your request." }
     ]
   },
   "hosts": {
@@ -507,5 +524,169 @@
     "title": "This page is resting",
     "body": "The page you're looking for doesn't exist or has moved.",
     "cta": "Go home"
+  },
+  "journal": {
+    "title": "RESTEL Journal",
+    "lead": "Notes on resting well in Seoul — where to take a break, how to use an hour properly, what to do before a late flight, and how Koreans rest.",
+    "categories": {
+      "guide": "Rest guides",
+      "area": "Neighbourhood",
+      "travel": "Travel tips",
+      "culture": "Korean rest culture",
+      "brand": "About RESTEL"
+    },
+    "readMin": "{n} min read",
+    "by": "RESTEL Editors",
+    "summary": "In short",
+    "faqTitle": "Questions",
+    "relatedTitle": "Keep reading",
+    "allArticles": "All articles",
+    "latestTitle": "From the journal",
+    "aboutEntity": "Rest space rental in Seoul",
+    "cta": {
+      "sessions": {
+        "title": "Pick the right length of rest",
+        "body": "Nap 60, Rest 180, Day Rest and K-REST 90 — see what each session includes.",
+        "button": "Sessions & prices"
+      },
+      "krest": {
+        "title": "Try the Korean way to rest",
+        "body": "Tea, guided breathing and a warm floor, in 90 minutes and in your language.",
+        "button": "About K-REST"
+      },
+      "book": {
+        "title": "Keep an hour for yourself",
+        "body": "Pick a date and start time at RESTEL Sinchon. We confirm and send the entry details.",
+        "button": "Request a session"
+      },
+      "spaces": {
+        "title": "See the space first",
+        "body": "Photos, layout and directions for RESTEL Sinchon.",
+        "button": "View RESTEL Sinchon"
+      },
+      "guide": {
+        "title": "First time at RESTEL?",
+        "body": "From the door code to the tea corner, here is how a session goes.",
+        "button": "How to rest"
+      }
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "RESTEL | Nap & Rest Space in Seoul — Sinchon, near Hongdae",
+      "description": "Rent a private Korean-style rest space by the hour, 5 minutes from Sinchon Station and one stop from Hongdae. Nap, meditate or simply switch off on floor mats with soft light and warm tea. A rest space rental, not a hotel.",
+      "keywords": [
+        "nap room Seoul",
+        "where to nap in Seoul",
+        "rest space Seoul",
+        "places to rest in Seoul",
+        "quiet place Hongdae",
+        "Sinchon things to do",
+        "rest before flight Seoul",
+        "jet lag Seoul",
+        "Korean wellness experience",
+        "meditation Seoul",
+        "hourly rest space",
+        "RESTEL"
+      ]
+    },
+    "about": {
+      "title": "What is RESTEL? A rest space rental, not a hotel",
+      "description": "RESTEL = REST + TEL. A new kind of space in Seoul that you rent by the hour to nap, meditate and reset — floor mats instead of beds, and every session ends before midnight.",
+      "keywords": [
+        "what is RESTEL",
+        "rest space rental",
+        "nap space Seoul",
+        "Korean rest space",
+        "not a hotel"
+      ]
+    },
+    "sessions": {
+      "title": "Sessions & Prices — Nap 60, Rest 180, Day Rest, K-REST 90 | RESTEL",
+      "description": "A 60-minute nap, three hours of rest, a full day off or a 90-minute Korean rest experience. The whole space is yours for each session. Prices in KRW with a reference in your currency.",
+      "keywords": [
+        "nap price Seoul",
+        "rest space price",
+        "hourly rest Seoul",
+        "RESTEL prices"
+      ]
+    },
+    "spaces": {
+      "title": "RESTEL Locations — Rest Spaces in Seoul",
+      "description": "RESTEL Sinchon and partner rest spaces that meet the RESTEL standard. Compare locations, sessions and layouts, then request a time.",
+      "keywords": [
+        "rest space Seoul locations",
+        "RESTEL Sinchon",
+        "nap space near Hongdae"
+      ]
+    },
+    "sinchon": {
+      "title": "RESTEL Sinchon | Nap & Rest Space 5 min from Sinchon Station, Seoul",
+      "description": "A private floor-style rest space under a line of black roof tiles, with folding mats, blankets, a tea corner and a terrace. 5 minutes from Sinchon Station, one stop from Hongdae. From 60 minutes.",
+      "keywords": [
+        "RESTEL Sinchon",
+        "nap Sinchon",
+        "rest near Hongdae",
+        "quiet place near Yonsei",
+        "Ewha rest space",
+        "Sinchon Seoul"
+      ]
+    },
+    "krest": {
+      "title": "K-REST — The Korean Way to Rest, in Seoul | RESTEL",
+      "description": "Tea, guided breathing and rest on a warm floor. K-REST brings ondol, floor culture, jjimjilbang calm and templestay stillness into a 90-minute session for travellers.",
+      "keywords": [
+        "Korean wellness experience",
+        "Korean culture experience Seoul",
+        "ondol experience",
+        "tea and meditation Seoul",
+        "K-wellness"
+      ]
+    },
+    "guide": {
+      "title": "How to Rest at RESTEL — Entry, Lights, Sound, Tea",
+      "description": "Door code, shoes off, three light levels, sound channels, mats and blankets, the tea corner and leaving the space tidy. A first-timer’s guide to a RESTEL session.",
+      "keywords": [
+        "how RESTEL works",
+        "rest space guide",
+        "guided meditation Seoul"
+      ]
+    },
+    "faq": {
+      "title": "FAQ — Is RESTEL a hotel? Can I sleep? Can I come alone?",
+      "description": "Answers about what RESTEL is, napping, group size, coming alone, the nearest station, booking from abroad, cancellations and house rules.",
+      "keywords": [
+        "RESTEL FAQ",
+        "nap room Seoul alone",
+        "rest space near Sinchon Station"
+      ]
+    },
+    "hosts": {
+      "title": "List Your Space on RESTEL — Turn Idle Hours into a Rest Space",
+      "description": "Party rooms, studios and empty units can become RESTEL rest spaces. No listing fee; bookings, multilingual guest messages and monthly settlement run through the RESTEL host portal.",
+      "keywords": [
+        "list space Seoul",
+        "space rental partner Korea",
+        "RESTEL host"
+      ]
+    },
+    "contact": {
+      "title": "Contact RESTEL — Bookings, Groups, Partnerships",
+      "description": "Questions about booking, group use, corporate partnerships or listing a space. We reply in Korean and English.",
+      "keywords": [
+        "contact RESTEL"
+      ]
+    },
+    "journal": {
+      "title": "RESTEL Journal — Where and How to Rest in Seoul",
+      "description": "Practical notes for resting in Seoul: where to take a nap, the Sinchon–Hongdae–Ewha area, what to do before a late flight, jet lag on day one, and Korean rest culture.",
+      "keywords": [
+        "where to rest in Seoul",
+        "Seoul travel tips",
+        "late flight Seoul",
+        "jet lag Seoul",
+        "Korean rest culture"
+      ]
+    }
   }
 }

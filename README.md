@@ -20,7 +20,7 @@
    - Root directory: `/` (기본값)
 4. **Save and Deploy** → 1~3분 뒤 `restel.<계정>.workers.dev` 주소가 생깁니다.
 
-> 현재 배포 주소: **https://restel.naadaa87.workers.dev** (2026-11 연결 완료). main 브랜치에 커밋이 올라가면 자동으로 다시 배포됩니다.
+> 대표 주소: **https://restel.kr** (2026-11 도메인 구매). 보조 주소 https://restel.naadaa87.workers.dev 도 계속 열리지만 검색엔진에는 noindex로 숨깁니다. main 브랜치에 커밋이 올라가면 자동으로 다시 배포됩니다.
 
 > D1 데이터베이스(`restel-db`)와 R2 버킷(`restel-media`)은 `wrangler.jsonc`에 ID 없이 선언되어 있어 **첫 배포 때 Wrangler가 자동으로 만들어 연결**합니다. 대시보드에서 따로 만들 필요가 없습니다. 테이블은 첫 요청 때 앱이 스스로 생성합니다.
 
@@ -40,12 +40,13 @@ Worker → **Settings** → **Variables and Secrets** → **Add** (Type: Secret)
 
 > 시크릿은 **Secret** 타입으로 넣어야 합니다. 일반 Variable(Text) 타입으로 넣으면 다음 GitHub 자동 배포 때 `wrangler.jsonc`에 없는 값으로 간주되어 지워집니다.
 
-### 1-3. 도메인 연결
-1. 도메인을 Cloudflare에 추가합니다(도메인의 네임서버가 Cloudflare여야 합니다). 2026-11 기준 restel.kr은 이 계정에 없습니다.
-2. Worker → **Domains** 탭 → **Add Domain** → 예: `restel.kr`
-3. Worker → **Settings** → **Build** → **Variables and secrets** → **Add** → 이름 `SITE_URL`, 값 `https://restel.kr`
-4. **Deployments**에서 최신 빌드 → **Retry build**. canonical·사이트맵·OG·robots.txt·알림 메일 링크가 모두 새 주소로 바뀝니다. 코드 수정은 필요 없습니다.
-5. 새 주소가 열리는 것을 확인한 뒤 **Domains** 탭에서 workers.dev 주소를 꺼 두면 검색엔진에 주소가 둘로 잡히지 않습니다.
+### 1-3. 도메인 연결 (restel.kr)
+코드는 이미 `https://restel.kr`을 대표 주소로 쓰도록 바뀌어 있습니다(canonical·hreflang·사이트맵·RSS·OG·알림 메일 링크). `SITE_URL` 빌드 변수는 넣지 않아도 됩니다.
+1. 도메인 등록 업체(가비아 등)에서 restel.kr의 **네임서버**를 Cloudflare가 알려 준 두 개로 바꿉니다. Cloudflare 화면의 도메인 상태가 **Active**가 될 때까지 기다립니다(보통 수십 분~몇 시간).
+2. Worker `restel` → **Settings → Domains & Routes → Add → Custom domain** → `restel.kr` 추가. 같은 방법으로 `www.restel.kr`도 추가합니다.
+3. https://restel.kr 이 열리는지 확인합니다. `www.restel.kr`과 workers.dev 주소는 열리긴 하지만 `X-Robots-Tag: noindex`가 붙어 검색 결과에 나오지 않고, 동적 페이지는 www에서 restel.kr로 넘어갑니다.
+4. (선택) www를 완전히 넘기려면 Cloudflare → restel.kr → **Rules → Redirect Rules → 템플릿 "Redirect from WWW to root"** 를 켭니다.
+5. (선택) **Email Routing**에서 `hello@restel.kr` → 대표 메일로 전달을 켜 두면 사이트 연락처를 도메인 메일로 바꿀 수 있습니다(`src/config/site.ts`의 `contact.email`).
 
 ### 1-4. 첫 로그인
 - 관리자: `https://도메인/admin/login` — 1-2에서 등록한 이메일·비밀번호
@@ -69,6 +70,9 @@ Worker → **Settings** → **Variables and Secrets** → **Add** (Type: Secret)
 | 사이트 문구·번역 | `src/i18n/locales/ko.json` 등 7개 파일 (키 이름은 같게 유지) |
 | 신촌 사진 교체 | `public/images/sinchon/` (가로 1400px WebP 권장) |
 | 가이드 명상 오디오 | `public/audio/meditation-10-ko.mp3` 형식 (`public/audio/README.md`) |
+| 레스텔 저널(읽을거리) 글 추가·수정 | `src/content/journal/<언어>/<슬러그>.md` (아래 3-1 참고) |
+| 페이지별 검색 제목·설명·키워드 | `src/i18n/locales/*.json`의 `seo` 항목 |
+| 검색엔진에 새 글 알리기 | `/admin/settings` → "검색엔진에 알리기 (IndexNow)" |
 
 GitHub 웹에서 파일을 열어 연필 아이콘으로 수정하고 **Commit changes**를 누르면 1~3분 뒤 사이트에 반영됩니다. 잘못 바꿨다면 GitHub의 커밋 기록에서 되돌리거나 Cloudflare **Deployments**에서 이전 버전으로 롤백할 수 있습니다.
 
@@ -84,15 +88,23 @@ GitHub 웹에서 파일을 열어 연필 아이콘으로 수정하고 **Commit c
 
 ---
 
-## 3. SEO 체크리스트 (배포 후 한 번)
-1. **Google Search Console**: 도메인 등록 → 소유 확인 메타 값을 `src/config/site.ts`의 `verification.google`에 넣고 커밋 → 사이트맵 `https://도메인/sitemap.xml` 제출
-2. **네이버 서치어드바이저**: 동일하게 `verification.naver` → 사이트맵 제출
-3. **Bing 웹마스터**: `verification.bing`
-4. **Google 비즈니스 프로필 / 네이버 스마트플레이스**: 카테고리는 "휴식 공간·공간대여"(숙박 아님), 사진 10장, 예약 링크 `https://도메인/book/sinchon`
-5. **Cloudflare Web Analytics**: 대시보드에서 사이트 추가 → 토큰을 `cfAnalyticsToken`에 넣기
-6. `npm run check:words` — 숙박 어휘(1박·체크인·객실 등)가 설명 문장에 섞이지 않았는지 검사
+## 3. SEO 체크리스트 (도메인 연결 후 한 번)
+1. **Google Search Console**: "도메인" 속성으로 `restel.kr` 추가 → Cloudflare DNS에 TXT 레코드로 소유 확인(가장 간단) → 사이트맵 `https://restel.kr/sitemap.xml` 제출. URL 접두어 방식이라면 메타 값을 `src/config/site.ts`의 `verification.google`에 넣고 커밋.
+2. **네이버 서치어드바이저**: 사이트 `https://restel.kr` 등록 → HTML 태그 값을 `verification.naver`에 넣고 커밋 → 소유 확인 → **요청 > 사이트맵 제출**에 `https://restel.kr/sitemap.xml`, **RSS 제출**에 `https://restel.kr/rss.xml`.
+3. **Bing 웹마스터**: Google Search Console에서 가져오기로 한 번에 등록(또는 `verification.bing`).
+4. **IndexNow**: 소유 확인이 끝나면 `/admin/settings` → "지금 알리기". 네이버·빙 등에 전체 주소가 전달됩니다. 새 글을 올릴 때마다 한 번씩.
+5. **Google 비즈니스 프로필 / 네이버 스마트플레이스**: 카테고리는 "휴식 공간·공간대여"(숙박 아님), 사진 10장, 홈페이지 `https://restel.kr`, 예약 링크 `https://restel.kr/book/sinchon`
+6. **Cloudflare Web Analytics**: 대시보드에서 사이트 추가 → 토큰을 `cfAnalyticsToken`에 넣기
+7. `npm run check:words` — 숙박 어휘(1박·체크인·객실 등)가 설명 문장·저널 글에 섞이지 않았는지 검사
 
-이미 적용된 것: 언어별 `<title>`·설명·키워드, hreflang(ko/en/ja/zh-Hant/zh-Hans/th/vi/x-default), canonical, Open Graph·Twitter 카드, JSON-LD(Organization·WebSite·LocalBusiness·FAQPage·HowTo·BreadcrumbList·Service), 동적 사이트맵, robots.txt, 끝 슬래시 정리, `/ko/...` 리다이렉트.
+이미 적용된 것: 언어·페이지별 `<title>`·설명·키워드(`seo` 항목), hreflang(ko/en/ja/zh-Hant/zh-Hans/th/vi/x-default, 글마다 실제 있는 언어만), canonical, Open Graph·Twitter 카드, JSON-LD(Organization·WebSite·LocalBusiness·FAQPage·HowTo·BreadcrumbList·Service·BlogPosting·CollectionPage), 이미지 포함 동적 사이트맵, 언어별 RSS(`/rss.xml`, `/en/rss.xml` …), AI 검색용 `/llms.txt`, IndexNow 키 파일, robots.txt, 보조 주소 noindex, 끝 슬래시 정리, `/ko/...` 리다이렉트.
+
+### 3-1. 레스텔 저널(읽을거리) 글 쓰는 법
+- 위치: `src/content/journal/<언어>/<슬러그>.md` — 언어는 `ko`·`en`·`ja`·`zh-tw`·`zh-cn`·`th`·`vi`. 같은 글의 언어별 버전은 **슬러그(파일 이름)를 똑같이** 맞춥니다. 일부 언어에만 있는 글도 됩니다(예: 한국어 전용 `campus-break-sinchon`).
+- 맨 위 `---` 사이에 제목(`title`), 검색 제목(`seoTitle`), 설명(`description`, 80~160자), 키워드, 분류(`guide`·`area`·`travel`·`culture`·`brand`), 게시일, 대표 사진, 요약, FAQ, 함께 읽을 글, 하단 버튼(`cta`)을 적습니다. 기존 글 하나를 복사해서 고치는 것이 가장 쉽습니다.
+- 본문은 마크다운(`##` 소제목, `-` 목록, 표)입니다. 다른 글 링크는 언어 경로를 붙여 씁니다(한국어 `/journal/...`, 영어 `/en/journal/...`).
+- 저장하면 목록·사이트맵·RSS·hreflang이 자동으로 갱신됩니다. 배포 후 `/admin/settings`에서 IndexNow "지금 알리기"를 눌러 주세요.
+- 효능 주장(수면 유도·불면 해소 등)과 숙박 어휘는 쓰지 않습니다.
 
 ---
 
@@ -101,7 +113,8 @@ GitHub 웹에서 파일을 열어 연필 아이콘으로 수정하고 **Commit c
 src/
   config/site.ts          사이트 설정(연락처·사업자·인증 코드)
   data/flagship.ts        직영 지점(신촌) 데이터·가격
-  i18n/locales/*.json     7개 언어 문구
+  i18n/locales/*.json     7개 언어 문구 (seo: 페이지별 검색 문구, journal: 저널 화면 문구)
+  content/journal/<언어>/  레스텔 저널 글(마크다운) — content.config.ts에 형식 정의
   i18n/index.ts           언어 유틸(경로·hreflang·환산액)
   layouts/Base.astro      공개 페이지 레이아웃(SEO 포함)
   layouts/Portal.astro    호스트·관리자 레이아웃
@@ -114,6 +127,9 @@ src/
   lib/auth.ts             비밀번호 해시·서명 쿠키 세션
   lib/handlers.ts         예약 요청·문의·조회 처리
   lib/spaces.ts           직영/파트너 공간 통합 모델
+  lib/journal.ts          저널 글 조회·언어별 버전
+  lib/feeds.ts            사이트맵·RSS·IndexNow 주소 목록
+  lib/seo.ts              페이지별 검색 문구 꺼내기
 public/                   로고·사진·OG 이미지·robots·_headers
 scripts/check-forbidden-words.mjs  숙박 어휘 검사
 scripts/i18n-hosts-patch.py        호스트 안내 문구 7개 언어 일괄 반영(1회성, 재실행 시 같은 키를 덮어씀)

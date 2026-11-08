@@ -1,8 +1,10 @@
 ---
 import Base from '@/layouts/Base.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import SessionCard from '@/components/SessionCard.astro';
 import type { Locale } from '@/config/site';
 import { site } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 import { flagships } from '@/data/flagship';
 import { flagshipToView } from '@/lib/spaces';
@@ -10,6 +12,7 @@ import { flagshipToView } from '@/lib/spaces';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'sessions');
 const L = (p: string) => localizePath(p, lang);
 const f = flagshipToView(flagships[0], lang);
 const offers = f.sessions.map((s) => ({
@@ -17,7 +20,7 @@ const offers = f.sessions.map((s) => ({
 }));
 const ld = { '@context': 'https://schema.org', '@type': 'Service', name: 'RESTEL rest sessions', provider: { '@type': 'Organization', name: 'RESTEL' }, areaServed: 'Seoul', offers };
 ---
-<Base lang={lang} path="/sessions" title={t.sessions.title} description={t.sessions.lead} jsonLd={[ld]}>
+<Base lang={lang} path="/sessions" title={t.sessions.title} fullTitle={seo.fullTitle} description={seo.description || t.sessions.lead} keywords={seo.keywords} jsonLd={[ld]}>
   <section class="section">
     <div class="container">
       <span class="kicker">{t.nav.sessions}</span>
@@ -47,4 +50,5 @@ const ld = { '@context': 'https://schema.org', '@type': 'Service', name: 'RESTEL
       <a class="btn btn--primary" href={L('/book/sinchon')}>{t.common.requestBooking}</a>
     </div>
   </section>
+  <JournalStrip lang={lang} slugs={['how-to-rest-in-60-minutes', 'where-to-rest-in-seoul', 'before-late-flight-seoul']} title={t.journal.relatedTitle} />
 </Base>

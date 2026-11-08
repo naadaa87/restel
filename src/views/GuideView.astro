@@ -1,16 +1,19 @@
 ---
 import Base from '@/layouts/Base.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import type { Locale } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'guide');
 const L = (p: string) => localizePath(p, lang);
 const icons = ['🔑', '🩴', '💡', '🔈', '🛏️', '🍵', '🤫', '🧯', '🚪'];
 const ld = { '@context': 'https://schema.org', '@type': 'HowTo', name: t.guide.title, description: t.guide.lead, step: t.guide.blocks.map((b, i) => ({ '@type': 'HowToStep', position: i + 1, name: b.title, text: b.text })) };
 ---
-<Base lang={lang} path="/guide" title={t.guide.title} description={t.guide.lead} jsonLd={[ld]}>
+<Base lang={lang} path="/guide" title={t.guide.title} fullTitle={seo.fullTitle} description={seo.description || t.guide.lead} keywords={seo.keywords} jsonLd={[ld]}>
   <section class="section">
     <div class="narrow">
       <span class="kicker">{t.nav.guide}</span>
@@ -42,4 +45,5 @@ const ld = { '@context': 'https://schema.org', '@type': 'HowTo', name: t.guide.t
       <div class="center" style="margin-top:28px"><a class="btn btn--primary" href={L('/book/sinchon')}>{t.common.requestBooking}</a></div>
     </div>
   </section>
+  <JournalStrip lang={lang} slugs={['how-to-rest-in-60-minutes', 'where-to-rest-in-seoul', 'what-is-rest-space-rental']} title={t.journal.relatedTitle} />
 </Base>

@@ -1,16 +1,18 @@
 ---
 import Base from '@/layouts/Base.astro';
 import type { Locale } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'hosts');
 const L = (p: string) => localizePath(p, lang);
 const h = t.hosts;
 const faqLd = h.faq?.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: h.faq.map((f: any) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [];
 ---
-<Base lang={lang} path="/hosts" title={h.title} description={h.lead} jsonLd={faqLd}>
+<Base lang={lang} path="/hosts" title={h.title} fullTitle={seo.fullTitle} description={seo.description || h.lead} keywords={seo.keywords} jsonLd={faqLd}>
   <section class="section">
     <div class="container split">
       <div>

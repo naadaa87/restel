@@ -1,0 +1,11 @@
+---
+import View from '@/views/JournalArticleView.astro';
+import { allArticles } from '@/lib/journal';
+export async function getStaticPaths() {
+  const list = (await allArticles()).filter((a) => a.lang !== 'ko');
+  return list.map((article) => ({ params: { lang: article.lang, slug: article.slug }, props: { article } }));
+}
+const { lang } = Astro.params as any;
+const { article } = Astro.props as any;
+---
+<View lang={lang} article={article} />

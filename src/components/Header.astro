@@ -2,8 +2,10 @@
 import type { Locale } from '@/config/site';
 import { getDict, localizePath, localeList, stripLang } from '@/i18n';
 
-interface Props { lang: Locale; path: string }
-const { lang, path } = Astro.props;
+interface Props { lang: Locale; path: string; locales?: Locale[]; fallback?: string }
+const { lang, path, locales: only, fallback } = Astro.props;
+// 이 페이지가 없는 언어를 고르면 fallback 경로(예: 저널 목록)로 보낸다
+const hrefFor = (code: Locale) => (!only || only.includes(code) ? localizePath(path, code) : localizePath(fallback || '/', code));
 const t = getDict(lang);
 const L = (p: string) => localizePath(p, lang);
 const items = [
@@ -12,6 +14,7 @@ const items = [
   { href: '/sessions', label: t.nav.sessions },
   { href: '/krest', label: t.nav.krest },
   { href: '/guide', label: t.nav.guide },
+  { href: '/journal', label: t.nav.journal },
   { href: '/faq', label: t.nav.faq },
   { href: '/hosts', label: t.nav.hosts },
 ];
@@ -31,7 +34,7 @@ const current = localeList.find((l) => l.code === lang)!;
       <details class="lang">
         <summary class="lang__btn" aria-label={t.nav.language}>🌐 {current.native}</summary>
         <div class="lang__menu">
-          {localeList.map((l) => <a href={localizePath(path, l.code)} hreflang={l.hreflang} lang={l.htmlLang} aria-current={l.code === lang ? 'true' : undefined}><span>{l.native}</span><span class="muted small">{l.code.toUpperCase()}</span></a>)}
+          {localeList.map((l) => <a href={hrefFor(l.code)} hreflang={l.hreflang} lang={l.htmlLang} aria-current={l.code === lang ? 'true' : undefined}><span>{l.native}</span><span class="muted small">{l.code.toUpperCase()}</span></a>)}
         </div>
       </details>
       <a class="btn btn--primary btn--sm" href={L('/book/sinchon')}>{t.nav.book}</a>

@@ -1,15 +1,18 @@
 ---
 import Base from '@/layouts/Base.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import type { Locale } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'faq');
 const L = (p: string) => localizePath(p, lang);
 const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: t.faq.items.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) };
 ---
-<Base lang={lang} path="/faq" title={t.faq.title} description={t.faq.items[0].a} jsonLd={[ld]}>
+<Base lang={lang} path="/faq" title={t.faq.title} fullTitle={seo.fullTitle} description={seo.description || t.faq.items[0].a} keywords={seo.keywords} jsonLd={[ld]}>
   <section class="section">
     <div class="narrow">
       <span class="kicker">FAQ</span>
@@ -23,4 +26,5 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: t
       </div>
     </div>
   </section>
+  <JournalStrip lang={lang} slugs={['what-is-rest-space-rental', 'where-to-rest-in-seoul', 'before-late-flight-seoul']} title={t.journal.relatedTitle} />
 </Base>

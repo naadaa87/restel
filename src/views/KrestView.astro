@@ -1,17 +1,20 @@
 ---
 import Base from '@/layouts/Base.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import type { Locale } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'krest');
 const L = (p: string) => localizePath(p, lang);
 const cards = Object.entries(t.krest.cards) as [string, { title: string; summary: string; body: string }][];
 const imgs: Record<string, string> = { ondol: '/images/sinchon/mats.webp', yo: '/images/sinchon/mats.webp', jjimjilbang: '/images/sinchon/family.webp', tea: '/images/sinchon/amenities.webp', stillness: '/images/sinchon/hall.webp', hanok: '/images/sinchon/mats.webp' };
 const ld = { '@context': 'https://schema.org', '@type': 'ItemList', name: t.krest.title, itemListElement: cards.map(([k, c], i) => ({ '@type': 'ListItem', position: i + 1, name: c.title, url: `${L('/krest')}#${k}` })) };
 ---
-<Base lang={lang} path="/krest" title={t.krest.title} description={t.krest.lead} jsonLd={[ld]}>
+<Base lang={lang} path="/krest" title={t.krest.title} fullTitle={seo.fullTitle} description={seo.description || t.krest.lead} keywords={seo.keywords} jsonLd={[ld]}>
   <section class="section">
     <div class="narrow">
       <span class="kicker">K-REST</span>
@@ -41,4 +44,5 @@ const ld = { '@context': 'https://schema.org', '@type': 'ItemList', name: t.kres
       <a class="btn btn--primary" href={L('/book/sinchon?session=krest90')}>K-REST 90 · {t.common.requestBooking}</a>
     </div>
   </section>
+  <JournalStrip lang={lang} slugs={['korean-way-to-rest', 'jet-lag-first-day-seoul', 'how-to-rest-in-60-minutes']} title={t.journal.relatedTitle} />
 </Base>

@@ -1,0 +1,39 @@
+---
+// 다른 페이지 하단에 붙이는 "함께 읽을 글" 묶음 (내부 링크)
+import type { Locale } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { articlesFor } from '@/lib/journal';
+
+interface Props { lang: Locale; slugs?: string[]; title?: string; limit?: number; paper?: boolean }
+const { lang, slugs = [], title, limit = 3, paper = true } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const mine = await articlesFor(lang);
+const picked = [
+  ...slugs.map((s) => mine.find((a) => a.slug === s)).filter(Boolean),
+  ...mine.filter((a) => !slugs.includes(a.slug)),
+].slice(0, limit) as typeof mine;
+---
+{picked.length > 0 && (
+  <section class={`section home-journal ${paper ? 'section--paper' : ''}`}>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+        <div>
+          <span class="kicker">RESTEL JOURNAL</span>
+          <h2 class="h2" style="margin:0">{title || t.journal.latestTitle}</h2>
+        </div>
+        <a class="btn btn--ghost btn--sm" href={L('/journal')}>{t.journal.allArticles}</a>
+      </div>
+      <div class="grid grid--3">
+        {picked.map((a) => (
+          <a class="card article-card" href={L('/journal/' + a.slug)}>
+            <img class="card__img" src={a.data.hero.replace('.webp', '-sm.webp')} alt={a.data.heroAlt} width="700" height="525" loading="lazy" />
+            <span class="kicker" style="margin:14px 0 6px">{(t.journal.categories as any)[a.data.category]}</span>
+            <h3 class="h3">{a.data.title}</h3>
+            <p class="muted small" style="margin:8px 0 0">{a.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

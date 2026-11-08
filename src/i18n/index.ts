@@ -59,9 +59,12 @@ export function stripLang(pathname: string): string {
 }
 
 /** hreflang 대체 링크 목록 */
-export function alternates(basePath: string, siteUrl: string) {
-  const list = locales.map((l) => ({ lang: l, hreflang: localeMeta[l].hreflang, href: siteUrl + localizePath(basePath, l) }));
-  list.push({ lang: 'x-default' as any, hreflang: 'x-default', href: siteUrl + localizePath(basePath, defaultLocale) });
+export function alternates(basePath: string, siteUrl: string, only?: Locale[]) {
+  const avail = only && only.length ? locales.filter((l) => only.includes(l)) : locales;
+  const list = avail.map((l) => ({ lang: l, hreflang: localeMeta[l].hreflang, href: siteUrl + localizePath(basePath, l) }));
+  // x-default: 한국어 버전이 있으면 한국어, 없으면 영어(또는 첫 번째 언어)
+  const def = avail.includes(defaultLocale) ? defaultLocale : avail.includes('en') ? 'en' : avail[0];
+  if (def) list.push({ lang: 'x-default' as any, hreflang: 'x-default', href: siteUrl + localizePath(basePath, def) });
   return list;
 }
 

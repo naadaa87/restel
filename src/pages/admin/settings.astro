@@ -5,6 +5,9 @@ import Portal from '@/layouts/Portal.astro';
 import { db, getSettings, setSetting, audit } from '@/lib/db';
 import { flash, redirectWith, str } from '@/lib/portal';
 import { sameOrigin } from '@/lib/auth';
+import { contentEntries, flatUrls } from '@/lib/feeds';
+import { getAllSpaces } from '@/lib/spaces';
+import { locales } from '@/config/site';
 
 const me = (Astro.locals as any).admin;
 const env = (Astro.locals as any).runtime?.env || {};
@@ -19,6 +22,26 @@ const KEYS = [
 if (Astro.request.method === 'POST') {
   if (!sameOrigin(Astro.request)) return redirectWith('/admin/settings', undefined, '잘못된 요청');
   const fd = await Astro.request.formData();
+  if (str(fd, 'action') === 'indexnow') {
+    // IndexNow: 네이버·빙 등 참여 검색엔진에 사이트 전체 주소를 한 번에 알린다 (구글은 서치콘솔 사이트맵으로)
+    const entries = await contentEntries();
+    try { (await getAllSpaces(Astro.locals, 'ko')).forEach((sp) => entries.push({ path: `/spaces/${sp.slug}`, locales: [...locales], lastmod: '', changefreq: '', priority: '' })); } catch {}
+    const urlList = [...new Set(flatUrls(entries, site.url))].slice(0, 9000);
+    let result = '';
+    try {
+      const r = await fetch('https://api.indexnow.org/indexnow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify({ host: site.domain, key: site.indexNowKey, keyLocation: `${site.url}/${site.indexNowKey}.txt`, urlList }),
+      });
+      result = r.status === 200 || r.status === 202 ? 'ok' : `HTTP ${r.status}`;
+    } catch (e: any) { result = '전송 실패: ' + (e?.message || e); }
+    await setSetting(d, 'indexnow_last', `${new Date().toISOString()} · ${urlList.length}개 · ${result}`);
+    await audit(d, `admin:${me.email}`, 'indexnow.submit', result);
+    return result === 'ok'
+      ? redirectWith('/admin/settings', `검색엔진에 ${urlList.length}개 주소를 알렸습니다. (네이버·빙 등 IndexNow 참여 검색엔진)`)
+      : redirectWith('/admin/settings', undefined, `IndexNow 전송 결과: ${result} — 도메인 연결과 키 파일(${site.url}/${site.indexNowKey}.txt)을 확인해 주세요.`);
+  }
   for (const k of KEYS) await setSetting(d, k.key, str(fd, k.key));
   await audit(d, `admin:${me.email}`, 'settings.update');
   return redirectWith('/admin/settings', '설정을 저장했습니다.');
@@ -44,6 +67,15 @@ const envRows = [
       <h2 class="h3" style="margin-bottom:10px">환경 상태</h2>
       <table class="list"><tbody>{envRows.map(([k, v]) => <tr><td><code>{k}</code></td><td>{v}</td></tr>)}</tbody></table>
       <p class="help" style="margin-top:10px">값 변경은 Cloudflare 대시보드 → Workers & Pages → restel → Settings → Variables and Secrets 에서 합니다. 사이트 문구·연락처·사업자 정보는 GitHub 저장소의 <code>src/config/site.ts</code>, 직영 지점 정보·가격은 <code>src/data/flagship.ts</code>, 번역은 <code>src/i18n/locales/*.json</code> 에서 수정합니다.</p>
+    </div>
+    <div class="panel">
+      <h2 class="h3" style="margin-bottom:10px">검색엔진에 알리기 (IndexNow)</h2>
+      <p class="help">새 글을 올리거나 문구를 크게 바꾼 뒤 한 번 누르면, 네이버·빙 등 IndexNow에 참여한 검색엔진에 사이트 주소 전체를 알립니다. 구글은 서치 콘솔에 제출한 사이트맵(<code>{site.url}/sitemap.xml</code>)으로 반영됩니다. 하루에 여러 번 누를 필요는 없습니다.</p>
+      <form method="post" style="margin-top:10px">
+        <input type="hidden" name="action" value="indexnow" />
+        <button class="btn btn--sage btn--sm" type="submit">지금 알리기</button>
+      </form>
+      <p class="small muted" style="margin-top:10px">마지막 전송: {s.indexnow_last || '없음'}</p>
     </div>
   </div>
 </Portal>

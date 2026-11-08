@@ -1,14 +1,17 @@
 ---
 import Base from '@/layouts/Base.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import type { Locale } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'about');
 const L = (p: string) => localizePath(p, lang);
 ---
-<Base lang={lang} path="/about" title={t.about.title} description={t.about.lead}>
+<Base lang={lang} path="/about" title={t.about.title} fullTitle={seo.fullTitle} description={seo.description || t.about.lead} keywords={seo.keywords}>
   <section class="section">
     <div class="narrow">
       <span class="kicker">RESTEL = REST + TEL</span>
@@ -55,4 +58,5 @@ const L = (p: string) => localizePath(p, lang);
       </div>
     </div>
   </section>
+  <JournalStrip lang={lang} slugs={['what-is-rest-space-rental', 'korean-way-to-rest', 'where-to-rest-in-seoul']} title={t.journal.relatedTitle} />
 </Base>

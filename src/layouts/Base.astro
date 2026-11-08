@@ -18,8 +18,12 @@ interface Props {
   keywords?: string;
   hideNotice?: boolean;
   bodyClass?: string;
+  locales?: Locale[];        // 이 페이지가 있는 언어(없으면 전체)
+  langFallback?: string;     // 없는 언어로 바꿀 때 보낼 경로
+  type?: 'website' | 'article';
+  article?: { published: string; modified?: string; section?: string; tags?: string[] };
 }
-const { lang, path, title, fullTitle, description, image, noindex, jsonLd = [], keywords, hideNotice = false, bodyClass = '' } = Astro.props;
+const { lang, path, title, fullTitle, description, image, noindex, jsonLd = [], keywords, hideNotice = false, bodyClass = '', locales: only, langFallback, type, article } = Astro.props;
 const t = getDict(lang);
 const meta = localeMeta[lang];
 const orgLd = {
@@ -58,7 +62,7 @@ const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}
     {fonts && <link rel="preconnect" href="https://fonts.googleapis.com" />}
     {fonts && <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />}
     {fonts && <link rel="stylesheet" href={fonts} />}
-    <Seo lang={lang} path={path} title={title} fullTitle={fullTitle} description={description} image={image} noindex={noindex} keywords={keywords} jsonLd={[orgLd, websiteLd, ...jsonLd]} />
+    <Seo lang={lang} path={path} title={title} fullTitle={fullTitle} description={description} image={image} noindex={noindex} keywords={keywords} locales={only} type={type} article={article} jsonLd={[orgLd, websiteLd, ...jsonLd]} />
     <meta name="generator" content={Astro.generator} />
   </head>
   <body class={bodyClass}>
@@ -69,13 +73,13 @@ const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}
         <button id="lang-banner-close" aria-label={t.common.dismiss}>✕</button>
       </div>
     </div>
-    <Header lang={lang} path={path} />
+    <Header lang={lang} path={path} locales={only} fallback={langFallback} />
     {!hideNotice && <div class="notice"><strong>RESTEL</strong> · {t.common.notLodging}</div>}
     <main id="main">
       <slot />
     </main>
     <Footer lang={lang} />
-    <script is:inline define:vars={{ lang, path, locales: localeList.map((l) => ({ code: l.code, native: l.native, html: l.htmlLang })), suggestTpl: t.common.langSuggest }}>
+    <script is:inline define:vars={{ lang, path, avail: only || null, fallback: langFallback || '/', locales: localeList.map((l) => ({ code: l.code, native: l.native, html: l.htmlLang })), suggestTpl: t.common.langSuggest }}>
       (function () {
         try {
           var KEY = 'restel_lang';
@@ -92,7 +96,8 @@ const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}
           if (!target || target === lang) return;
           var loc = locales.find(function (l) { return l.code === target; });
           if (!loc) return;
-          var href = target === 'ko' ? path : '/' + target + (path === '/' ? '' : path);
+          var p = (avail && avail.indexOf(target) < 0) ? fallback : path;
+          var href = target === 'ko' ? p : '/' + target + (p === '/' ? '' : p);
           var el = document.getElementById('lang-banner');
           document.getElementById('lang-banner-text').textContent = suggestTpl.replace('{lang}', loc.native);
           document.getElementById('lang-banner-link').setAttribute('href', href);

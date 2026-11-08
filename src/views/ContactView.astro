@@ -2,14 +2,16 @@
 import Base from '@/layouts/Base.astro';
 import type { Locale } from '@/config/site';
 import { site } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict } from '@/i18n';
 
 interface Props { lang: Locale; result?: { done: boolean; error?: string; values: Record<string, string> } | null; turnstileSiteKey?: string }
 const { lang, result, turnstileSiteKey } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'contact');
 const v = result?.values || {};
 ---
-<Base lang={lang} path="/contact" title={t.contact.title} description={t.contact.lead}>
+<Base lang={lang} path="/contact" title={t.contact.title} fullTitle={seo.fullTitle} description={seo.description || t.contact.lead} keywords={seo.keywords}>
   <section class="section">
     <div class="container detail">
       <div>

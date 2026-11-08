@@ -4,7 +4,7 @@
     "tagline": "Nơi bạn bước vào để nghỉ ngơi — RESTEL",
     "titleSuffix": " | RESTEL — Không gian nghỉ ngơi kiểu Hàn tại Seoul",
     "description": "RESTEL là không gian nghỉ ngơi kiểu Hàn Quốc cho thuê theo giờ tại Sinchon, Seoul. Đặt một không gian riêng để chợp mắt, thiền, chữa lành và nạp lại năng lượng. Nệm trải sàn, ánh sáng dịu, trà ấm. Không phải khách sạn — là dịch vụ cho thuê không gian nghỉ ngơi.",
-    "keywords": "không gian nghỉ ngơi Seoul, phòng chợp mắt Seoul, ngủ trưa Sinchon, nghỉ ngơi theo giờ Hàn Quốc, không gian thiền Seoul, chữa lành Seoul, Hongdae nghỉ ngơi, ondol, RESTEL, cho thuê không gian nghỉ ngơi",
+    "keywords": "chỗ nghỉ ngơi ở Seoul, ngủ trưa Seoul, chợp mắt Hongdae, nghỉ chân Seoul, Sinchon có gì chơi, chờ chuyến bay đêm Seoul, lệch múi giờ Hàn Quốc, trải nghiệm chữa lành Hàn Quốc, thiền ở Seoul, không gian nghỉ ngơi theo giờ, du lịch Hàn Quốc tự túc, RESTEL",
     "ogTitle": "RESTEL — Không gian nghỉ ngơi kiểu Hàn cho thuê theo giờ"
   },
   "nav": {
@@ -14,6 +14,7 @@
     "sessions": "Gói & Giá",
     "krest": "K-REST",
     "guide": "Hướng dẫn",
+    "journal": "Cẩm nang",
     "faq": "Câu hỏi thường gặp",
     "hosts": "Dành cho chủ không gian",
     "contact": "Liên hệ",
@@ -95,6 +96,19 @@
     "hostsTitle": "Biến không gian của bạn thành RESTEL",
     "hostsBody": "Phòng tiệc, studio và mặt bằng trống thường bỏ không vào buổi chiều ngày thường. Hãy chuyển đổi theo tiêu chuẩn RESTEL — chúng tôi cùng bạn xử lý yêu cầu đặt chỗ, hiển thị đa ngôn ngữ và nội dung.",
     "hostsCta": "Thông tin cho chủ không gian",
+    "whereTitle": "Dễ tìm đến",
+    "whereSub": "Đi bộ 5 phút từ ga Sinchon, cách Hongdae và Ewha một ga.",
+    "where": [
+      { "title": "Ga Sinchon tuyến 2, đi bộ khoảng 5 phút", "body": "Địa chỉ đầy đủ và cách vào cửa được gửi sau khi xác nhận." },
+      { "title": "Cách ga Hongik Univ. (Hongdae) một ga", "body": "Ga có tàu sân bay AREX dừng, tiện ghé trước giờ bay hoặc ngày vừa đến." },
+      { "title": "Gần ĐH Yonsei và Ewha", "body": "Ghé nghỉ sau khi dạo khuôn viên trường hay khu Sinchon – Ewha." },
+      { "title": "Mở 07:00–24:00", "body": "Từ sáng sớm đến trước nửa đêm. Mọi gói kết thúc trước nửa đêm." }
+    ],
+    "journalPicks": [
+      "before-late-flight-seoul",
+      "jet-lag-first-day-seoul",
+      "korean-way-to-rest"
+    ],
     "faqTitle": "Câu hỏi thường gặp"
   },
   "about": {
@@ -294,7 +308,10 @@
       { "q": "Yêu cầu được xác nhận như thế nào?", "a": "Gửi yêu cầu, chúng tôi kiểm tra và nhắn cho bạn (email hoặc KakaoTalk). Khi thanh toán xong, chúng tôi gửi mã vào cửa." },
       { "q": "Chính sách hoàn tiền thế nào?", "a": "Hoàn 100% trước 48 giờ, 50% trước 24 giờ, sau đó không hoàn. Thay đổi miễn phí trước khi xác nhận." },
       { "q": "Tôi có thể mang đồ ăn không?", "a": "Đồ ăn nhẹ và đồ uống thì được. Vui lòng tránh nấu nướng, rượu bia và đồ ăn nặng mùi." },
-      { "q": "Tôi có thể đăng không gian của mình lên RESTEL không?", "a": "Có. Đăng ký tại trang dành cho chủ không gian. Chúng tôi chia sẻ tiêu chuẩn RESTEL (ánh sáng, rèm tối, nệm, biển chỉ dẫn, an toàn) và hiển thị không gian của bạn sau khi duyệt." }
+      { "q": "Tôi có thể đăng không gian của mình lên RESTEL không?", "a": "Có. Đăng ký tại trang dành cho chủ không gian. Chúng tôi chia sẻ tiêu chuẩn RESTEL (ánh sáng, rèm tối, nệm, biển chỉ dẫn, an toàn) và hiển thị không gian của bạn sau khi duyệt." },
+      { "q": "Đi một mình có được không?", "a": "Được. Giá tính theo không gian nên đi một mình vẫn dùng trọn căn phòng (tính giá cơ bản 2 người). Rất hợp khi bạn muốn nghỉ mà không phải để ý ai." },
+      { "q": "Ở đâu, ga nào gần nhất?", "a": "Đi bộ khoảng 5 phút từ ga Sinchon tuyến 2. Ga Hongik Univ. (Hongdae, nối tàu sân bay AREX) và ga Ewha Womans Univ. đều cách một ga. Địa chỉ đầy đủ và mã cửa được gửi sau khi xác nhận." },
+      { "q": "Ghé nghỉ trước giờ bay hoặc giữa lịch tham quan được không?", "a": "Được. Nap 60 hoặc Rest 180 là vừa. Từ ga Hongik Univ. đi tàu AREX thường đến sân bay Incheon mất khoảng một tiếng, nên hãy tính ngược từ giờ cất cánh. Nếu có vali lớn, hãy ghi chú trong yêu cầu." }
     ]
   },
   "hosts": {
@@ -507,5 +524,152 @@
     "title": "Trang này đang nghỉ ngơi",
     "body": "Trang bạn tìm không tồn tại hoặc đã được chuyển.",
     "cta": "Về trang chủ"
+  },
+  "journal": {
+    "title": "RESTEL Journal",
+    "lead": "Ghi chép về chuyện nghỉ ngơi cho tử tế ở Seoul — chợp mắt ở đâu, dùng một giờ thế nào cho đáng, làm gì trước chuyến bay đêm, và người Hàn nghỉ ngơi ra sao.",
+    "categories": {
+      "guide": "Cẩm nang nghỉ ngơi",
+      "area": "Khu vực lân cận",
+      "travel": "Mẹo du lịch",
+      "culture": "Văn hóa nghỉ ngơi Hàn Quốc",
+      "brand": "Về RESTEL"
+    },
+    "readMin": "{n} phút đọc",
+    "by": "Ban biên tập RESTEL",
+    "summary": "Tóm tắt",
+    "faqTitle": "Câu hỏi",
+    "relatedTitle": "Đọc thêm",
+    "allArticles": "Tất cả bài viết",
+    "latestTitle": "Từ RESTEL Journal",
+    "aboutEntity": "Cho thuê không gian nghỉ ngơi tại Seoul",
+    "cta": {
+      "sessions": {
+        "title": "Chọn độ dài nghỉ ngơi phù hợp",
+        "body": "Nap 60, Rest 180, Day Rest và K-REST 90 — xem mỗi gói có gì.",
+        "button": "Gói & Giá"
+      },
+      "krest": {
+        "title": "Thử cách nghỉ ngơi kiểu Hàn",
+        "body": "Trà, thở có hướng dẫn và sàn ấm trong 90 phút.",
+        "button": "Tìm hiểu K-REST"
+      },
+      "book": {
+        "title": "Dành một giờ cho chính mình",
+        "body": "Chọn ngày và giờ bắt đầu tại RESTEL Sinchon. Chúng tôi sẽ xác nhận và gửi cách vào cửa.",
+        "button": "Gửi yêu cầu"
+      },
+      "spaces": {
+        "title": "Xem không gian trước",
+        "body": "Ảnh, bố trí và đường đi đến RESTEL Sinchon.",
+        "button": "Xem RESTEL Sinchon"
+      },
+      "guide": {
+        "title": "Lần đầu đến RESTEL?",
+        "body": "Từ mã cửa đến góc trà, đây là cách một buổi nghỉ diễn ra.",
+        "button": "Hướng dẫn"
+      }
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "RESTEL | Chỗ chợp mắt & nghỉ ngơi ở Seoul — Sinchon, gần Hongdae",
+      "description": "Thuê không gian nghỉ ngơi riêng kiểu Hàn theo giờ, cách ga Sinchon 5 phút đi bộ, cách Hongdae một ga. Chợp mắt, thiền hay nghỉ trước giờ bay trên nệm trải sàn, ánh sáng dịu và trà ấm. Không phải khách sạn.",
+      "keywords": [
+        "chỗ nghỉ ngơi ở Seoul",
+        "ngủ trưa Seoul",
+        "chợp mắt Hongdae",
+        "nghỉ chân Seoul",
+        "Sinchon có gì chơi",
+        "chờ chuyến bay đêm Seoul",
+        "lệch múi giờ Hàn Quốc",
+        "trải nghiệm chữa lành Hàn Quốc",
+        "thiền ở Seoul",
+        "không gian nghỉ ngơi theo giờ"
+      ]
+    },
+    "about": {
+      "title": "RESTEL là gì? Cho thuê không gian nghỉ ngơi, không phải khách sạn",
+      "description": "RESTEL = REST + TEL. Không phải nơi để ở lại qua đêm mà là nơi để nghỉ. Thuê theo giờ để chợp mắt, thiền và nạp lại năng lượng — một kiểu không gian mới ở Seoul.",
+      "keywords": [
+        "RESTEL là gì",
+        "cho thuê không gian nghỉ ngơi",
+        "không gian nghỉ ngơi Seoul"
+      ]
+    },
+    "sessions": {
+      "title": "Gói & Giá — Nap 60, Rest 180, Day Rest, K-REST 90 | RESTEL",
+      "description": "Chợp mắt 60 phút, nghỉ 3 giờ, nghỉ cả ngày hoặc trải nghiệm nghỉ ngơi kiểu Hàn 90 phút. Mỗi gói là cả không gian riêng. Giá bằng won kèm giá tham khảo bằng đồng.",
+      "keywords": [
+        "giá chợp mắt Seoul",
+        "không gian nghỉ ngơi giá"
+      ]
+    },
+    "spaces": {
+      "title": "Địa điểm RESTEL — Không gian nghỉ ngơi ở Seoul",
+      "description": "RESTEL Sinchon và các không gian đối tác đạt chuẩn RESTEL. So sánh vị trí, gói và không gian rồi gửi yêu cầu.",
+      "keywords": [
+        "không gian nghỉ ngơi Seoul",
+        "RESTEL Sinchon"
+      ]
+    },
+    "sinchon": {
+      "title": "RESTEL Sinchon | Chỗ chợp mắt & nghỉ ngơi cách ga Sinchon 5 phút",
+      "description": "Bục gỗ dưới hàng ngói đen, có sân hiên, nệm gấp, chăn và góc trà. Không gian riêng từ 60 phút, gần Hongdae và Ewha.",
+      "keywords": [
+        "RESTEL Sinchon",
+        "chợp mắt Sinchon",
+        "nghỉ ngơi gần Hongdae",
+        "Ewha"
+      ]
+    },
+    "krest": {
+      "title": "K-REST — Trải nghiệm cách nghỉ ngơi kiểu Hàn ở Seoul | RESTEL",
+      "description": "Một tách trà, thở có hướng dẫn và nghỉ trên sàn ấm. Văn hóa ondol, ngồi sàn, sự thư thái kiểu jjimjilbang và tĩnh lặng kiểu templestay gói trong 90 phút.",
+      "keywords": [
+        "trải nghiệm văn hóa Hàn Quốc",
+        "ondol",
+        "thiền ở Seoul",
+        "trà Hàn Quốc"
+      ]
+    },
+    "guide": {
+      "title": "Hướng dẫn RESTEL — Từ lúc vào cửa đến cách nghỉ",
+      "description": "Mã cửa, cởi giày, ba mức ánh sáng, kênh âm thanh, nệm và chăn, góc trà và dọn dẹp trước khi về. Dành cho người lần đầu.",
+      "keywords": [
+        "cách dùng RESTEL"
+      ]
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp — RESTEL có phải khách sạn? Đi một mình được không?",
+      "description": "Giải đáp về RESTEL, chuyện chợp mắt, số người, đi một mình, ga gần nhất, đặt từ nước ngoài, hủy và nội quy.",
+      "keywords": [
+        "RESTEL câu hỏi",
+        "chợp mắt Seoul một mình"
+      ]
+    },
+    "hosts": {
+      "title": "Trở thành đối tác RESTEL — Biến giờ trống thành không gian nghỉ ngơi",
+      "description": "Phòng tiệc, studio hay mặt bằng trống có thể thành không gian nghỉ ngơi chuẩn RESTEL. Không phí đăng; đặt chỗ, tin nhắn đa ngôn ngữ và quyết toán hằng tháng qua cổng chủ không gian.",
+      "keywords": [
+        "đối tác RESTEL"
+      ]
+    },
+    "contact": {
+      "title": "Liên hệ RESTEL — Đặt chỗ, nhóm, hợp tác",
+      "description": "Hỏi về đặt chỗ, đi nhóm, hợp tác doanh nghiệp hoặc đăng không gian. Chúng tôi trả lời bằng tiếng Hàn và tiếng Anh.",
+      "keywords": [
+        "liên hệ RESTEL"
+      ]
+    },
+    "journal": {
+      "title": "RESTEL Journal — Nghỉ ở đâu, nghỉ thế nào ở Seoul",
+      "description": "Chợp mắt ở đâu tại Seoul, dạo khu Sinchon – Hongdae – Ewha, làm gì trước chuyến bay đêm, lệch múi giờ ngày đầu và văn hóa nghỉ ngơi kiểu Hàn.",
+      "keywords": [
+        "du lịch Seoul tự túc",
+        "chuyến bay đêm Seoul",
+        "lệch múi giờ Hàn Quốc"
+      ]
+    }
   }
 }

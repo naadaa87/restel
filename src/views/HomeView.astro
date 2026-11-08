@@ -1,8 +1,10 @@
 ---
 import Base from '@/layouts/Base.astro';
 import SessionCard from '@/components/SessionCard.astro';
+import JournalStrip from '@/components/JournalStrip.astro';
 import type { Locale } from '@/config/site';
 import { site } from '@/config/site';
+import { pageSeo } from '@/lib/seo';
 import { getDict, localizePath } from '@/i18n';
 import { flagships } from '@/data/flagship';
 import { flagshipToView } from '@/lib/spaces';
@@ -10,6 +12,7 @@ import { flagshipToView } from '@/lib/spaces';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang);
+const seo = pageSeo(t, 'home');
 const L = (p: string) => localizePath(p, lang);
 const flagship = flagshipToView(flagships[0], lang);
 const faqLd = {
@@ -25,7 +28,7 @@ const bizLd = {
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '07:00', closes: '23:59' }],
 };
 ---
-<Base lang={lang} path="/" fullTitle={`${t.meta.ogTitle}`} description={t.meta.description} jsonLd={[faqLd, bizLd]}>
+<Base lang={lang} path="/" fullTitle={seo.fullTitle || t.meta.ogTitle} description={seo.description || t.meta.description} keywords={seo.keywords} jsonLd={[faqLd, bizLd]}>
   <section class="hero">
     <div class="container hero__grid">
       <div>
@@ -129,6 +132,20 @@ const bizLd = {
       </div>
     </div>
   </section>
+
+  <section class="section">
+    <div class="narrow">
+      <h2 class="h2 center">{t.home.whereTitle}</h2>
+      <p class="sub center" style="margin-bottom:24px">{t.home.whereSub}</p>
+      <div class="grid grid--2">
+        {t.home.where.map((w: any) => (
+          <div class="card"><h3 class="h3" style="margin-bottom:6px">{w.title}</h3><p class="muted" style="margin:0">{w.body}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <JournalStrip lang={lang} slugs={t.home.journalPicks} />
 
   <section class="section">
     <div class="container split">

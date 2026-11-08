@@ -1,0 +1,110 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { render } from 'astro:content';
+import { articlesFor, localesOf, readMinutes, isoDate, type Article } from '@/lib/journal';
+
+interface Props { lang: Locale; article: Article }
+const { lang, article } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const a = article.data;
+const path = '/journal/' + article.slug;
+const { Content } = await render(article);
+const avail = await localesOf(article.slug);
+const mine = await articlesFor(lang);
+const related = [
+  ...a.related.map((s) => mine.find((x) => x.slug === s)).filter(Boolean),
+  ...mine.filter((x) => x.slug !== article.slug && !a.related.includes(x.slug)),
+].filter((x) => x && x.slug !== article.slug).slice(0, 3) as Article[];
+const cat = (t.journal.categories as any)[a.category];
+const mins = readMinutes(article.body, lang);
+const pub = isoDate(a.published);
+const mod = isoDate(a.updated || a.published);
+const fmtDate = (d: Date) => new Intl.DateTimeFormat(lang === 'zh-tw' ? 'zh-Hant' : lang === 'zh-cn' ? 'zh-Hans' : lang, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' }).format(d);
+const cta = (t.journal.cta as any)[a.cta] || t.journal.cta.book;
+const ctaHref = { sessions: '/sessions', krest: '/krest', book: '/book/sinchon', spaces: '/spaces/sinchon', guide: '/guide' }[a.cta];
+const url = site.url + L(path);
+const org = { '@type': 'Organization', name: 'RESTEL', alternateName: '레스텔', url: site.url, logo: { '@type': 'ImageObject', url: site.url + '/brand/logo-full.png' } };
+const ld: Record<string, any>[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'BlogPosting', '@id': url + '#article',
+    headline: a.title, description: a.description, image: [site.url + a.hero], inLanguage: lang,
+    datePublished: pub, dateModified: mod, articleSection: cat, keywords: a.keywords.join(', '),
+    author: org, publisher: org, mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    isPartOf: { '@type': 'Blog', name: t.journal.title.includes('RESTEL') ? t.journal.title : 'RESTEL ' + t.journal.title, url: site.url + L('/journal') },
+    about: { '@type': 'Thing', name: t.journal.aboutEntity },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t.nav.home, item: site.url + L('/') },
+      { '@type': 'ListItem', position: 2, name: t.journal.title, item: site.url + L('/journal') },
+      { '@type': 'ListItem', position: 3, name: a.title, item: url },
+    ],
+  },
+];
+if (a.faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: a.faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) });
+---
+<Base lang={lang} path={path} fullTitle={(a.seoTitle || a.title) + ' | RESTEL'} description={a.description} keywords={a.keywords.join(', ')} image={a.hero} type="article" locales={avail} langFallback="/journal" article={{ published: pub, modified: mod, section: cat, tags: a.keywords }} jsonLd={ld}>
+  <article class="section">
+    <div class="narrow">
+      <nav class="crumbs" aria-label="breadcrumb"><a href={L('/')}>{t.nav.home}</a><span>›</span><a href={L('/journal')}>{t.journal.title}</a><span>›</span><span>{cat}</span></nav>
+      <span class="kicker">{cat}</span>
+      <h1 class="h1 article__title">{a.title}</h1>
+      <p class="small muted article__meta">
+        {t.journal.by} · <time datetime={mod}>{fmtDate(a.updated || a.published)}</time> · {t.journal.readMin.replace('{n}', String(mins))}
+      </p>
+    </div>
+    <div class="narrow narrow--wide">
+      <img class="article__hero" src={a.hero} alt={a.heroAlt} width="1400" height="1050" fetchpriority="high" />
+    </div>
+    <div class="narrow">
+      {a.summary.length > 0 && (
+        <aside class="callout callout--sage article__summary">
+          <strong>{t.journal.summary}</strong>
+          <ul>{a.summary.map((s) => <li>{s}</li>)}</ul>
+        </aside>
+      )}
+      <div class="prose">
+        <Content />
+      </div>
+      {a.faq.length > 0 && (
+        <section style="margin-top:44px">
+          <h2 class="h2" style="font-size:24px">{t.journal.faqTitle}</h2>
+          <div class="faq" style="margin-top:14px">
+            {a.faq.map((q) => <details><summary>{q.q}</summary><div class="faq__a">{q.a}</div></details>)}
+          </div>
+        </section>
+      )}
+      <div class="card card--paper article__cta">
+        <div>
+          <h2 class="h3" style="margin-bottom:6px">{cta.title}</h2>
+          <p class="muted" style="margin:0">{cta.body}</p>
+        </div>
+        <a class="btn btn--primary" href={L(ctaHref)}>{cta.button}</a>
+      </div>
+      <p class="small muted" style="margin-top:14px">{t.common.notLodging}</p>
+    </div>
+  </article>
+  {related.length > 0 && (
+    <section class="section section--paper">
+      <div class="container">
+        <h2 class="h2" style="margin-bottom:20px">{t.journal.relatedTitle}</h2>
+        <div class="grid grid--3">
+          {related.map((r) => (
+            <a class="card article-card" href={L('/journal/' + r.slug)}>
+              <img class="card__img" src={r.data.hero.replace('.webp', '-sm.webp')} alt={r.data.heroAlt} width="700" height="525" loading="lazy" />
+              <span class="kicker" style="margin:14px 0 6px">{(t.journal.categories as any)[r.data.category]}</span>
+              <h3 class="h3">{r.data.title}</h3>
+              <p class="muted small" style="margin:8px 0 0">{r.data.description}</p>
+            </a>
+          ))}
+        </div>
+        <div class="center" style="margin-top:24px"><a class="btn btn--ghost btn--sm" href={L('/journal')}>{t.journal.allArticles}</a></div>
+      </div>
+    </section>
+  )}
+</Base>

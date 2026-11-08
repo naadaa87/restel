@@ -9,7 +9,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": "./dist", "binding": "ASSETS", "html_handling": "drop-trailing-slash" },
   "observability": { "enabled": true },
-  // 대표 주소(SITE_URL)는 여기 두지 않는다. Cloudflare > Settings > Builds > Variables의 빌드 변수로 관리(astro.config.mjs 참고)
+  // 대표 주소는 https://restel.kr (astro.config.mjs 기본값). 커스텀 도메인은 대시보드 Settings > Domains & Routes에서 연결한다.
+  // 도메인이 Active가 되기 전에 routes를 여기에 적으면 배포가 실패하므로 두지 않는다.
   "vars": {
     "DEFAULT_LOCALE": "ko"
   },

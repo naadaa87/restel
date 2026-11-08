@@ -1,0 +1,73 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { site } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { articlesFor, readMinutes, isoDate } from '@/lib/journal';
+import { pageSeo } from '@/lib/seo';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const L = (p: string) => localizePath(p, lang);
+const list = await articlesFor(lang);
+const seo = pageSeo(t, 'journal');
+const cats = ['guide', 'area', 'travel', 'culture', 'brand'].filter((c) => list.some((a) => a.data.category === c));
+const fmtDate = (d: Date) => new Intl.DateTimeFormat(lang === 'zh-tw' ? 'zh-Hant' : lang === 'zh-cn' ? 'zh-Hans' : lang, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' }).format(d);
+const ld = [
+  {
+    '@context': 'https://schema.org', '@type': 'CollectionPage', name: seo.fullTitle || t.journal.title, description: seo.description,
+    url: site.url + L('/journal'), inLanguage: lang,
+    mainEntity: { '@type': 'ItemList', itemListElement: list.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: site.url + L('/journal/' + a.slug), name: a.data.title })) },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t.nav.home, item: site.url + L('/') },
+      { '@type': 'ListItem', position: 2, name: t.journal.title, item: site.url + L('/journal') },
+    ],
+  },
+];
+---
+<Base lang={lang} path="/journal" fullTitle={seo.fullTitle} description={seo.description} keywords={seo.keywords} jsonLd={ld}>
+  <section class="section">
+    <div class="container">
+      <nav class="crumbs" aria-label="breadcrumb"><a href={L('/')}>{t.nav.home}</a><span>›</span><span>{t.journal.title}</span></nav>
+      <span class="kicker">RESTEL JOURNAL</span>
+      <h1 class="h1" style="font-size:clamp(30px,4.5vw,46px)">{t.journal.title}</h1>
+      <p class="lead" style="margin-top:14px;max-width:720px">{t.journal.lead}</p>
+      {cats.length > 1 && (
+        <div class="chips" style="margin-top:22px">
+          {cats.map((c) => <a class="pill" href={`#cat-${c}`}>{(t.journal.categories as any)[c]}</a>)}
+        </div>
+      )}
+    </div>
+  </section>
+  {cats.map((c, ci) => (
+    <section class={ci % 2 === 0 ? 'section section--paper section--tight' : 'section section--tight'} id={`cat-${c}`}>
+      <div class="container">
+        <h2 class="h2" style="margin-bottom:20px">{(t.journal.categories as any)[c]}</h2>
+        <div class="grid grid--3">
+          {list.filter((a) => a.data.category === c).map((a) => (
+            <a class="card article-card" href={L('/journal/' + a.slug)}>
+              <img class="card__img" src={a.data.hero.replace('.webp', '-sm.webp')} alt={a.data.heroAlt} width="700" height="525" loading="lazy" />
+              <span class="kicker" style="margin:14px 0 6px">{(t.journal.categories as any)[a.data.category]}</span>
+              <h3 class="h3">{a.data.title}</h3>
+              <p class="muted small" style="margin:8px 0 10px">{a.data.description}</p>
+              <span class="small muted"><time datetime={isoDate(a.data.updated || a.data.published)}>{fmtDate(a.data.updated || a.data.published)}</time> · {t.journal.readMin.replace('{n}', String(readMinutes(a.body, lang)))}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+  <section class="section">
+    <div class="narrow center">
+      <p class="muted">{t.common.notLodging}</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+        <a class="btn btn--primary" href={L('/sessions')}>{t.home.cta1}</a>
+        <a class="btn btn--ghost" href={L('/book/sinchon')}>{t.common.requestBooking}</a>
+      </div>
+    </div>
+  </section>
+</Base>
