@@ -25,7 +25,7 @@ export const site = {
   // 검색엔진 소유 확인 메타 태그 값 (없으면 비워 두세요)
   verification: {
     google: '',
-    naver: '',
+    naver: '1d3fe7f97742a1820db1f753c40de67d649976c9', // 네이버 서치어드바이저 HTML 태그 (2026-11-16)
     bing: '',
   },
   // IndexNow 키 — 네이버·빙에 새 글·수정 사항을 바로 알릴 때 쓴다. public/<키>.txt 파일과 짝을 이룬다(바꾸지 마세요)
