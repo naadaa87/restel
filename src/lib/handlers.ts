@@ -87,6 +87,24 @@ export async function handleContactPost(ctx: { request: Request; locals: any }, 
   return { done: true, values: {} };
 }
 
+/** 레스텔 스테이(오픈 예정) 사전 알림 신청 — 문의함에 topic 'stay'로 쌓는다 */
+export async function handleStayPost(ctx: { request: Request; locals: any }, lang: Locale): Promise<{ done: boolean; error?: string; values: Record<string, string> }> {
+  const env = ctx.locals?.runtime?.env || {};
+  const { getStay } = await import('@/lib/stay');
+  const s = getStay(lang);
+  const fd = await ctx.request.formData();
+  const values: Record<string, string> = {};
+  for (const k of ['name', 'email', 'when', 'people', 'lang', 'message']) values[k] = str(fd, k);
+  const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
+  if (!sameOrigin(ctx.request) || fd.get('website') || !okEmail || !fd.get('consent') || !(await verifyTurnstile(env, ctx.request, fd))) return { done: false, error: s.form.error, values };
+  const d = await db(ctx.locals);
+  if (!d) return { done: false, error: s.form.error, values };
+  const message = `[RESTEL STAY 사전 알림]\n희망 시기: ${values.when || '-'}\n인원: ${values.people || '-'}\n안내 언어: ${values.lang || lang}\n페이지 언어: ${lang}\n\n${values.message || ''}`.slice(0, 3000);
+  await createInquiry(d, { kind: 'contact', name: (values.name || '-').slice(0, 80), email: values.email.slice(0, 120), phone: '', topic: 'stay', message });
+  await notifyAdmin(env, `레스텔 스테이 알림 신청 · ${values.email}`, message);
+  return { done: true, values: {} };
+}
+
 export async function handleMyRequest(ctx: { request: Request; locals: any; url: URL }, t: any) {
   const d = await db(ctx.locals);
   let code = ctx.url.searchParams.get('code') || '';

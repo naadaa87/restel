@@ -13,6 +13,7 @@
     "spaces": "Địa điểm",
     "sessions": "Gói & Giá",
     "krest": "K-REST",
+    "stay": "RESTEL STAY",
     "guide": "Hướng dẫn",
     "journal": "Cẩm nang",
     "faq": "Câu hỏi thường gặp",
@@ -96,6 +97,13 @@
     "hostsTitle": "Biến không gian của bạn thành RESTEL",
     "hostsBody": "Phòng tiệc, studio và mặt bằng trống thường bỏ không vào buổi chiều ngày thường. Hãy chuyển đổi theo tiêu chuẩn RESTEL — chúng tôi cùng bạn xử lý yêu cầu đặt chỗ, hiển thị đa ngôn ngữ và nội dung.",
     "hostsCta": "Thông tin cho chủ không gian",
+    "waysTitle": "Nghỉ từ một giờ đến một đêm",
+    "waysSub": "Ba cách nghỉ cùng RESTEL. Nghỉ theo giờ đặt được ngay; gói qua đêm đang được chuẩn bị với tên RESTEL STAY.",
+    "ways": [
+      { "tag": "Đặt ngay", "title": "Vài giờ", "body": "Nap 60 và Rest 180 tại RESTEL Sinchon. Nhắm mắt một tiếng hoặc thong thả cả buổi chiều.", "cta": "Gói & Giá", "href": "/sessions", "soon": false },
+      { "tag": "Đặt ngay", "title": "Cả ngày", "body": "Day Rest cho tối đa 8 giờ trong giờ mở cửa. Đang du lịch? K-REST 90 có thêm trà và thở có hướng dẫn.", "cta": "Tìm hiểu K-REST", "href": "/krest", "soon": false },
+      { "tag": "Sắp ra mắt", "title": "2 ngày 1 đêm · RESTEL STAY", "body": "RESTEL STAY kéo dài cách nghỉ kiểu Hàn thành một đêm và chỉ mở tại cơ sở đã đăng ký kinh doanh lưu trú. Đăng ký để nhận tin sớm nhất.", "cta": "Về RESTEL STAY", "href": "/stay", "soon": true }
+    ],
     "whereTitle": "Dễ tìm đến",
     "whereSub": "Đi bộ 5 phút từ ga Sinchon, cách Hongdae và Ewha một ga.",
     "where": [
@@ -302,7 +310,7 @@
       { "q": "RESTEL có phải khách sạn hay hostel không?", "a": "Không. RESTEL là không gian nghỉ ngơi cho thuê theo giờ. Chúng tôi không cung cấp phòng có giường và phòng tắm, và không có gói qua đêm. Mọi gói kết thúc trước nửa đêm." },
       { "q": "Tôi có thể ngủ ở đó không?", "a": "Có — chợp mắt rất được hoan nghênh. Nệm gấp, chăn và đèn đánh thức đã sẵn sàng. Điều chúng tôi không cung cấp là chỗ qua đêm." },
       { "q": "Bao nhiêu người có thể dùng một không gian?", "a": "Giá bao gồm hai người. Bạn có thể thêm người đến mức tối đa của không gian (6 người tại Sinchon) với phí nhỏ mỗi người." },
-      { "q": "Du khách nước ngoài có đặt được không?", "a": "Tất nhiên. Trang web có 7 ngôn ngữ và chúng tôi xác nhận yêu cầu qua email. Chúng tôi đang chuẩn bị thanh toán bằng thẻ phát hành ở nước ngoài." },
+      { "q": "Du khách nước ngoài có đặt được không?", "a": "Tất nhiên. Trang web có 12 ngôn ngữ và chúng tôi xác nhận yêu cầu qua email. Chúng tôi đang chuẩn bị thanh toán bằng thẻ phát hành ở nước ngoài." },
       { "q": "Có giới hạn tuổi không?", "a": "Khách phải từ 19 tuổi trở lên. Việc trẻ vị thành niên đi cùng người giám hộ được thông báo theo từng không gian." },
       { "q": "Có thể tắm không?", "a": "RESTEL Sinchon có bồn rửa nhưng không có vòi sen. RESTEL là nơi để nghỉ, không phải nơi để tắm và ngủ lại." },
       { "q": "Yêu cầu được xác nhận như thế nào?", "a": "Gửi yêu cầu, chúng tôi kiểm tra và nhắn cho bạn (email hoặc KakaoTalk). Khi thanh toán xong, chúng tôi gửi mã vào cửa." },
@@ -311,16 +319,17 @@
       { "q": "Tôi có thể đăng không gian của mình lên RESTEL không?", "a": "Có. Đăng ký tại trang dành cho chủ không gian. Chúng tôi chia sẻ tiêu chuẩn RESTEL (ánh sáng, rèm tối, nệm, biển chỉ dẫn, an toàn) và hiển thị không gian của bạn sau khi duyệt." },
       { "q": "Đi một mình có được không?", "a": "Được. Giá tính theo không gian nên đi một mình vẫn dùng trọn căn phòng (tính giá cơ bản 2 người). Rất hợp khi bạn muốn nghỉ mà không phải để ý ai." },
       { "q": "Ở đâu, ga nào gần nhất?", "a": "Đi bộ khoảng 5 phút từ ga Sinchon tuyến 2. Ga Hongik Univ. (Hongdae, nối tàu sân bay AREX) và ga Ewha Womans Univ. đều cách một ga. Địa chỉ đầy đủ và mã cửa được gửi sau khi xác nhận." },
-      { "q": "Ghé nghỉ trước giờ bay hoặc giữa lịch tham quan được không?", "a": "Được. Nap 60 hoặc Rest 180 là vừa. Từ ga Hongik Univ. đi tàu AREX thường đến sân bay Incheon mất khoảng một tiếng, nên hãy tính ngược từ giờ cất cánh. Nếu có vali lớn, hãy ghi chú trong yêu cầu." }
+      { "q": "Ghé nghỉ trước giờ bay hoặc giữa lịch tham quan được không?", "a": "Được. Nap 60 hoặc Rest 180 là vừa. Từ ga Hongik Univ. đi tàu AREX thường đến sân bay Incheon mất khoảng một tiếng, nên hãy tính ngược từ giờ cất cánh. Nếu có vali lớn, hãy ghi chú trong yêu cầu." },
+      { "q": "Có thể nghỉ qua đêm không? (RESTEL STAY)", "a": "RESTEL Sinchon là không gian nghỉ theo giờ, mọi gói kết thúc trước nửa đêm. Gói qua đêm đang được chuẩn bị với tên RESTEL STAY, chỉ mở tại cơ sở đã đăng ký kinh doanh lưu trú. Bạn có thể đăng ký nhận tin ở trang RESTEL STAY." }
     ]
   },
   "hosts": {
     "title": "Trở thành chủ không gian RESTEL",
-    "lead": "Biến phòng tiệc, studio hoặc mặt bằng trống nhiều giờ rảnh thành không gian nghỉ ngơi theo tiêu chuẩn RESTEL. RESTEL lo phần hiển thị bằng 7 ngôn ngữ, tiếp nhận yêu cầu, mẫu hướng dẫn thanh toán và vào không gian, đối soát hàng tháng và quy tắc vận hành.",
+    "lead": "Biến phòng tiệc, studio hoặc mặt bằng trống nhiều giờ rảnh thành không gian nghỉ ngơi theo tiêu chuẩn RESTEL. RESTEL lo phần hiển thị bằng 12 ngôn ngữ, tiếp nhận yêu cầu, mẫu hướng dẫn thanh toán và vào không gian, đối soát hàng tháng và quy tắc vận hành.",
     "whyTitle": "Vì sao chọn RESTEL",
     "why": [
       { "title": "Lấp đầy giờ trống ngày thường", "body": "Phòng tiệc chỉ đạt 20–30% công suất mùa thấp điểm. Nhu cầu chợp mắt và thiền ngày thường nằm ở phía bên kia của đồng hồ." },
-      { "title": "Tiếp cận du khách quốc tế", "body": "Trang web 7 ngôn ngữ và nội dung K-REST giới thiệu không gian của bạn tới du khách tự túc như một không gian nghỉ ngơi kiểu Hàn." },
+      { "title": "Tiếp cận du khách quốc tế", "body": "Trang web 12 ngôn ngữ và nội dung K-REST giới thiệu không gian của bạn tới du khách tự túc như một không gian nghỉ ngơi kiểu Hàn." },
       { "title": "Quy tắc vận hành rõ ràng", "body": "Chúng tôi chia sẻ tiêu chuẩn về gói, biển chỉ dẫn và từ ngữ để không gian luôn được định vị là cho thuê không gian nghỉ ngơi, không phải lưu trú." }
     ],
     "criteriaTitle": "Tiêu chuẩn RESTEL",
@@ -360,8 +369,8 @@
       {
         "title": "RESTEL",
         "items": [
-          "Giới thiệu không gian đến khách quốc tế và Hàn Quốc qua website 7 ngôn ngữ và nội dung K-REST",
-          "Cung cấp tiếp nhận yêu cầu, trang theo dõi cho khách và mẫu tin nhắn 7 ngôn ngữ",
+          "Giới thiệu không gian đến khách quốc tế và Hàn Quốc qua website 12 ngôn ngữ và nội dung K-REST",
+          "Cung cấp tiếp nhận yêu cầu, trang theo dõi cho khách và mẫu tin nhắn 12 ngôn ngữ",
           "Cung cấp tiêu chuẩn vận hành không gian nghỉ, bảng thông báo in, danh sách kiểm tra và hướng dẫn chăm sóc khách",
           "Phát hành bảng đối soát hàng tháng và hỗ trợ 1:1 qua Trung tâm chủ không gian"
         ]
@@ -393,7 +402,7 @@
     ],
     "portalTitle": "Cổng chủ không gian làm được gì",
     "portal": [
-      { "title": "Đăng tin 7 ngôn ngữ", "body": "Chỉ cần viết tiếng Hàn và tiếng Anh, trang sẽ hiển thị ở cả 7 ngôn ngữ." },
+      { "title": "Đăng tin 12 ngôn ngữ", "body": "Chỉ cần viết tiếng Hàn và tiếng Anh, trang sẽ hiển thị ở cả 12 ngôn ngữ." },
       { "title": "Phiên, giá, ngày nghỉ", "body": "Giá ngày thường/cuối tuần theo phiên, phụ phí thêm người, ngày nghỉ trong tuần và theo ngày, thời gian dọn dẹp." },
       { "title": "Lịch và việc cần làm", "body": "Lịch tháng, phiên hôm nay, tin nhắn chờ trả lời, phiên chưa thanh toán." },
       { "title": "Mẫu thanh toán và vào không gian", "body": "Tin nhắn xác nhận, thanh toán, vào không gian, nhắc nhở và hủy bằng ngôn ngữ của khách." },
@@ -405,7 +414,7 @@
       { "q": "Có phí đăng tin hay phí hàng tháng không?", "a": "Không. Hoa hồng (mặc định 15%) chỉ áp dụng cho các phiên đã hoàn tất đến từ RESTEL." },
       { "q": "Có cần giấy phép lưu trú không?", "a": "RESTEL vận hành như dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú. Điều kiện là giữ tiêu chuẩn: phiên theo giờ kết thúc trước nửa đêm, không có giường, chỉ dành cho người lớn. Yêu cầu phòng cháy cho cơ sở đa dụng được xác nhận với trạm cứu hỏa địa phương." },
       { "q": "Tôi có thể tiếp tục vận hành phòng tiệc không?", "a": "Có. Chúng tôi khuyến nghị phiên RESTEL ban ngày và dùng làm phòng tiệc buổi tối. Trong phiên hãy cất đồ trang trí và đèn tiệc." },
-      { "q": "Tôi lo về khách nước ngoài.", "a": "Tin nhắn xác nhận, thanh toán, vào không gian và nhắc nhở có mẫu sẵn 7 ngôn ngữ; số tiền và giờ được gửi bằng con số. Đội ngũ RESTEL hỗ trợ khi cần." },
+      { "q": "Tôi lo về khách nước ngoài.", "a": "Tin nhắn xác nhận, thanh toán, vào không gian và nhắc nhở có mẫu sẵn 12 ngôn ngữ; số tiền và giờ được gửi bằng con số. Đội ngũ RESTEL hỗ trợ khi cần." },
       { "q": "Nhận tiền như thế nào?", "a": "Giai đoạn đầu dùng chuyển khoản hoặc thanh toán tại chỗ. Sau khi xác nhận, bạn gửi hướng dẫn thanh toán; khi đã thanh toán, bạn gửi hướng dẫn vào không gian. Thanh toán thẻ trực tuyến đang được bổ sung." },
       { "q": "Phê duyệt mất bao lâu?", "a": "Thông tin kinh doanh được kiểm tra trong 3 ngày làm việc sau khi đăng ký, và kết quả xét duyệt không gian được trả lời trong 3 ngày làm việc sau khi gửi. Mục cần bổ sung sẽ hiển thị trên cổng." }
     ]
@@ -476,7 +485,7 @@
     "email": "Email",
     "phone": "Điện thoại",
     "topic": "Chủ đề",
-    "topics": { "use": "Sử dụng", "host": "Làm chủ không gian", "biz": "Doanh nghiệp & hợp tác", "press": "Báo chí & khác" },
+    "topics": { "use": "Sử dụng", "host": "Làm chủ không gian", "biz": "Doanh nghiệp & hợp tác", "press": "Báo chí & khác", "stay": "Tin RESTEL STAY" },
     "message": "Nội dung",
     "submit": "Gửi",
     "done": "Cảm ơn bạn — chúng tôi sẽ sớm liên hệ.",

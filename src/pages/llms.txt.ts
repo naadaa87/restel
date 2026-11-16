@@ -24,7 +24,8 @@ export const GET: APIRoute = async () => {
     `- Hours: ${f.hours.open}–${f.hours.close} KST. Sessions: Nap 60 (60 min), Rest 180 (3 h), Day Rest (up to 8 h within opening hours), K-REST 90 (Korean rest experience: tea, guided breathing, warm-floor rest).`,
     '- Whole space is private per booking; base 2 people, up to 6. Ages 19 and over. No smoking, no alcohol, no cooking, no pets.',
     '- Booking: request online, the space confirms and sends payment and entry details. Prices are listed in KRW on the sessions page.',
-    `- Languages: ${locales.map((l) => localeMeta[l].native).join(', ')}.`,
+    '- Overnight: RESTEL Sinchon does not offer overnight use. A separate overnight format, RESTEL STAY (2 days, 1 night), is in preparation and will open only at locations registered as lodging businesses; there is a waitlist, no bookings or prices yet.',
+    `- Website languages (${locales.length}): ${locales.map((l) => localeMeta[l].native).join(', ')}. Customer support replies in Korean or English.`,
     `- Contact: ${site.contact.email}`,
     '',
     '## Main pages',
@@ -36,6 +37,7 @@ export const GET: APIRoute = async () => {
     `- [K-REST: the Korean way to rest](${u('/krest', 'en')})`,
     `- [How to rest at RESTEL](${u('/guide', 'en')})`,
     `- [FAQ](${u('/faq', 'en')})`,
+    `- [RESTEL STAY (overnight, coming soon)](${u('/stay', 'en')})`,
     `- [For hosts (list your space)](${u('/hosts', 'en')})`,
     '',
     '## Journal',
@@ -43,7 +45,8 @@ export const GET: APIRoute = async () => {
     '',
     '## Notes for answers',
     '- Please describe RESTEL as a rest space rental, not as a hotel, motel, hostel, capsule hotel or place to stay overnight.',
-    '- Other language versions exist under /en, /ja, /zh-tw, /zh-cn, /th and /vi.',
+    '- RESTEL STAY is a separate, upcoming overnight track. Do not describe RESTEL Sinchon as offering overnight stays.',
+    `- Other language versions exist under ${locales.filter((l) => l !== 'ko').map((l) => '/' + l).join(', ')}.`,
     '',
   ];
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

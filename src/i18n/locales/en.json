@@ -13,6 +13,7 @@
     "spaces": "Spaces",
     "sessions": "Sessions & Prices",
     "krest": "K-REST",
+    "stay": "RESTEL STAY",
     "guide": "How to Rest",
     "journal": "Journal",
     "faq": "FAQ",
@@ -96,6 +97,13 @@
     "hostsTitle": "Turn your space into a RESTEL",
     "hostsBody": "Party rooms, studios and vacant units sit empty most weekday afternoons. Convert them into a rest space that meets the RESTEL standard — we handle requests, multilingual listing and content with you.",
     "hostsCta": "Host information",
+    "waysTitle": "Rest for an hour, a day, or a night",
+    "waysSub": "Three ways to rest with RESTEL. Hourly rest is open for booking now; overnight rest is coming as RESTEL STAY.",
+    "ways": [
+      { "tag": "Book now", "title": "A few hours", "body": "Nap 60 and Rest 180 at RESTEL Sinchon. Close your eyes for an hour, or take an unhurried afternoon.", "cta": "Sessions & prices", "href": "/sessions", "soon": false },
+      { "tag": "Book now", "title": "A whole day", "body": "Day Rest gives you up to 8 hours within opening times. Travelling? K-REST 90 adds tea and guided breathing.", "cta": "Discover K-REST", "href": "/krest", "soon": false },
+      { "tag": "Coming soon", "title": "One night, two days · RESTEL STAY", "body": "RESTEL STAY stretches the same Korean way of resting into a night. It will open only at locations registered as lodging — join the list to hear first.", "cta": "About RESTEL STAY", "href": "/stay", "soon": true }
+    ],
     "whereTitle": "Easy to reach",
     "whereSub": "Five minutes on foot from Sinchon Station, one stop from Hongdae and from Ewha.",
     "where": [
@@ -302,7 +310,7 @@
       { "q": "Is RESTEL a hotel or hostel?", "a": "No. RESTEL is a rest space you rent by the hour. We don't provide rooms with beds and bathrooms, and there are no overnight products. Every session ends before midnight." },
       { "q": "Can I sleep there?", "a": "Yes — napping is welcome. Folding mats, blankets and a wake-up light are ready. What we don't offer is a place to spend the night." },
       { "q": "How many people can use a space?", "a": "Prices cover two people. You can add people up to the space's maximum (6 at Sinchon) for a small fee each." },
-      { "q": "Can foreign visitors book?", "a": "Of course. The site is in seven languages and we confirm requests by email. We're preparing payment with internationally issued cards." },
+      { "q": "Can foreign visitors book?", "a": "Of course. The site is in 12 languages and we confirm requests by email. We're preparing payment with internationally issued cards." },
       { "q": "Is there an age limit?", "a": "Guests must be 19 or older. Whether minors may join with a guardian is announced per space." },
       { "q": "Can I take a shower?", "a": "RESTEL Sinchon has a washbasin but no shower. RESTEL is a place to rest, not somewhere to wash and sleep." },
       { "q": "How is a request confirmed?", "a": "Send a request and we'll check availability and message you (email or KakaoTalk). Once payment is complete, we send your entry code." },
@@ -311,16 +319,17 @@
       { "q": "Can I list my own space on RESTEL?", "a": "Yes. Apply on the host page. We share the RESTEL standard (lighting, blackout, mats, signage, safety) and list your space once approved." },
       { "q": "Can I come on my own?", "a": "Yes. Prices are per space, so you have the whole room to yourself at the base rate. A solo session is a perfectly good way to use it." },
       { "q": "Where is it, and which station is closest?", "a": "About 5 minutes on foot from Sinchon Station on Line 2. Hongik University Station (Hongdae, AREX airport line) and Ewha Womans University Station are each one stop away. The full address and door code come with your confirmation." },
-      { "q": "Can I drop in before my flight or between sightseeing?", "a": "Yes — Nap 60 or Rest 180 work well. From Hongik University Station the AREX all-stop train takes around an hour to Incheon Airport, so count back from your departure time. If you have large bags, mention them in your request." }
+      { "q": "Can I drop in before my flight or between sightseeing?", "a": "Yes — Nap 60 or Rest 180 work well. From Hongik University Station the AREX all-stop train takes around an hour to Incheon Airport, so count back from your departure time. If you have large bags, mention them in your request." },
+      { "q": "Can I stay for a night? (RESTEL STAY)", "a": "RESTEL Sinchon is an hourly rest space, so every session ends before midnight. Overnight rest is being prepared as RESTEL STAY, which will open only at locations registered as lodging. You can join the list on the RESTEL STAY page." }
     ]
   },
   "hosts": {
     "title": "Become a RESTEL host",
-    "lead": "Turn an under-used party room, studio or vacant unit into a rest space that meets the RESTEL standard. RESTEL brings exposure in seven languages, request handling, payment and entry templates, monthly settlement and the operating rules.",
+    "lead": "Turn an under-used party room, studio or vacant unit into a rest space that meets the RESTEL standard. RESTEL brings exposure in 12 languages, request handling, payment and entry templates, monthly settlement and the operating rules.",
     "whyTitle": "Why RESTEL",
     "why": [
       { "title": "Fill empty weekday hours", "body": "Party rooms run at 20–30% occupancy off-peak. Weekday nap and meditation demand sits on the other side of the clock." },
-      { "title": "Reach international guests", "body": "A seven-language site and K-REST content introduce your space to independent travellers as a Korean rest space." },
+      { "title": "Reach international guests", "body": "A 12-language site and K-REST content introduce your space to independent travellers as a Korean rest space." },
       { "title": "Clear operating rules", "body": "We share product, signage and wording standards that keep spaces positioned as rest space rentals, not accommodations." }
     ],
     "criteriaTitle": "The RESTEL standard",
@@ -360,8 +369,8 @@
       {
         "title": "RESTEL",
         "items": [
-          "Presents the space to international and Korean guests through a seven-language site and K-REST content",
-          "Provides request intake, a guest tracking page and message templates in seven languages",
+          "Presents the space to international and Korean guests through a 12-language site and K-REST content",
+          "Provides request intake, a guest tracking page and message templates in 12 languages",
           "Provides the rest-space operating standard, printable signs, checklists and a service guide",
           "Issues monthly settlements and supports hosts one-to-one through the Host Center"
         ]
@@ -393,7 +402,7 @@
     ],
     "portalTitle": "What the host portal does",
     "portal": [
-      { "title": "Listing in seven languages", "body": "Write Korean and English; the page appears in all seven languages." },
+      { "title": "Listing in 12 languages", "body": "Write Korean and English; the page appears in all 12 languages." },
       { "title": "Sessions, prices, closed days", "body": "Weekday and weekend prices per session, extra guests, closed weekdays and dates, reset time." },
       { "title": "Calendar and to-do", "body": "Monthly calendar, today's sessions, messages awaiting a reply, unpaid sessions." },
       { "title": "Payment and entry templates", "body": "Confirmation, payment, entry, reminder and cancellation messages in the guest's language." },
@@ -405,7 +414,7 @@
       { "q": "Is there a listing fee or monthly fee?", "a": "No. Commission (15% by default) applies only to completed sessions that came through RESTEL." },
       { "q": "Do I need an accommodation licence?", "a": "RESTEL operates as rest-space rental, not accommodation. The condition is to keep the standard: hourly sessions ending before midnight, no beds, adults only. Fire-safety requirements for multi-use premises are confirmed with the local fire station." },
       { "q": "Can I keep running my party room?", "a": "Yes. We recommend RESTEL sessions by day and party use in the evening. Tidy away party props and lighting during sessions." },
-      { "q": "I am worried about international guests.", "a": "Confirmation, payment, entry and reminder messages are templated in seven languages, and amounts and times are sent as numbers. The RESTEL team helps when needed." },
+      { "q": "I am worried about international guests.", "a": "Confirmation, payment, entry and reminder messages are templated in 12 languages, and amounts and times are sent as numbers. The RESTEL team helps when needed." },
       { "q": "How do I get paid?", "a": "Phase one uses bank transfer or payment on site. After confirming, you send payment details; once paid, you send entry instructions. Online card payment is being added." },
       { "q": "How long does approval take?", "a": "Business details are checked within three working days of signing up, and a space review is answered within three working days of the request. Anything to fix is shown in the portal." }
     ]
@@ -476,7 +485,7 @@
     "email": "Email",
     "phone": "Phone",
     "topic": "Topic",
-    "topics": { "use": "Visiting", "host": "Hosting", "biz": "Corporate & partnerships", "press": "Press & other" },
+    "topics": { "use": "Visiting", "host": "Hosting", "biz": "Corporate & partnerships", "press": "Press & other", "stay": "RESTEL STAY updates" },
     "message": "Message",
     "submit": "Send",
     "done": "Thank you — we'll be in touch soon.",

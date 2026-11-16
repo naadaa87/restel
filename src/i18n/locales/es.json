@@ -1,0 +1,391 @@
+{
+  "meta": {
+    "siteName": "RESTEL",
+    "tagline": "Descansar a la coreana.",
+    "titleSuffix": " | RESTEL — Espacio de descanso coreano en Seúl",
+    "description": "RESTEL es un espacio de descanso de estilo coreano que se alquila por horas en Sinchon, Seúl. Reserva una sala privada para una siesta, meditar, desconectar y recargar energía. Colchonetas en el suelo, luz suave y té caliente. No es un hotel: es un alquiler de espacio para descansar.",
+    "keywords": "dónde descansar en Seúl, siesta en Seúl, sala de siesta Seúl, Hongdae, Sinchon, jet lag Corea, qué hacer antes de un vuelo nocturno Seúl, bienestar Corea, meditación Seúl, viaje a Corea, RESTEL",
+    "ogTitle": "RESTEL — Un espacio de descanso coreano que se alquila por horas"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Qué es RESTEL",
+    "spaces": "Espacios",
+    "sessions": "Sesiones y precios",
+    "krest": "K-REST",
+    "stay": "RESTEL STAY",
+    "guide": "Cómo descansar",
+    "journal": "Blog",
+    "faq": "Preguntas",
+    "hosts": "Para anfitriones",
+    "contact": "Contacto",
+    "book": "Solicitar sesión",
+    "language": "Idioma",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "hostLogin": "Acceso anfitriones",
+    "myRequest": "Ver mi solicitud"
+  },
+  "common": {
+    "notLodging": "RESTEL es un alquiler de espacio para descansar, no un alojamiento.",
+    "notLodgingShort": "No es un alojamiento",
+    "learnMore": "Más información",
+    "viewAll": "Ver todo",
+    "requestBooking": "Solicitar sesión",
+    "perSpace": "Espacio completo · para {n} personas",
+    "extraPerson": "Persona extra {price}",
+    "minutes": "{n} min",
+    "hours": "{n} horas",
+    "upTo": "Hasta {n} horas",
+    "people": "{n} personas",
+    "weekday": "Entre semana",
+    "weekend": "Fines de semana y festivos",
+    "refNote": "Solo orientativo. El pago se hace en wones coreanos (KRW).",
+    "flagship": "Sede principal",
+    "partner": "Socio RESTEL",
+    "comingSoon": "Próximamente",
+    "readMore": "Leer más",
+    "back": "Volver",
+    "submit": "Enviar",
+    "required": "obligatorio",
+    "optional": "opcional",
+    "langSuggest": "Esta página está disponible en {lang}.",
+    "langSwitch": "Cambiar",
+    "dismiss": "Cerrar",
+    "kstNote": "Todas las horas están en hora de Corea (KST)."
+  },
+  "home": {
+    "kicker": "ALQUILER DE ESPACIO PARA DESCANSAR · SEÚL",
+    "title": "Un lugar para descansar,\nno para quedarse.",
+    "subtitle": "No es un hotel, ni un motel, ni un hostal. RESTEL es un espacio de descanso de estilo coreano que se alquila por horas. Quítate los zapatos, sube a la plataforma de madera y encontrarás colchonetas y mantas, luz suave y una taza de té caliente.",
+    "cta1": "Sesiones y precios",
+    "cta2": "Ver RESTEL Sinchon",
+    "heroPoints": ["Siesta y descanso", "Meditación y respiración", "Recargar energía", "Espacio privado"],
+    "notHotel": {
+      "kicker": "NO ES UN HOTEL",
+      "title": "No te registras. Vienes a descansar.",
+      "body": "RESTEL no es un sitio para pasar la noche. Una hora o media jornada: alquilas todo el ambiente que necesitas para descansar. Colchonetas plegables y un sofá en lugar de camas, mantas en lugar de edredones, una entrada tranquila sin recepción. Es el cuarto tipo de “-tel”, pensado para el descanso.",
+      "items": [
+        { "title": "Sesiones por horas", "body": "Desde una siesta de 60 minutos hasta un día entero de descanso: alquila solo el tiempo que necesitas." },
+        { "title": "Descanso en el suelo a la coreana", "body": "Una plataforma elevada a la que se sube descalzo, colchonetas y mantas, suelo de madera cálido." },
+        { "title": "La calma, ya preparada", "body": "Tres niveles de luz, sonidos de la naturaleza, meditación guiada y té, todo listo." }
+      ]
+    },
+    "how": {
+      "title": "Cómo funciona",
+      "steps": [
+        { "title": "Elige una sesión", "body": "Nap 60, Rest 180 o Day Rest: el tiempo de descanso que necesites." },
+        { "title": "Solicita una hora", "body": "Elige fecha y hora de inicio. Confirmamos la disponibilidad y te enviamos los detalles." },
+        { "title": "Entra en silencio", "body": "Abre la puerta con el código que te enviamos, quítate los zapatos y sube a la plataforma." },
+        { "title": "Descansa", "body": "Baja la luz, túmbate en una colchoneta, prepara un té y pon una meditación guiada." }
+      ]
+    },
+    "sessionsTitle": "Sesiones y precios",
+    "sessionsSub": "Cada sesión te da el espacio completo, en privado. Precios para dos personas.",
+    "flagshipTitle": "RESTEL Sinchon",
+    "flagshipSub": "Nuestro primer espacio: una plataforma de madera bajo una línea de tejas negras, un nicho iluminado con forma de luna y una terraza. A pocos minutos a pie de la estación de Sinchon, entre Hongdae y el barrio universitario.",
+    "flagshipCta": "Ver el espacio",
+    "krestTitle": "K-REST: cómo descansan los coreanos",
+    "krestSub": "Suelos radiantes y cultura del suelo, el descanso al estilo jjimjilbang, una taza de té de cereales, una calma de templo. Hemos convertido el descanso coreano en guías breves y sencillas para viajeros.",
+    "keywordsTitle": "¿Buscas algo de esto?",
+    "keywordsBody": "Una sala de siesta, un espacio de descanso, un retiro, un refugio, un espacio de bienestar, una sleep box: RESTEL tiene un poco de todo. Lo que no es: un hotel cápsula ni un micro stay. RESTEL es un espacio de descanso que se alquila por horas.",
+    "hostsTitle": "Convierte tu espacio en un RESTEL",
+    "hostsBody": "Salas de fiesta, estudios y locales vacíos pasan muchas tardes entre semana sin uso. Conviértelos en un espacio de descanso con el estándar RESTEL; nosotros te ayudamos con las solicitudes, la ficha multilingüe y el contenido.",
+    "hostsCta": "Información para anfitriones",
+    "waysTitle": "Descansa una hora, un día o una noche",
+    "waysSub": "Tres formas de descansar con RESTEL. El descanso por horas ya se puede reservar; el formato de una noche llegará como RESTEL STAY.",
+    "ways": [
+      { "tag": "Reserva ya", "title": "Unas horas", "body": "Nap 60 y Rest 180 en RESTEL Sinchon. Cierra los ojos una hora o regálate una tarde sin prisas.", "cta": "Sesiones y precios", "href": "/sessions", "soon": false },
+      { "tag": "Reserva ya", "title": "Un día entero", "body": "Day Rest te da hasta 8 horas dentro del horario. ¿De viaje? K-REST 90 añade té y respiración guiada.", "cta": "Descubre K-REST", "href": "/krest", "soon": false },
+      { "tag": "Próximamente", "title": "Una noche, dos días · RESTEL STAY", "body": "RESTEL STAY lleva el mismo descanso a la coreana a una noche completa y solo abrirá en establecimientos registrados como alojamiento. Apúntate para enterarte primero.", "cta": "Sobre RESTEL STAY", "href": "/stay", "soon": true }
+    ],
+    "whereTitle": "Fácil de llegar",
+    "whereSub": "A cinco minutos a pie de la estación de Sinchon, a una parada de Hongdae y de Ewha.",
+    "where": [
+      { "title": "Estación de Sinchon, línea 2 — unos 5 min a pie", "body": "La dirección exacta y cómo entrar llegan con tu confirmación." },
+      { "title": "A una parada de Hongik Univ. (Hongdae)", "body": "La estación Hongik University está en la línea del tren al aeropuerto (AREX): ideal antes de tu vuelo o el día que llegas." },
+      { "title": "Cerca de Yonsei, Ewha y Sogang", "body": "Una pausa tranquila después de recorrer los campus o las calles de Sinchon y Ewha." },
+      { "title": "Abierto de 07:00 a 24:00 (KST)", "body": "Desde primera hora hasta justo antes de medianoche. Todas las sesiones terminan antes de medianoche." }
+    ],
+    "journalPicks": ["before-late-flight-seoul", "jet-lag-first-day-seoul", "korean-way-to-rest"],
+    "faqTitle": "Preguntas frecuentes"
+  },
+  "about": {
+    "title": "Qué es RESTEL",
+    "lead": "RESTEL une REST y TEL. Después del hotel, el motel y el hostal llega un nuevo tipo de “-tel”: un lugar al que entras para descansar.",
+    "story": [
+      "Los hoteles nacieron del servicio y la formalidad; los moteles, de los viajes por carretera; los hostales, de la cultura mochilera. El sufijo “-tel” ya no describe un edificio, sino una forma de hacer una pausa en el camino.",
+      "En Corea se descansa en el suelo. Sobre un suelo radiante ondol con una colchoneta extendida, en la habitación de la abuela, en el suelo de madera de un jjimjilbang, en la sala abierta de un hanok. No hace falta una cama para descansar, y un mismo suelo se comparte con la familia y los amigos. RESTEL trae esta vieja costumbre al centro de la ciudad.",
+      "En RESTEL no hay camas. Hay colchonetas plegables y un sofá, mantas y almohadas. No es un lugar para pasar la noche, sino para descansar de verdad, una hora o media jornada. Por eso RESTEL es un alquiler de espacio para descansar y no un alojamiento, y lo decimos desde el principio."
+    ],
+    "valuesTitle": "Tres promesas de RESTEL",
+    "values": [
+      { "title": "Desconexión", "body": "En cuanto se cierra la puerta, el ruido y la lista de tareas se quedan fuera. Quitarse los zapatos marca la frontera." },
+      { "title": "Descanso en el suelo", "body": "Colchonetas y mantas sobre una plataforma elevada, una almohada de cáscara de trigo sarraceno. La forma más cómoda de tumbarse, sin necesidad de cama." },
+      { "title": "Calma preparada", "body": "Luz, sonido, aroma, té y contenidos guiados ya están ahí. No tienes que pensar cómo descansar." }
+    ],
+    "notTitle": "Lo que RESTEL no es",
+    "notList": [
+      "No es un alojamiento. Sin noches, sin recepción, sin habitaciones.",
+      "No es una sala de fiestas. Aquí manda el silencio, no la música ni el bullicio.",
+      "No es una clínica. No hacemos promesas médicas ni sobre el sueño."
+    ],
+    "compareTitle": "En qué se diferencia de sitios parecidos",
+    "compare": [
+      { "alt": "Hoteles por horas", "they": "Una habitación con cama durante unas horas.", "we": "No es un alojamiento. Alquilas todo un ambiente de descanso, no una habitación." },
+      { "alt": "Cafés de siesta y de sillones de masaje", "they": "Un asiento en una sala abierta.", "we": "Todo el espacio es tuyo: solo, en pareja o en familia sobre un mismo suelo." },
+      { "alt": "Salas de fiestas", "they": "Sonido y luces para reuniones.", "we": "El mismo tipo de alquiler, el propósito contrario: todo pensado para la calma." },
+      { "alt": "Jjimjilbang y saunas", "they": "Descanso en un suelo público compartido.", "we": "El descanso en el suelo del jjimjilbang, reinterpretado en privado y limpio." },
+      { "alt": "Estudios de meditación", "they": "Clases con horario fijo.", "we": "Contenidos guiados integrados en el espacio, llegues cuando llegues." }
+    ],
+    "insideTitle": "Dentro de un RESTEL",
+    "inside": [
+      "Una plataforma de madera elevada a la que se sube sin zapatos",
+      "Colchonetas plegables, sofá, mantas, almohadas de trigo sarraceno y de látex",
+      "Tres niveles de luz: intensa, suave y tenue",
+      "Canales de sonido: lluvia, campanillas de viento, brasas crepitando",
+      "Rincón de té con té de azufaifo, de cebada y té verde con arroz integral",
+      "Meditación guiada en varios idiomas (10 y 20 minutos)",
+      "Una terraza para tomar el aire (según el espacio)",
+      "Una caja de desconexión digital y juegos tranquilos"
+    ]
+  },
+  "sessions": {
+    "title": "Sesiones y precios",
+    "lead": "RESTEL vende tipos de descanso, no horas. Cada sesión es el espacio completo, en privado. Los precios son para dos personas, con un pequeño suplemento por persona extra. Todas las sesiones terminan antes de medianoche.",
+    "items": {
+      "nap60": { "name": "Nap 60", "ko": "Una siesta de una hora", "for": "Pausa para comer · entre reuniones · época de exámenes", "desc": "La hora perfecta para cerrar los ojos. Colchonetas, mantas y una luz despertador te esperan.", "includes": ["Espacio completo", "2 colchonetas y mantas", "1 té por persona", "Canal de sonido", "Luz despertador 10 min antes del final"] },
+      "rest180": { "name": "Rest 180", "ko": "Tres horas de descanso", "for": "Parejas · viajeros · recuperarse en media jornada", "desc": "Tres horas sin prisas para una siesta, una meditación y una taza de té.", "includes": ["Espacio completo", "2 colchonetas y mantas", "2 tés por persona", "Meditación guiada", "Dulces para el té"] },
+      "dayrest": { "name": "Day Rest", "ko": "Un día de descanso", "for": "Familias · grupos pequeños · una larga desconexión", "desc": "Hasta 8 horas dentro del horario, con juegos tranquilos, libros y té.", "includes": ["Espacio completo", "4 colchonetas y mantas", "Té ilimitado", "Set de meditación y té", "Juegos de mesa y libros"] },
+      "krest90": { "name": "K-REST 90", "ko": "Experiencia de descanso coreano", "for": "Viajeros · a partir de 2 personas", "desc": "Una guía del té, una meditación guiada de 20 minutos y descanso en el suelo al estilo ondol, en 90 minutos.", "includes": ["Guía del té (vídeo y tarjetas)", "Meditación guiada de 20 min", "Descanso en colchoneta con manta", "Tarjetas K-REST"] }
+    },
+    "priceFrom": "desde {price}",
+    "perPerson": "por persona",
+    "startWindow": "Horas de inicio",
+    "duration": "Duración",
+    "includes": "Incluye",
+    "addons": {
+      "title": "Extras",
+      "items": [
+        { "name": "Set de té", "body": "Tazas, tetera, dulces y una tarjeta con instrucciones" },
+        { "name": "Kit de sueño", "body": "Antifaz, tapones, almohada mejorada" },
+        { "name": "Aroma", "body": "Artemisa, hinoki o hierbas" },
+        { "name": "Caja de desconexión digital", "body": "Una caja para guardar el móvil un rato" }
+      ]
+    },
+    "rules": {
+      "title": "Normas",
+      "items": [
+        "Abierto de 07:00 a 24:00. Todas las sesiones terminan antes de medianoche.",
+        "Entre sesiones hay 60 minutos para preparar el espacio.",
+        "Hay que tener 19 años o más. Se puede pedir identificación.",
+        "Cancelación: reembolso del 100 % hasta 48 h antes, del 50 % hasta 24 h antes; después, sin reembolso. Los cambios son gratis antes de la confirmación.",
+        "Se permiten tentempiés ligeros. No se puede cocinar ni beber alcohol."
+      ]
+    },
+    "priceNote": "Precios de RESTEL Sinchon. Los espacios asociados publican sus propios precios."
+  },
+  "spaces": {
+    "title": "Espacios RESTEL",
+    "lead": "Nuestro espacio principal y los espacios asociados que cumplen el estándar RESTEL. Todos son alquileres de espacio para descansar, no alojamientos.",
+    "empty": "Aún no hay espacios asociados; pronto habrá más.",
+    "view": "Ver espacio",
+    "region": "Zona",
+    "sessionsFrom": "Sesiones desde {price}",
+    "capacity": "Para {base} · hasta {max} personas"
+  },
+  "space": {
+    "aboutTitle": "Sobre el espacio",
+    "featuresTitle": "Qué hay dentro",
+    "sessionsTitle": "Sesiones y precios",
+    "rulesTitle": "Normas",
+    "directionsTitle": "Cómo llegar",
+    "hoursTitle": "Horario",
+    "mapGoogle": "Google Maps",
+    "mapNaver": "Naver Map",
+    "mapKakao": "Kakao Map",
+    "hostedBy": "Gestionado por",
+    "requestCta": "Solicitar este espacio",
+    "guideCta": "Cómo descansar aquí",
+    "galleryAlt": "{name}, foto {n}",
+    "photosNote": "Las fotos muestran el espacio real; algunas están retocadas."
+  },
+  "krest": {
+    "title": "K-REST — el descanso coreano",
+    "lead": "Para los viajeros, RESTEL es una forma de vivir cómo descansan los coreanos. Hemos elegido lo que suele resultar desconocido o curioso y lo contamos de forma breve.",
+    "cards": {
+      "ondol": { "title": "Ondol y la cultura del suelo", "summary": "Por qué los coreanos descansan en el suelo", "body": "El ondol es el suelo radiante tradicional de Corea. Un suelo cálido invita a sentarse y tumbarse, y de ahí nació una cultura de dormir, comer y descansar en el suelo sin camas. La plataforma de madera de RESTEL lleva esta cultura a la ciudad. En cuanto subes sin zapatos, el cuerpo se asienta y la respiración se calma." },
+      "yo": { "title": "Colchonetas, mantas y almohadas", "summary": "Una colchoneta en lugar de un yo, una manta en lugar de un edredón", "body": "La cama tradicional coreana es un yo (colchón fino) extendido en el suelo con un edredón encima. Como RESTEL es un lugar para descansar y no para dormir toda la noche, usamos colchonetas plegables y mantas. La almohada de cáscara de trigo sarraceno es un clásico coreano: fresca, firme y con un leve susurro al moverte." },
+      "jjimjilbang": { "title": "El descanso al estilo jjimjilbang", "summary": "Descansar en un suelo de madera compartido", "body": "Un jjimjilbang es un baño coreano donde, después de lavarse, la gente se tumba en un amplio suelo caliente con huevos asados, una bebida dulce de arroz y una toalla doblada en forma de “orejas de oveja”. RESTEL reinterpreta ese descanso en el suelo en privado y en silencio. Combínalo con una visita a un baño y tu día de descanso estará completo." },
+      "tea": { "title": "Una taza de té", "summary": "Azufaifo, cebada, té verde con arroz integral", "body": "El té coreano no es solo té de hojas. Los favoritos de cada día se hacen con cereales y frutos: té de azufaifo cocido durante horas, té de cebada tostada con sabor a nuez, té verde con arroz integral tostado. El rincón de té de RESTEL tiene los tres y algunos dulces, con una tarjeta que explica cómo preparar cada uno." },
+      "stillness": { "title": "Calma y meditación", "summary": "El silencio de un templo, en la ciudad", "body": "En los templos de montaña de Corea, el día transcurre entre cantos al amanecer, 108 postraciones y charlas con té. RESTEL condensa esa calma en meditaciones guiadas de 10 y 20 minutos que suenan por el altavoz de la sala en varios idiomas. Basta con contar las respiraciones." },
+      "hanok": { "title": "Las líneas del hanok", "summary": "Una cumbrera de tejas y una puerta de la luna", "body": "A lo largo de la pared de RESTEL Sinchon corre una línea de tejas negras y, en el centro, un nicho en arco con forma de luna desprende una luz suave. Es una síntesis moderna de la línea del tejado y la puerta de un hanok. Queda muy bien en fotos, pero es aún mejor tumbarse mirando la luz." }
+    },
+    "pairTitle": "Descanso coreano para completar tu visita",
+    "pairs": ["Baños y saunas (guía HANTANG)", "Templestay urbano", "Ceremonia del té", "Paseo por barrios de hanok"]
+  },
+  "guide": {
+    "title": "Cómo descansar en RESTEL",
+    "lead": "Desde que entras hasta que sales: todo lo que necesitas saber. El código QR del espacio también abre esta página.",
+    "blocks": [
+      { "title": "Entrada", "text": "Abre la puerta con el código que te enviamos. Funciona desde 10 minutos antes del inicio hasta 10 minutos después del final.", "detail": "Si la puerta no se abre, escribe al contacto de tu confirmación. Si el edificio tiene un código de entrada aparte, también aparece ahí." },
+      { "title": "Sin zapatos", "text": "Deja los zapatos en el mueble junto a la puerta. La plataforma es para ir descalzo o con calcetines.", "detail": "Junto a la entrada hay un lavamanos y gel desinfectante." },
+      { "title": "Luz", "text": "Usa el interruptor de la pared para elegir luz intensa, suave o tenue.", "detail": "Diez minutos antes del final, la luz sube poco a poco: es tu despertador." },
+      { "title": "Sonido", "text": "Por el altavoz suenan sonidos de la naturaleza. Puedes cambiar a silencio u otro canal.", "detail": "La meditación guiada se reproduce desde el reproductor de esta página o por el altavoz." },
+      { "title": "Colchonetas", "text": "Despliega una colchoneta y coge una manta y una almohada. Una colchoneta por persona.", "detail": "Las fundas se cambian en cada sesión. Deja las usadas en la caja junto a la puerta." },
+      { "title": "Té", "text": "Llena una taza con agua caliente del dispensador del rincón de té y deja reposar una bolsita.", "detail": "Té de azufaifo, de cebada o té verde con arroz integral. Deja las tazas usadas en el fregadero." },
+      { "title": "Silencio", "text": "Las paredes son finas. Por favor, haz las llamadas en la terraza.", "detail": "Volumen del altavoz en 3 o menos; usa auriculares para ver vídeos." },
+      { "title": "Emergencias", "text": "El extintor y la luz de emergencia están junto a la puerta. Revisa el plano de evacuación.", "detail": "Emergencias: 119. Para todo lo demás, usa el contacto de tu confirmación." },
+      { "title": "Salida", "text": "Separa la basura, pliega las colchonetas y deja la luz en intensa.", "detail": "Guardamos los objetos olvidados 7 días. Una línea sobre tu descanso significa mucho para nosotros." }
+    ],
+    "playerTitle": "Meditación guiada",
+    "player10": "Calmar la respiración · 10 min",
+    "player20": "Tumbado · 20 min",
+    "playerNote": "El audio aparecerá aquí cuando esté disponible."
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "items": [
+      { "q": "¿RESTEL es un hotel o un hostal?", "a": "No. RESTEL es un espacio de descanso que se alquila por horas. No ofrecemos habitaciones con cama y baño, ni productos para pasar la noche. Todas las sesiones terminan antes de medianoche." },
+      { "q": "¿Se puede dormir?", "a": "Sí, la siesta es bienvenida. Hay colchonetas plegables, mantas y una luz despertador. Lo que no ofrecemos es un lugar para pasar la noche." },
+      { "q": "¿Cuántas personas pueden usar un espacio?", "a": "El precio incluye a dos personas. Puedes añadir más hasta la capacidad máxima del espacio (6 en Sinchon) con un pequeño suplemento por persona." },
+      { "q": "¿Pueden reservar los visitantes extranjeros?", "a": "Por supuesto. La web está en 12 idiomas y confirmamos las solicitudes por correo electrónico. Estamos preparando el pago con tarjetas emitidas en el extranjero." },
+      { "q": "¿Hay límite de edad?", "a": "Hay que tener 19 años o más. Si los menores pueden venir con un tutor se indica en cada espacio." },
+      { "q": "¿Puedo ducharme?", "a": "RESTEL Sinchon tiene lavabo, pero no ducha. RESTEL es un lugar para descansar, no para asearse y dormir." },
+      { "q": "¿Cómo se confirma una solicitud?", "a": "Envía una solicitud; comprobamos la disponibilidad y te escribimos (correo o KakaoTalk). Cuando se completa el pago, te enviamos el código de entrada." },
+      { "q": "¿Cuál es la política de reembolso?", "a": "Reembolso del 100 % hasta 48 horas antes del inicio, del 50 % hasta 24 horas antes y ninguno después. Los cambios son gratis antes de la confirmación." },
+      { "q": "¿Puedo llevar comida?", "a": "Se permiten tentempiés ligeros y bebidas. Evita cocinar, el alcohol y la comida de olor fuerte." },
+      { "q": "¿Puedo publicar mi propio espacio en RESTEL?", "a": "Sí. Solicítalo en la página de anfitriones. Compartimos el estándar RESTEL (iluminación, oscuridad, colchonetas, señalización, seguridad) y publicamos tu espacio cuando se aprueba." },
+      { "q": "¿Puedo ir solo?", "a": "Sí. El precio es por espacio, así que tienes toda la sala para ti con la tarifa base. Una sesión en solitario es una manera estupenda de usarlo." },
+      { "q": "¿Dónde está y cuál es la estación más cercana?", "a": "A unos 5 minutos a pie de la estación de Sinchon (línea 2). Las estaciones Hongik University (Hongdae, tren al aeropuerto AREX) y Ewha Womans University están a una parada cada una. La dirección completa y el código de la puerta llegan con tu confirmación." },
+      { "q": "¿Puedo pasar antes de mi vuelo o entre visitas?", "a": "Sí: Nap 60 o Rest 180 encajan muy bien. Desde la estación Hongik University, el tren AREX con todas las paradas tarda alrededor de una hora hasta el aeropuerto de Incheon, así que calcula hacia atrás desde la hora de salida. Si llevas maletas grandes, indícalo en tu solicitud." },
+      { "q": "¿Puedo quedarme una noche? (RESTEL STAY)", "a": "RESTEL Sinchon es un espacio de descanso por horas, así que todas las sesiones terminan antes de medianoche. El descanso de una noche se está preparando como RESTEL STAY, que solo abrirá en establecimientos registrados como alojamiento. Puedes apuntarte en la página de RESTEL STAY." }
+    ]
+  },
+  "book": {
+    "title": "Solicitar sesión",
+    "lead": "Dinos qué sesión y qué hora quieres. Comprobamos la disponibilidad y te enviamos un mensaje de confirmación. El pago se hace después.",
+    "space": "Espacio",
+    "session": "Sesión",
+    "date": "Fecha",
+    "start": "Hora de inicio",
+    "people": "Personas",
+    "name": "Nombre",
+    "contact": "Teléfono (con prefijo internacional)",
+    "email": "Correo electrónico",
+    "lang": "Idioma de los mensajes",
+    "note": "Notas",
+    "notePh": "p. ej. sobre todo meditación / dos almohadas de trigo sarraceno",
+    "consent1": "He leído las normas y la política de cancelación.",
+    "consent2": "Acepto que se usen mis datos de contacto para esta solicitud.",
+    "consent3": "Entiendo que RESTEL es un alquiler de espacio para descansar, no un alojamiento.",
+    "submit": "Enviar solicitud",
+    "contactOrEmail": "Indica un teléfono o un correo electrónico.",
+    "estimate": "Total estimado",
+    "estimateNote": "Incluye {base} personas; se aplican los suplementos por persona extra. El importe final se confirma en nuestro mensaje.",
+    "done": {
+      "title": "Hemos recibido tu solicitud",
+      "body": "Código de solicitud {code}. Comprobaremos la disponibilidad y te escribiremos al contacto que nos diste. Usa el enlace de abajo para seguir el estado y los mensajes.",
+      "cta": "Ver estado de la solicitud",
+      "home": "Volver al inicio"
+    },
+    "error": "No hemos podido enviar tu solicitud. Inténtalo de nuevo en un momento o usa la página de contacto.",
+    "dbUnavailable": "Las solicitudes en línea no están disponibles temporalmente. Escríbenos por KakaoTalk o por correo.",
+    "closedDate": "Ese día el espacio está cerrado. Elige otra fecha.",
+    "pastDate": "No se pueden elegir fechas pasadas."
+  },
+  "request": {
+    "title": "Consultar tu solicitud",
+    "lead": "Introduce el código de solicitud y el teléfono o correo que usaste para ver el estado y los mensajes.",
+    "code": "Código de solicitud",
+    "contact": "Teléfono o correo",
+    "find": "Buscar",
+    "notFound": "No hemos encontrado ninguna solicitud con esos datos.",
+    "status": "Estado",
+    "statuses": { "requested": "Recibida", "confirmed": "Confirmada", "declined": "No disponible", "cancelled": "Cancelada", "completed": "Completada", "noshow": "No presentado" },
+    "messages": "Mensajes",
+    "reply": "Enviar un mensaje",
+    "replyPh": "Una nota para el anfitrión",
+    "cancel": "Cancelar solicitud",
+    "cancelConfirm": "¿Cancelar esta solicitud?",
+    "senders": { "customer": "Tú", "host": "Anfitrión", "admin": "RESTEL" },
+    "payment": {
+      "title": "Pago",
+      "amount": "Importe",
+      "method": "Método",
+      "methods": { "transfer": "Transferencia bancaria", "onsite": "Pago en el local", "card": "Tarjeta" },
+      "pending": "El anfitrión te enviará los detalles en breve",
+      "bank": "Cuenta",
+      "holder": "Titular",
+      "deadline": "Pagar antes de",
+      "deadlineNote": "en las {hours} horas siguientes a la confirmación",
+      "onsite": "En el local",
+      "onsiteNote": "Paga con tarjeta o en efectivo al llegar.",
+      "paid": "Pago recibido",
+      "refunded": "Reembolso realizado",
+      "refundDefault": "Cancelación: reembolso del 100 % hasta 48 horas antes, del 50 % hasta 24 horas antes y ninguno después."
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "lead": "Preguntas sobre visitas, colaboraciones, salas de descanso para empresas o cómo ser anfitrión: déjanos un mensaje. Respondemos en uno o dos días laborables (en coreano o inglés).",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "topic": "Tema",
+    "topics": { "use": "Visitas", "host": "Ser anfitrión", "biz": "Empresas y colaboraciones", "press": "Prensa y otros", "stay": "Novedades de RESTEL STAY" },
+    "message": "Mensaje",
+    "submit": "Enviar",
+    "done": "Gracias, te responderemos pronto.",
+    "kakao": "Escríbenos por KakaoTalk",
+    "emailUs": "Escríbenos un correo"
+  },
+  "footer": {
+    "about": "RESTEL es un espacio de descanso coreano que se alquila por horas: salas privadas para siestas, meditación y desconexión en Seúl. No es un alojamiento.",
+    "links": "Explorar",
+    "legal": "Políticas",
+    "contact": "Contacto",
+    "business": "Datos de la empresa",
+    "hostPortal": "Portal de anfitriones",
+    "admin": "Admin",
+    "copyright": "© {year} RESTEL. Todos los derechos reservados."
+  },
+  "notFound": {
+    "title": "Esta página está descansando",
+    "body": "La página que buscas no existe o se ha movido.",
+    "cta": "Ir al inicio"
+  },
+  "journal": {
+    "title": "Blog de RESTEL",
+    "lead": "Notas para descansar bien en Seúl: dónde hacer una pausa, cómo aprovechar una hora de verdad, qué hacer antes de un vuelo nocturno y cómo descansan los coreanos.",
+    "categories": { "guide": "Guías de descanso", "area": "El barrio", "travel": "Consejos de viaje", "culture": "Cultura coreana del descanso", "brand": "Sobre RESTEL" },
+    "readMin": "{n} min de lectura",
+    "by": "Equipo editorial de RESTEL",
+    "summary": "En resumen",
+    "faqTitle": "Preguntas",
+    "relatedTitle": "Sigue leyendo",
+    "allArticles": "Todos los artículos",
+    "latestTitle": "Del blog",
+    "aboutEntity": "Alquiler de espacio para descansar en Seúl",
+    "cta": {
+      "sessions": { "title": "Elige cuánto quieres descansar", "body": "Nap 60, Rest 180, Day Rest y K-REST 90: mira qué incluye cada sesión.", "button": "Sesiones y precios" },
+      "krest": { "title": "Prueba el descanso a la coreana", "body": "Té, respiración guiada y un suelo cálido en 90 minutos.", "button": "Sobre K-REST" },
+      "book": { "title": "Guárdate una hora para ti", "body": "Elige fecha y hora en RESTEL Sinchon. Confirmamos y te enviamos cómo entrar.", "button": "Solicitar sesión" },
+      "spaces": { "title": "Mira primero el espacio", "body": "Fotos, distribución y cómo llegar a RESTEL Sinchon.", "button": "Ver RESTEL Sinchon" },
+      "guide": { "title": "¿Primera vez en RESTEL?", "body": "Del código de la puerta al rincón de té: así es una sesión.", "button": "Cómo descansar" }
+    }
+  },
+  "seo": {
+    "home": { "title": "RESTEL | Dónde echar una siesta y descansar en Seúl — Sinchon, junto a Hongdae", "description": "Alquila por horas un espacio de descanso privado de estilo coreano, a 5 minutos de la estación de Sinchon y a una parada de Hongdae. Siesta, meditación o una pausa antes del vuelo sobre colchonetas, con luz suave y té caliente. No es un hotel.", "keywords": ["dónde descansar en Seúl", "siesta en Seúl", "sala de siesta Seúl", "Hongdae", "Sinchon Seúl", "antes de un vuelo nocturno Seúl", "jet lag Corea", "bienestar Corea", "meditación Seúl", "espacio de descanso por horas"] },
+    "about": { "title": "¿Qué es RESTEL? Un alquiler de espacio para descansar, no un hotel", "description": "RESTEL = REST + TEL. Un nuevo tipo de espacio en Seúl que se alquila por horas para dormir la siesta, meditar y recargar: colchonetas en el suelo en lugar de camas, y todas las sesiones terminan antes de medianoche.", "keywords": ["qué es RESTEL", "espacio de descanso Seúl"] },
+    "sessions": { "title": "Sesiones y precios — Nap 60, Rest 180, Day Rest, K-REST 90 | RESTEL", "description": "Una siesta de 60 minutos, tres horas de descanso, un día entero o una experiencia coreana de 90 minutos. Cada sesión es el espacio completo en privado. Precios en wones con referencia en euros.", "keywords": ["precio siesta Seúl", "descanso por horas Seúl"] },
+    "spaces": { "title": "Espacios RESTEL — Dónde descansar en Seúl", "description": "RESTEL Sinchon y espacios asociados con el estándar RESTEL. Compara ubicación, sesiones y distribución y envía tu solicitud.", "keywords": ["espacio de descanso Seúl", "RESTEL Sinchon"] },
+    "sinchon": { "title": "RESTEL Sinchon | Siesta y descanso a 5 minutos de la estación de Sinchon", "description": "Un espacio privado de descanso a la coreana bajo una línea de tejas negras, con colchonetas plegables, mantas, rincón de té y terraza. A 5 minutos de la estación de Sinchon y a una parada de Hongdae. Desde 60 minutos.", "keywords": ["RESTEL Sinchon", "siesta Sinchon", "descansar cerca de Hongdae", "cerca de la Universidad Yonsei", "Ewha"] },
+    "krest": { "title": "K-REST — Descansar a la coreana en Seúl | RESTEL", "description": "Té, respiración guiada y descanso sobre un suelo cálido. K-REST reúne el ondol, la cultura del suelo, la calma del jjimjilbang y el silencio del templestay en una sesión de 90 minutos para viajeros.", "keywords": ["experiencia cultural coreana Seúl", "ondol", "meditación Seúl", "té coreano", "bienestar coreano"] },
+    "guide": { "title": "Cómo descansar en RESTEL — Entrada, luz, sonido, té", "description": "Código de la puerta, sin zapatos, tres niveles de luz, canales de sonido, colchonetas y mantas, rincón de té y cómo dejar el espacio al salir. Guía para la primera visita.", "keywords": ["cómo funciona RESTEL"] },
+    "faq": { "title": "Preguntas — ¿RESTEL es un hotel? ¿Se puede dormir? ¿Puedo ir solo?", "description": "Respuestas sobre RESTEL, la siesta, el número de personas, ir solo, la estación más cercana, reservar desde el extranjero, cancelaciones y normas.", "keywords": ["RESTEL preguntas", "siesta en Seúl solo"] },
+    "hosts": { "title": "Publica tu espacio en RESTEL", "description": "Salas de fiestas, estudios y locales vacíos pueden convertirse en espacios RESTEL. Sin cuota de publicación; solicitudes, mensajes multilingües y liquidación mensual desde el portal de anfitriones.", "keywords": ["anfitrión RESTEL"] },
+    "contact": { "title": "Contacto RESTEL — Reservas, grupos y colaboraciones", "description": "Preguntas sobre reservas, visitas en grupo, colaboraciones con empresas o publicar un espacio. Respondemos en coreano e inglés.", "keywords": ["contacto RESTEL"] },
+    "journal": { "title": "Blog de RESTEL — Dónde y cómo descansar en Seúl", "description": "Notas prácticas para descansar en Seúl: dónde echar una siesta, la zona de Sinchon, Hongdae y Ewha, qué hacer antes de un vuelo nocturno, el jet lag del primer día y la cultura coreana del descanso.", "keywords": ["viaje a Seúl", "consejos Seúl", "vuelo nocturno Seúl", "jet lag Corea"] }
+  }
+}

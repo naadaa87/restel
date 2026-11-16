@@ -29,6 +29,7 @@ const ld = {
   ...(s.lat && s.lng ? { geo: { '@type': 'GeoCoordinates', latitude: s.lat, longitude: s.lng } } : {}),
   hasMap: gmap,
   ...(s.slug === 'sinchon' ? { openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: s.hours.open, closes: s.hours.close === '24:00' ? '23:59' : s.hours.close }], address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: 'Seodaemun-gu', addressRegion: 'Seoul', addressCountry: 'KR' } } : {}),
+  knowsLanguage: ['ko', 'en'],
   amenityFeature: s.features.map((f) => ({ '@type': 'LocationFeatureSpecification', name: f, value: true })),
   makesOffer: s.sessions.map((x) => ({ '@type': 'Offer', name: (t.sessions.items as any)[x.code]?.name || x.customName || x.code, price: x.priceWeekday, priceCurrency: 'KRW' })),
 };

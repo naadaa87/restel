@@ -15,7 +15,7 @@ faq:
   - q: "Is a rest space rental the same as a nap café?"
     a: "Not quite. Nap cafés usually share one room between many people and rent individual seats or pods. At RESTEL you rent the whole space for yourself or your group."
   - q: "Can I spend the night?"
-    a: "No. Every RESTEL session ends before midnight, and there are no night packages."
+    a: "Not at RESTEL Sinchon — every session ends before midnight. A separate overnight format, RESTEL STAY, is in preparation and will open only at locations registered as lodging businesses."
   - q: "Is it awkward to come alone?"
     a: "Not at all. Because you rent the whole space, a solo session is one of the easiest ways to use it."
 related: ["where-to-rest-in-seoul", "how-to-rest-in-60-minutes", "korean-way-to-rest"]

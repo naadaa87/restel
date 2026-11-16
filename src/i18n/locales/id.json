@@ -1,0 +1,391 @@
+{
+  "meta": {
+    "siteName": "RESTEL",
+    "tagline": "Istirahat ala Korea.",
+    "titleSuffix": " | RESTEL — Ruang Istirahat Korea di Seoul",
+    "description": "RESTEL adalah ruang istirahat ala Korea yang disewa per jam di Sinchon, Seoul. Pesan ruang privat untuk tidur siang, meditasi, healing, dan menyegarkan diri. Matras lantai, cahaya lembut, teh hangat. Bukan hotel — penyewaan ruang istirahat.",
+    "keywords": "tempat istirahat di Seoul, tidur siang di Seoul, ruang istirahat Seoul, nap room Seoul, Hongdae, Sinchon, jet lag Korea, sebelum penerbangan malam Seoul, healing Korea, meditasi Seoul, liburan ke Korea, RESTEL",
+    "ogTitle": "RESTEL — Ruang istirahat ala Korea yang disewa per jam"
+  },
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang RESTEL",
+    "spaces": "Ruang",
+    "sessions": "Sesi & Harga",
+    "krest": "K-REST",
+    "stay": "RESTEL STAY",
+    "guide": "Cara Beristirahat",
+    "journal": "Jurnal",
+    "faq": "FAQ",
+    "hosts": "Untuk Host",
+    "contact": "Kontak",
+    "book": "Ajukan Sesi",
+    "language": "Bahasa",
+    "menu": "Menu",
+    "close": "Tutup",
+    "hostLogin": "Login host",
+    "myRequest": "Cek permintaan saya"
+  },
+  "common": {
+    "notLodging": "RESTEL adalah penyewaan ruang istirahat, bukan akomodasi.",
+    "notLodgingShort": "Bukan akomodasi",
+    "learnMore": "Selengkapnya",
+    "viewAll": "Lihat semua",
+    "requestBooking": "Ajukan sesi",
+    "perSpace": "Seluruh ruang · untuk {n} orang",
+    "extraPerson": "Tambahan per orang {price}",
+    "minutes": "{n} menit",
+    "hours": "{n} jam",
+    "upTo": "Hingga {n} jam",
+    "people": "{n} orang",
+    "weekday": "Hari kerja",
+    "weekend": "Akhir pekan & hari libur",
+    "refNote": "Hanya perkiraan. Pembayaran dalam won Korea (KRW).",
+    "flagship": "Flagship",
+    "partner": "Mitra RESTEL",
+    "comingSoon": "Segera hadir",
+    "readMore": "Baca selengkapnya",
+    "back": "Kembali",
+    "submit": "Kirim",
+    "required": "wajib",
+    "optional": "opsional",
+    "langSuggest": "Halaman ini tersedia dalam {lang}.",
+    "langSwitch": "Ganti",
+    "dismiss": "Tutup",
+    "kstNote": "Semua waktu dalam Waktu Standar Korea (KST)."
+  },
+  "home": {
+    "kicker": "PENYEWAAN RUANG ISTIRAHAT · SEOUL",
+    "title": "Tempat untuk beristirahat,\nbukan untuk menginap.",
+    "subtitle": "Bukan hotel, bukan motel, bukan hostel. RESTEL adalah ruang istirahat ala Korea yang disewa per jam. Lepas sepatu, naik ke panggung kayu, lalu temukan matras dan selimut, cahaya lembut, dan secangkir teh hangat.",
+    "cta1": "Sesi & harga",
+    "cta2": "Lihat RESTEL Sinchon",
+    "heroPoints": ["Tidur siang & istirahat", "Meditasi & napas", "Healing & segar kembali", "Ruang privat"],
+    "notHotel": {
+      "kicker": "BUKAN HOTEL",
+      "title": "Anda tidak menginap. Anda datang untuk beristirahat.",
+      "body": "RESTEL bukan tempat untuk bermalam. Satu jam atau setengah hari, Anda menyewa seluruh suasana yang dibutuhkan untuk beristirahat: matras lipat dan sofa sebagai ganti ranjang, selimut sebagai ganti bed cover, pintu masuk yang tenang tanpa resepsionis. Inilah “-tel” jenis keempat, dibangun untuk istirahat.",
+      "items": [
+        { "title": "Sesi per jam", "body": "Dari tidur siang 60 menit hingga istirahat seharian — sewa hanya waktu yang Anda perlukan." },
+        { "title": "Istirahat lantai ala Korea", "body": "Panggung kayu yang dinaiki tanpa alas kaki, matras dan selimut, lantai kayu yang hangat." },
+        { "title": "Ketenangan yang sudah disiapkan", "body": "Tiga tingkat cahaya, suara alam, meditasi terpandu, dan teh sudah tersedia." }
+      ]
+    },
+    "how": {
+      "title": "Cara kerjanya",
+      "steps": [
+        { "title": "Pilih sesi", "body": "Pilih Nap 60, Rest 180, atau Day Rest — sesuai lama istirahat yang Anda butuhkan." },
+        { "title": "Ajukan waktu", "body": "Pilih tanggal dan jam mulai. Kami cek ketersediaan lalu mengirimkan detailnya." },
+        { "title": "Masuk dengan tenang", "body": "Buka pintu dengan kode yang kami kirim, lepas sepatu, naik ke panggung." },
+        { "title": "Beristirahat", "body": "Redupkan lampu, berbaring di matras, seduh teh, putar meditasi terpandu." }
+      ]
+    },
+    "sessionsTitle": "Sesi & harga",
+    "sessionsSub": "Setiap sesi memberi Anda seluruh ruang secara privat. Harga untuk dua orang.",
+    "flagshipTitle": "RESTEL Sinchon",
+    "flagshipSub": "Ruang pertama kami: panggung kayu di bawah deretan genteng hitam, ceruk gerbang bulan yang bercahaya, dan teras. Hanya beberapa menit berjalan kaki dari Stasiun Sinchon, di antara Hongdae dan kawasan kampus.",
+    "flagshipCta": "Lihat ruangnya",
+    "krestTitle": "K-REST: cara orang Korea beristirahat",
+    "krestSub": "Lantai berpemanas dan budaya duduk di lantai, cara istirahat ala jjimjilbang, secangkir teh biji-bijian, ketenangan seperti di kuil. Kami merangkum istirahat ala Korea menjadi panduan singkat untuk wisatawan.",
+    "keywordsTitle": "Sedang mencari ini?",
+    "keywordsBody": "Nap room, ruang istirahat, retreat, tempat menyendiri, ruang wellness, sleep box — RESTEL punya sedikit dari semuanya. Yang bukan RESTEL adalah hotel kapsul atau micro stay. RESTEL adalah ruang istirahat yang disewa per jam.",
+    "hostsTitle": "Jadikan ruang Anda sebuah RESTEL",
+    "hostsBody": "Ruang pesta, studio, dan unit kosong sering sepi di siang hari kerja. Ubah menjadi ruang istirahat sesuai standar RESTEL — kami bantu permintaan, listing multibahasa, dan kontennya.",
+    "hostsCta": "Info untuk host",
+    "waysTitle": "Istirahat satu jam, seharian, atau semalam",
+    "waysSub": "Tiga cara beristirahat bersama RESTEL. Istirahat per jam bisa dipesan sekarang; istirahat semalam sedang disiapkan sebagai RESTEL STAY.",
+    "ways": [
+      { "tag": "Pesan sekarang", "title": "Beberapa jam", "body": "Nap 60 dan Rest 180 di RESTEL Sinchon. Pejamkan mata satu jam, atau nikmati sore yang santai.", "cta": "Sesi & harga", "href": "/sessions", "soon": false },
+      { "tag": "Pesan sekarang", "title": "Seharian", "body": "Day Rest memberi hingga 8 jam dalam jam buka. Sedang berwisata? K-REST 90 menambahkan teh dan latihan napas terpandu.", "cta": "Kenali K-REST", "href": "/krest", "soon": false },
+      { "tag": "Segera hadir", "title": "2 hari 1 malam · RESTEL STAY", "body": "RESTEL STAY membawa cara istirahat ala Korea yang sama ke dalam satu malam, dan hanya akan dibuka di lokasi yang terdaftar sebagai usaha penginapan. Daftar untuk kabar pertama.", "cta": "Tentang RESTEL STAY", "href": "/stay", "soon": true }
+    ],
+    "whereTitle": "Mudah dijangkau",
+    "whereSub": "Lima menit jalan kaki dari Stasiun Sinchon, satu stasiun dari Hongdae dan Ewha.",
+    "where": [
+      { "title": "Stasiun Sinchon, Jalur 2 — sekitar 5 menit jalan kaki", "body": "Alamat lengkap dan cara masuk dikirim bersama konfirmasi Anda." },
+      { "title": "Satu stasiun dari Hongik Univ. (Hongdae)", "body": "Stasiun Hongik University dilalui kereta bandara AREX, jadi mudah mampir sebelum terbang atau di hari kedatangan." },
+      { "title": "Dekat Yonsei, Ewha, dan Sogang", "body": "Rehat tenang setelah menjelajah kampus atau jalanan Sinchon–Ewha." },
+      { "title": "Buka 07.00–24.00 (KST)", "body": "Dari pagi hingga menjelang tengah malam. Setiap sesi berakhir sebelum tengah malam." }
+    ],
+    "journalPicks": ["before-late-flight-seoul", "jet-lag-first-day-seoul", "korean-way-to-rest"],
+    "faqTitle": "Pertanyaan yang sering diajukan"
+  },
+  "about": {
+    "title": "Tentang RESTEL",
+    "lead": "RESTEL menggabungkan REST dan TEL. Setelah hotel, motel, dan hostel, hadir “-tel” jenis baru: tempat yang Anda masuki untuk beristirahat.",
+    "story": [
+      "Hotel lahir dari pelayanan dan formalitas, motel dari perjalanan darat, hostel dari budaya backpacker. Akhiran “-tel” kini tidak lagi menggambarkan bangunan, melainkan cara singgah.",
+      "Orang Korea beristirahat di lantai. Di lantai ondol yang hangat dengan matras tergelar, di kamar nenek, di lantai kayu jjimjilbang, di aula terbuka hanok. Untuk beristirahat Anda tidak butuh ranjang, dan satu lantai bisa dinikmati bersama keluarga dan teman. RESTEL membawa kebiasaan lama ini ke tengah kota.",
+      "Di RESTEL tidak ada ranjang. Yang ada matras lipat dan sofa, selimut dan bantal. Ini bukan tempat bermalam, melainkan tempat beristirahat dengan benar, satu jam atau setengah hari. Karena itu RESTEL adalah penyewaan ruang istirahat, bukan akomodasi — dan kami menyampaikannya sejak awal."
+    ],
+    "valuesTitle": "Tiga janji RESTEL",
+    "values": [
+      { "title": "Jarak", "body": "Begitu pintu tertutup, keramaian dan daftar tugas tertinggal di luar. Melepas sepatu adalah garis batasnya." },
+      { "title": "Istirahat di lantai", "body": "Matras dan selimut di panggung kayu, bantal sekam soba. Cara berbaring paling nyaman, tanpa perlu ranjang." },
+      { "title": "Ketenangan yang disiapkan", "body": "Cahaya, suara, aroma, teh, dan konten panduan sudah tersedia. Anda tidak perlu memikirkan cara beristirahat." }
+    ],
+    "notTitle": "Yang bukan RESTEL",
+    "notList": [
+      "Bukan akomodasi. Tidak ada malam, tidak ada resepsionis, tidak ada kamar.",
+      "Bukan ruang pesta. Tenang adalah aturan dasarnya, bukan musik dan keramaian.",
+      "Bukan klinik. Kami tidak membuat klaim medis atau klaim manfaat tidur."
+    ],
+    "compareTitle": "Bedanya dengan tempat yang terlihat mirip",
+    "compare": [
+      { "alt": "Day-use hotel", "they": "Kamar dengan ranjang untuk beberapa jam.", "we": "Bukan akomodasi. Anda menyewa suasana istirahat, bukan kamar." },
+      { "alt": "Kafe tidur & kafe kursi pijat", "they": "Satu kursi di ruang terbuka.", "we": "Seluruh ruang milik Anda — sendiri, berdua, atau sekeluarga di satu lantai." },
+      { "alt": "Ruang pesta", "they": "Suara dan lampu untuk berkumpul.", "we": "Jenis sewa yang sama, tujuan sebaliknya: dirancang untuk ketenangan." },
+      { "alt": "Jjimjilbang & sauna", "they": "Beristirahat di lantai umum.", "we": "Istirahat lantai ala jjimjilbang, dibuat privat dan bersih." },
+      { "alt": "Studio meditasi", "they": "Kelas di jam tertentu.", "we": "Konten mandiri tersedia di ruang, kapan pun Anda datang." }
+    ],
+    "insideTitle": "Di dalam RESTEL",
+    "inside": [
+      "Panggung kayu yang dinaiki tanpa sepatu",
+      "Matras lipat, sofa, selimut, bantal sekam soba dan lateks",
+      "Tiga tingkat cahaya: terang, lembut, gelap",
+      "Kanal suara: hujan, lonceng angin, bara yang berderak",
+      "Sudut teh dengan teh kurma merah, teh jelai, dan teh hijau beras merah",
+      "Meditasi terpandu dalam beberapa bahasa (10 dan 20 menit)",
+      "Teras untuk udara segar (tergantung lokasi)",
+      "Kotak detoks digital dan permainan yang tenang"
+    ]
+  },
+  "sessions": {
+    "title": "Sesi & harga",
+    "lead": "RESTEL menjual jenis istirahat, bukan jam. Setiap sesi adalah seluruh ruang secara privat. Harga untuk dua orang, dengan biaya kecil per orang tambahan. Semua sesi berakhir sebelum tengah malam.",
+    "items": {
+      "nap60": { "name": "Nap 60", "ko": "Tidur siang satu jam", "for": "Istirahat siang · di sela rapat · musim ujian", "desc": "Satu jam yang pas untuk memejamkan mata. Matras, selimut, dan lampu pembangun sudah siap.", "includes": ["Seluruh ruang", "2 matras & selimut", "1 teh per orang", "Kanal suara", "Lampu pembangun 10 menit sebelum selesai"] },
+      "rest180": { "name": "Rest 180", "ko": "Tiga jam istirahat", "for": "Pasangan · wisatawan · pemulihan setengah hari", "desc": "Tiga jam tanpa terburu-buru untuk tidur siang, meditasi, dan secangkir teh.", "includes": ["Seluruh ruang", "2 matras & selimut", "2 teh per orang", "Meditasi terpandu", "Camilan teh"] },
+      "dayrest": { "name": "Day Rest", "ko": "Sehari beristirahat", "for": "Keluarga · kelompok kecil · jeda panjang", "desc": "Hingga 8 jam dalam jam buka, dengan permainan tenang, buku, dan teh.", "includes": ["Seluruh ruang", "4 matras & selimut", "Teh sepuasnya", "Set meditasi & teh", "Permainan papan & buku"] },
+      "krest90": { "name": "K-REST 90", "ko": "Pengalaman istirahat ala Korea", "for": "Wisatawan · 2 orang atau lebih", "desc": "Panduan teh, meditasi terpandu 20 menit, dan istirahat di lantai ala ondol, dalam 90 menit.", "includes": ["Panduan teh (video & kartu)", "Meditasi terpandu 20 menit", "Istirahat di matras & selimut", "Kartu panduan K-REST"] }
+    },
+    "priceFrom": "mulai {price}",
+    "perPerson": "per orang",
+    "startWindow": "Jam mulai",
+    "duration": "Durasi",
+    "includes": "Termasuk",
+    "addons": {
+      "title": "Tambahan",
+      "items": [
+        { "name": "Set teh", "body": "Cangkir, teko, camilan, dan kartu cara menyeduh" },
+        { "name": "Sleep kit", "body": "Penutup mata, penyumbat telinga, bantal lebih nyaman" },
+        { "name": "Aroma", "body": "Mugwort, hinoki, atau herbal" },
+        { "name": "Kotak detoks digital", "body": "Kotak untuk menyimpan ponsel sejenak" }
+      ]
+    },
+    "rules": {
+      "title": "Aturan ruang",
+      "items": [
+        "Buka 07.00–24.00. Setiap sesi berakhir sebelum tengah malam.",
+        "Ada jeda 60 menit untuk merapikan ruang di antara sesi.",
+        "Tamu minimal berusia 19 tahun. Verifikasi identitas dapat diminta.",
+        "Pembatalan: refund 100% hingga 48 jam sebelumnya, 50% hingga 24 jam sebelumnya, setelah itu tidak ada. Perubahan gratis sebelum konfirmasi.",
+        "Camilan ringan boleh. Dilarang memasak dan minum alkohol."
+      ]
+    },
+    "priceNote": "Harga yang ditampilkan berlaku untuk RESTEL Sinchon. Ruang mitra mencantumkan harganya sendiri."
+  },
+  "spaces": {
+    "title": "Ruang RESTEL",
+    "lead": "Ruang flagship kami dan ruang mitra yang memenuhi standar RESTEL. Semuanya penyewaan ruang istirahat, bukan akomodasi.",
+    "empty": "Belum ada ruang mitra — segera bertambah.",
+    "view": "Lihat ruang",
+    "region": "Area",
+    "sessionsFrom": "Sesi mulai {price}",
+    "capacity": "Untuk {base} · maks. {max} orang"
+  },
+  "space": {
+    "aboutTitle": "Tentang ruang ini",
+    "featuresTitle": "Isi ruang",
+    "sessionsTitle": "Sesi & harga",
+    "rulesTitle": "Aturan ruang",
+    "directionsTitle": "Cara ke sini",
+    "hoursTitle": "Jam buka",
+    "mapGoogle": "Google Maps",
+    "mapNaver": "Naver Map",
+    "mapKakao": "Kakao Map",
+    "hostedBy": "Dikelola oleh",
+    "requestCta": "Ajukan ruang ini",
+    "guideCta": "Cara beristirahat di sini",
+    "galleryAlt": "Foto {name} {n}",
+    "photosNote": "Foto menampilkan ruang sebenarnya; sebagian telah disunting."
+  },
+  "krest": {
+    "title": "K-REST — istirahat ala Korea",
+    "lead": "Bagi wisatawan, RESTEL adalah cara merasakan bagaimana orang Korea beristirahat. Kami memilih bagian yang terasa asing atau membuat penasaran, lalu merangkumnya dengan singkat.",
+    "cards": {
+      "ondol": { "title": "Ondol & budaya lantai", "summary": "Mengapa orang Korea beristirahat di lantai", "body": "Ondol adalah lantai berpemanas tradisional Korea. Lantai yang hangat membuat orang duduk dan berbaring di atasnya, dan dari situ lahir budaya tidur, makan, dan beristirahat di lantai tanpa ranjang. Panggung kayu RESTEL membawa budaya lantai ini ke kota. Begitu Anda naik tanpa sepatu, tubuh terasa lebih rendah dan napas melambat." },
+      "yo": { "title": "Matras, selimut & bantal", "summary": "Matras sebagai ganti yo, selimut sebagai ganti bed cover", "body": "Alas tidur tradisional Korea adalah yo (kasur tipis) yang digelar di lantai dengan selimut tebal di atasnya. Karena RESTEL adalah tempat istirahat, bukan menginap, kami memakai matras lipat dan selimut. Bantal sekam soba adalah klasik Korea: sejuk, padat, dan berdesir pelan saat Anda bergerak." },
+      "jjimjilbang": { "title": "Cara istirahat ala jjimjilbang", "summary": "Beristirahat di lantai kayu bersama", "body": "Jjimjilbang adalah pemandian Korea tempat orang berbaring di lantai luas yang hangat setelah mandi, ditemani telur panggang, minuman beras manis, dan handuk yang dilipat menjadi “telinga domba”. RESTEL menafsirkan ulang istirahat lantai itu menjadi privat dan tenang. Gabungkan dengan kunjungan ke pemandian, dan hari istirahat Anda lengkap." },
+      "tea": { "title": "Secangkir teh", "summary": "Kurma merah, jelai, teh hijau beras merah", "body": "Teh Korea bukan hanya teh daun. Favorit sehari-hari dibuat dari biji-bijian dan buah: teh kurma merah yang direbus berjam-jam, teh jelai sangrai yang gurih, teh hijau dengan beras merah sangrai. Sudut teh RESTEL menyediakan ketiganya plus camilan kecil, dengan kartu cara menyeduh." },
+      "stillness": { "title": "Ketenangan & meditasi", "summary": "Hening kuil, di tengah kota", "body": "Di kuil pegunungan Korea, satu hari berlalu dengan doa subuh, 108 sujud, dan obrolan sambil minum teh. RESTEL menyaring keheningan itu menjadi meditasi terpandu 10 dan 20 menit yang bisa diputar lewat speaker ruangan dalam beberapa bahasa. Cukup hitung napas Anda." },
+      "hanok": { "title": "Garis hanok", "summary": "Bubungan genteng dan gerbang bulan", "body": "Di dinding RESTEL Sinchon membentang deretan genteng hitam, dan di tengahnya ceruk lengkung berbentuk bulan memancarkan cahaya lembut. Ini adalah ringkasan modern dari garis atap dan gerbang hanok. Bagus untuk difoto, tapi lebih baik lagi: berbaringlah menghadap cahayanya." }
+    },
+    "pairTitle": "Istirahat ala Korea untuk melengkapi kunjungan Anda",
+    "pairs": ["Pemandian & sauna (panduan HANTANG)", "Templestay di kota", "Upacara teh", "Jalan-jalan di kawasan hanok"]
+  },
+  "guide": {
+    "title": "Cara beristirahat di RESTEL",
+    "lead": "Dari masuk hingga keluar — semua yang perlu Anda tahu. Kode QR di dalam ruang juga membuka halaman ini.",
+    "blocks": [
+      { "title": "Masuk", "text": "Buka pintu dengan kode yang kami kirim. Kode aktif mulai 10 menit sebelum sesi hingga 10 menit setelah selesai.", "detail": "Jika pintu tidak terbuka, hubungi kontak di konfirmasi Anda. Jika gedung punya kode pintu terpisah, kodenya juga tercantum di sana." },
+      { "title": "Lepas sepatu", "text": "Simpan sepatu di lemari dekat pintu. Panggung hanya untuk kaki telanjang atau berkaus kaki.", "detail": "Tempat cuci tangan dan hand sanitizer ada di dekat pintu masuk." },
+      { "title": "Cahaya", "text": "Gunakan sakelar dinding untuk memilih terang, lembut, atau gelap.", "detail": "Sepuluh menit sebelum selesai, lampu perlahan menjadi terang — itulah alarm Anda." },
+      { "title": "Suara", "text": "Suara alam diputar lewat speaker. Ganti ke hening atau kanal lain jika mau.", "detail": "Meditasi terpandu diputar dari pemutar di halaman ini atau lewat speaker." },
+      { "title": "Matras", "text": "Bentangkan matras dan ambil selimut serta bantal. Satu matras per orang.", "detail": "Sarung matras diganti setiap sesi. Masukkan sarung bekas ke kotak dekat pintu." },
+      { "title": "Teh", "text": "Isi cangkir dengan air panas dari dispenser di sudut teh dan seduh kantong teh.", "detail": "Teh kurma merah, jelai, atau teh hijau beras merah. Taruh cangkir bekas di wastafel." },
+      { "title": "Tenang", "text": "Dindingnya tipis. Silakan menelepon di teras.", "detail": "Volume speaker maksimal 3; gunakan earphone untuk menonton video." },
+      { "title": "Darurat", "text": "Alat pemadam dan lampu darurat ada di samping pintu. Lihat peta evakuasi.", "detail": "Darurat: 119. Untuk hal lain, gunakan kontak di konfirmasi Anda." },
+      { "title": "Keluar", "text": "Pilah sampah, lipat kembali matras, dan atur lampu ke terang.", "detail": "Barang tertinggal disimpan 7 hari. Satu kalimat kesan tentang istirahat Anda sangat berarti bagi kami." }
+    ],
+    "playerTitle": "Meditasi terpandu",
+    "player10": "Menenangkan napas · 10 menit",
+    "player20": "Berbaring · 20 menit",
+    "playerNote": "Audio akan diputar di sini setelah tersedia."
+  },
+  "faq": {
+    "title": "Pertanyaan yang sering diajukan",
+    "items": [
+      { "q": "Apakah RESTEL hotel atau hostel?", "a": "Bukan. RESTEL adalah ruang istirahat yang disewa per jam. Kami tidak menyediakan kamar dengan ranjang dan kamar mandi, dan tidak ada paket bermalam. Setiap sesi berakhir sebelum tengah malam." },
+      { "q": "Bolehkah saya tidur di sana?", "a": "Boleh — tidur siang sangat dipersilakan. Matras lipat, selimut, dan lampu pembangun sudah siap. Yang tidak kami sediakan adalah tempat untuk bermalam." },
+      { "q": "Berapa orang yang bisa memakai satu ruang?", "a": "Harga sudah termasuk dua orang. Anda bisa menambah orang hingga kapasitas maksimal ruang (6 orang di Sinchon) dengan biaya kecil per orang." },
+      { "q": "Apakah wisatawan asing bisa memesan?", "a": "Tentu. Situs ini tersedia dalam 12 bahasa dan kami mengonfirmasi permintaan lewat email. Kami juga sedang menyiapkan pembayaran dengan kartu luar negeri." },
+      { "q": "Apakah ada batas usia?", "a": "Tamu minimal berusia 19 tahun. Boleh tidaknya anak di bawah umur ikut bersama wali diumumkan per ruang." },
+      { "q": "Bisakah saya mandi?", "a": "RESTEL Sinchon punya wastafel, tetapi tidak ada pancuran. RESTEL adalah tempat beristirahat, bukan tempat mandi dan bermalam." },
+      { "q": "Bagaimana permintaan dikonfirmasi?", "a": "Kirim permintaan, kami cek ketersediaan lalu menghubungi Anda (email atau KakaoTalk). Setelah pembayaran selesai, kami kirim kode masuk." },
+      { "q": "Bagaimana kebijakan refund?", "a": "Refund 100% hingga 48 jam sebelum mulai, 50% hingga 24 jam sebelumnya, setelah itu tidak ada refund. Perubahan gratis sebelum konfirmasi." },
+      { "q": "Bolehkah membawa makanan?", "a": "Camilan ringan dan minuman boleh. Mohon hindari memasak, alkohol, dan makanan berbau tajam." },
+      { "q": "Bisakah saya mendaftarkan ruang saya di RESTEL?", "a": "Bisa. Daftar di halaman host. Kami membagikan standar RESTEL (cahaya, peredam cahaya, matras, papan informasi, keamanan) dan menayangkan ruang Anda setelah disetujui." },
+      { "q": "Bisakah saya datang sendiri?", "a": "Bisa. Harga dihitung per ruang, jadi Anda menikmati seluruh ruangan dengan tarif dasar. Sesi sendirian adalah cara yang sangat baik untuk memakainya." },
+      { "q": "Di mana lokasinya, dan stasiun mana yang terdekat?", "a": "Sekitar 5 menit jalan kaki dari Stasiun Sinchon di Jalur 2. Stasiun Hongik University (Hongdae, jalur kereta bandara AREX) dan Stasiun Ewha Womans University masing-masing berjarak satu stasiun. Alamat lengkap dan kode pintu dikirim bersama konfirmasi." },
+      { "q": "Bisakah saya mampir sebelum penerbangan atau di sela jalan-jalan?", "a": "Bisa — Nap 60 atau Rest 180 sangat pas. Dari Stasiun Hongik University, kereta AREX biasa ke Bandara Incheon sekitar satu jam, jadi hitung mundur dari jam keberangkatan Anda. Jika membawa koper besar, sebutkan di permintaan Anda." },
+      { "q": "Bisakah saya beristirahat semalam? (RESTEL STAY)", "a": "RESTEL Sinchon adalah ruang istirahat per jam, jadi setiap sesi berakhir sebelum tengah malam. Istirahat semalam sedang disiapkan sebagai RESTEL STAY, yang hanya akan dibuka di lokasi yang terdaftar sebagai usaha penginapan. Anda bisa mendaftar di halaman RESTEL STAY." }
+    ]
+  },
+  "book": {
+    "title": "Ajukan sesi",
+    "lead": "Beri tahu kami sesi dan waktu yang Anda inginkan. Kami cek ketersediaan dan mengirimkan pesan konfirmasi. Pembayaran dilakukan setelah konfirmasi.",
+    "space": "Ruang",
+    "session": "Sesi",
+    "date": "Tanggal",
+    "start": "Jam mulai",
+    "people": "Jumlah orang",
+    "name": "Nama",
+    "contact": "Telepon (dengan kode negara)",
+    "email": "Email",
+    "lang": "Bahasa untuk pesan",
+    "note": "Catatan",
+    "notePh": "mis. lebih banyak meditasi / dua bantal sekam soba",
+    "consent1": "Saya sudah membaca aturan ruang dan kebijakan pembatalan.",
+    "consent2": "Saya setuju data kontak saya digunakan untuk permintaan ini.",
+    "consent3": "Saya memahami bahwa RESTEL adalah penyewaan ruang istirahat, bukan akomodasi.",
+    "submit": "Kirim permintaan",
+    "contactOrEmail": "Mohon isi nomor telepon atau alamat email.",
+    "estimate": "Perkiraan total",
+    "estimateNote": "Sudah termasuk {base} orang; biaya orang tambahan dihitung. Jumlah akhir dikonfirmasi dalam pesan kami.",
+    "done": {
+      "title": "Permintaan Anda sudah kami terima",
+      "body": "Kode permintaan {code}. Kami akan cek ketersediaan dan menghubungi Anda lewat kontak yang Anda berikan. Pantau status dan pesan lewat tautan di bawah.",
+      "cta": "Lihat status permintaan",
+      "home": "Kembali ke beranda"
+    },
+    "error": "Permintaan tidak dapat dikirim. Coba lagi sebentar lagi atau gunakan halaman kontak.",
+    "dbUnavailable": "Permintaan online sementara tidak tersedia. Silakan hubungi kami lewat KakaoTalk atau email.",
+    "closedDate": "Tanggal itu adalah hari tutup ruang ini. Silakan pilih tanggal lain.",
+    "pastDate": "Tanggal yang sudah lewat tidak bisa dipilih."
+  },
+  "request": {
+    "title": "Cek permintaan Anda",
+    "lead": "Masukkan kode permintaan dan telepon atau email yang Anda gunakan untuk melihat status dan pesan.",
+    "code": "Kode permintaan",
+    "contact": "Telepon atau email",
+    "find": "Cari",
+    "notFound": "Kami tidak menemukan permintaan yang cocok.",
+    "status": "Status",
+    "statuses": { "requested": "Diterima", "confirmed": "Dikonfirmasi", "declined": "Tidak tersedia", "cancelled": "Dibatalkan", "completed": "Selesai", "noshow": "Tidak hadir" },
+    "messages": "Pesan",
+    "reply": "Kirim pesan",
+    "replyPh": "Catatan untuk host",
+    "cancel": "Batalkan permintaan",
+    "cancelConfirm": "Batalkan permintaan ini?",
+    "senders": { "customer": "Anda", "host": "Host", "admin": "RESTEL" },
+    "payment": {
+      "title": "Pembayaran",
+      "amount": "Jumlah",
+      "method": "Metode",
+      "methods": { "transfer": "Transfer bank", "onsite": "Bayar di tempat", "card": "Kartu" },
+      "pending": "Host akan segera mengirimkan detailnya",
+      "bank": "Rekening",
+      "holder": "Atas nama",
+      "deadline": "Bayar sebelum",
+      "deadlineNote": "dalam {hours} jam setelah konfirmasi",
+      "onsite": "Di tempat",
+      "onsiteNote": "Bayar dengan kartu atau tunai saat tiba.",
+      "paid": "Pembayaran diterima",
+      "refunded": "Refund diproses",
+      "refundDefault": "Pembatalan: refund 100% hingga 48 jam sebelumnya, 50% hingga 24 jam sebelumnya, setelah itu tidak ada."
+    }
+  },
+  "contact": {
+    "title": "Kontak",
+    "lead": "Pertanyaan soal kunjungan, kerja sama, ruang istirahat perusahaan, atau menjadi host — tinggalkan pesan. Kami membalas dalam satu atau dua hari kerja (dalam bahasa Korea atau Inggris).",
+    "name": "Nama",
+    "email": "Email",
+    "phone": "Telepon",
+    "topic": "Topik",
+    "topics": { "use": "Kunjungan", "host": "Menjadi host", "biz": "Perusahaan & kerja sama", "press": "Media & lainnya", "stay": "Kabar RESTEL STAY" },
+    "message": "Pesan",
+    "submit": "Kirim",
+    "done": "Terima kasih — kami akan segera menghubungi Anda.",
+    "kakao": "Kirim pesan lewat KakaoTalk",
+    "emailUs": "Email kami"
+  },
+  "footer": {
+    "about": "RESTEL adalah ruang istirahat ala Korea yang disewa per jam — ruang privat untuk tidur siang, meditasi, healing, dan menyegarkan diri di Seoul. Bukan akomodasi.",
+    "links": "Jelajahi",
+    "legal": "Kebijakan",
+    "contact": "Kontak",
+    "business": "Informasi usaha",
+    "hostPortal": "Portal host",
+    "admin": "Admin",
+    "copyright": "© {year} RESTEL. Hak cipta dilindungi."
+  },
+  "notFound": {
+    "title": "Halaman ini sedang beristirahat",
+    "body": "Halaman yang Anda cari tidak ada atau sudah dipindahkan.",
+    "cta": "Ke beranda"
+  },
+  "journal": {
+    "title": "RESTEL Journal",
+    "lead": "Catatan tentang cara beristirahat dengan baik di Seoul — tempat rehat sejenak, cara memakai satu jam dengan benar, apa yang dilakukan sebelum penerbangan malam, dan bagaimana orang Korea beristirahat.",
+    "categories": { "guide": "Panduan istirahat", "area": "Sekitar", "travel": "Tips perjalanan", "culture": "Budaya istirahat Korea", "brand": "Tentang RESTEL" },
+    "readMin": "{n} menit baca",
+    "by": "Redaksi RESTEL",
+    "summary": "Ringkasnya",
+    "faqTitle": "Pertanyaan",
+    "relatedTitle": "Baca juga",
+    "allArticles": "Semua artikel",
+    "latestTitle": "Dari jurnal",
+    "aboutEntity": "Penyewaan ruang istirahat di Seoul",
+    "cta": {
+      "sessions": { "title": "Pilih lama istirahat yang pas", "body": "Nap 60, Rest 180, Day Rest, dan K-REST 90 — lihat isi setiap sesi.", "button": "Sesi & harga" },
+      "krest": { "title": "Coba cara istirahat ala Korea", "body": "Teh, napas terpandu, dan lantai hangat dalam 90 menit.", "button": "Tentang K-REST" },
+      "book": { "title": "Sisihkan satu jam untuk diri sendiri", "body": "Pilih tanggal dan jam mulai di RESTEL Sinchon. Kami konfirmasi dan kirimkan cara masuk.", "button": "Ajukan sesi" },
+      "spaces": { "title": "Lihat ruangnya dulu", "body": "Foto, tata letak, dan petunjuk arah ke RESTEL Sinchon.", "button": "Lihat RESTEL Sinchon" },
+      "guide": { "title": "Pertama kali ke RESTEL?", "body": "Dari kode pintu hingga sudut teh, inilah jalannya sebuah sesi.", "button": "Cara beristirahat" }
+    }
+  },
+  "seo": {
+    "home": { "title": "RESTEL | Tempat Tidur Siang & Istirahat di Seoul — Sinchon, dekat Hongdae", "description": "Sewa ruang istirahat privat ala Korea per jam, 5 menit dari Stasiun Sinchon dan satu stasiun dari Hongdae. Tidur siang, meditasi, atau rehat sebelum terbang di atas matras lantai, cahaya lembut, dan teh hangat. Bukan hotel.", "keywords": ["tempat istirahat di Seoul", "tidur siang di Seoul", "nap room Seoul", "istirahat dekat Hongdae", "Sinchon Seoul", "sebelum penerbangan malam Seoul", "jet lag Korea", "healing Korea", "meditasi Seoul", "ruang istirahat per jam"] },
+    "about": { "title": "Apa itu RESTEL? Penyewaan ruang istirahat, bukan hotel", "description": "RESTEL = REST + TEL. Ruang baru di Seoul yang disewa per jam untuk tidur siang, meditasi, dan menyegarkan diri — matras lantai sebagai ganti ranjang, dan setiap sesi berakhir sebelum tengah malam.", "keywords": ["apa itu RESTEL", "penyewaan ruang istirahat", "ruang istirahat Seoul"] },
+    "sessions": { "title": "Sesi & Harga — Nap 60, Rest 180, Day Rest, K-REST 90 | RESTEL", "description": "Tidur siang 60 menit, istirahat 3 jam, seharian penuh, atau pengalaman istirahat ala Korea 90 menit. Setiap sesi adalah seluruh ruang secara privat. Harga dalam KRW dengan perkiraan rupiah.", "keywords": ["harga tidur siang Seoul", "ruang istirahat per jam Seoul"] },
+    "spaces": { "title": "Lokasi RESTEL — Ruang Istirahat di Seoul", "description": "RESTEL Sinchon dan ruang mitra yang memenuhi standar RESTEL. Bandingkan lokasi, sesi, dan ruangnya, lalu ajukan waktu.", "keywords": ["ruang istirahat Seoul", "RESTEL Sinchon"] },
+    "sinchon": { "title": "RESTEL Sinchon | Ruang Tidur Siang & Istirahat 5 Menit dari Stasiun Sinchon", "description": "Ruang istirahat privat bergaya lantai Korea di bawah deretan genteng hitam, dengan matras lipat, selimut, sudut teh, dan teras. 5 menit dari Stasiun Sinchon, satu stasiun dari Hongdae. Mulai 60 menit.", "keywords": ["RESTEL Sinchon", "tidur siang Sinchon", "istirahat dekat Hongdae", "dekat Universitas Yonsei", "Ewha"] },
+    "krest": { "title": "K-REST — Rasakan Cara Istirahat ala Korea di Seoul | RESTEL", "description": "Teh, napas terpandu, dan istirahat di lantai hangat. K-REST merangkum ondol, budaya lantai, santainya jjimjilbang, dan heningnya templestay dalam sesi 90 menit untuk wisatawan.", "keywords": ["pengalaman budaya Korea Seoul", "ondol", "meditasi Seoul", "teh Korea", "wellness Korea"] },
+    "guide": { "title": "Cara Beristirahat di RESTEL — Masuk, Cahaya, Suara, Teh", "description": "Kode pintu, lepas sepatu, tiga tingkat cahaya, kanal suara, matras dan selimut, sudut teh, hingga merapikan ruang sebelum pulang. Panduan untuk kunjungan pertama.", "keywords": ["cara pakai RESTEL"] },
+    "faq": { "title": "FAQ — Apakah RESTEL hotel? Bolehkah tidur? Bolehkah datang sendiri?", "description": "Jawaban tentang RESTEL, tidur siang, jumlah orang, datang sendiri, stasiun terdekat, memesan dari luar negeri, pembatalan, dan aturan ruang.", "keywords": ["RESTEL FAQ", "tidur siang Seoul sendiri"] },
+    "hosts": { "title": "Daftarkan Ruang Anda di RESTEL", "description": "Ruang pesta, studio, dan unit kosong bisa menjadi ruang istirahat RESTEL. Tanpa biaya listing; permintaan, pesan multibahasa, dan penyelesaian bulanan lewat portal host RESTEL.", "keywords": ["host RESTEL"] },
+    "contact": { "title": "Kontak RESTEL — Pemesanan, Grup, Kerja Sama", "description": "Pertanyaan tentang pemesanan, kunjungan grup, kerja sama perusahaan, atau mendaftarkan ruang. Kami membalas dalam bahasa Korea dan Inggris.", "keywords": ["kontak RESTEL"] },
+    "journal": { "title": "RESTEL Journal — Di Mana dan Bagaimana Beristirahat di Seoul", "description": "Catatan praktis untuk beristirahat di Seoul: tempat tidur siang, kawasan Sinchon–Hongdae–Ewha, sebelum penerbangan malam, jet lag di hari pertama, dan budaya istirahat Korea.", "keywords": ["liburan ke Seoul", "tips Seoul", "penerbangan malam Seoul", "jet lag Korea"] }
+  }
+}

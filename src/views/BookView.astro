@@ -87,7 +87,7 @@ const pricing = Object.fromEntries(s.sessions.map((x) => [x.code, { wd: x.priceW
     (function () {
       var sel = document.getElementById('session'), ppl = document.getElementById('people'), date = document.getElementById('date');
       var est = document.getElementById('est'), ref = document.getElementById('est-ref');
-      var rates = { en: [1/1400, '$', 0], ja: [1/9.3, '¥', 0], 'zh-tw': [1/43, 'NT$', 0], 'zh-cn': [1/195, '¥', 0], th: [1/40, '฿', 0], vi: [18.5, '₫', 0] };
+      var rates = { en: [1/1400, '$', 0], ja: [1/9.3, '¥', 0], 'zh-tw': [1/43, 'NT$', 0], 'zh-cn': [1/195, '¥', 0], th: [1/40, '฿', 0], vi: [18.5, '₫', 0], id: [11.6, 'Rp ', 0], ru: [1/17.5, '₽ ', 0], es: [1/1600, '€', 0], fr: [1/1600, '€', 0], de: [1/1600, '€', 0] };
       function calc() {
         var p = pricing[sel.value]; if (!p) return;
         var n = Number(ppl.value || 2);

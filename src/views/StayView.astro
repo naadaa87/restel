@@ -1,0 +1,113 @@
+---
+import Base from '@/layouts/Base.astro';
+import type { Locale } from '@/config/site';
+import { site, localeMeta, locales } from '@/config/site';
+import { getDict, localizePath } from '@/i18n';
+import { getStay } from '@/lib/stay';
+
+interface Props { lang: Locale; result?: { done: boolean; error?: string; values: Record<string, string> } | null; turnstileSiteKey?: string }
+const { lang, result, turnstileSiteKey } = Astro.props;
+const t = getDict(lang);
+const s = getStay(lang);
+const L = (p: string) => localizePath(p, lang);
+const v = result?.values || {};
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: s.seoTitle, description: s.seoDescription, url: site.url + L('/stay'), inLanguage: lang, about: { '@type': 'Thing', name: 'RESTEL STAY' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: s.faq.map((q: any) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: t.nav.home, item: site.url + L('/') },
+    { '@type': 'ListItem', position: 2, name: 'RESTEL STAY', item: site.url + L('/stay') },
+  ] },
+];
+const [t1, t2] = s.title.split('\n');
+---
+<Base lang={lang} path="/stay" fullTitle={s.seoTitle} description={s.seoDescription} keywords={s.keywords.join(', ')} jsonLd={ld}>
+  <section class="section stay-hero">
+    <div class="container narrow--wide" style="margin:0 auto">
+      <span class="kicker">{s.kicker}</span>
+      <h1 class="h1" style="font-size:clamp(32px,5vw,54px);line-height:1.15">{t1}<br /><span style="color:var(--coral-dark)">{t2}</span></h1>
+      <p class="lead" style="margin-top:18px;max-width:760px">{s.lead}</p>
+      <div class="callout callout--sage" style="margin-top:22px;max-width:760px"><strong>ⓘ</strong> {s.notice}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+        <a class="btn btn--primary" href="#stay-list">{s.form.submit}</a>
+        <a class="btn btn--ghost" href={L('/sessions')}>{s.todayCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper section--tight">
+    <div class="container">
+      <h2 class="h2" style="margin-bottom:18px">{s.compareTitle}</h2>
+      <div class="table-wrap">
+        <table class="table stay-table">
+          <thead><tr>{s.compareHead.map((h: string) => <th>{h}</th>)}</tr></thead>
+          <tbody>{s.compare.map((row: string[]) => <tr><th scope="row">{row[0]}</th><td data-label={s.compareHead[1]}>{row[1]}</td><td data-label={s.compareHead[2]}>{row[2]}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="h2">{s.flowTitle}</h2>
+      <p class="muted small" style="margin:6px 0 22px">{s.flowNote}</p>
+      <div class="grid grid--4">
+        {s.flow.map((f: any) => (
+          <div class="card"><span class="kicker" style="margin-bottom:6px">{f.time}</span><h3 class="h3" style="margin-bottom:6px">{f.title}</h3><p class="muted" style="margin:0">{f.body}</p></div>
+        ))}
+      </div>
+      <h2 class="h2" style="margin-top:44px">{s.forTitle}</h2>
+      <ul class="check" style="margin-top:14px">{s.for.map((x: string) => <li>{x}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="stay-list">
+    <div class="container split">
+      <div>
+        <h2 class="h2">{s.formTitle}</h2>
+        <p class="lead" style="margin:10px 0 22px">{s.formLead}</p>
+        {result?.done ? <div class="alert alert--ok">{s.form.done}</div> : (
+          <form class="form" method="post" action={L('/stay') + '#stay-list'}>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+            {result?.error && <div class="alert alert--error">{result.error}</div>}
+            <div class="form__row">
+              <div class="field"><label for="st-name">{s.form.name}</label><input id="st-name" name="name" value={v.name || ''} maxlength="80" /></div>
+              <div class="field"><label for="st-email">{s.form.email} <span class="req">*</span></label><input id="st-email" type="email" name="email" value={v.email || ''} required maxlength="120" /></div>
+            </div>
+            <div class="form__row">
+              <div class="field"><label for="st-when">{s.form.when}</label><input id="st-when" name="when" value={v.when || ''} placeholder={s.form.whenPh} maxlength="100" /></div>
+              <div class="field"><label for="st-people">{s.form.people}</label>
+                <select id="st-people" name="people">{s.form.peopleOpts.map((o: string) => <option selected={v.people === o}>{o}</option>)}</select>
+              </div>
+            </div>
+            <div class="field"><label for="st-lang">{s.form.lang}</label>
+              <select id="st-lang" name="lang">{locales.map((l) => <option value={l} selected={(v.lang || lang) === l}>{localeMeta[l].native}</option>)}</select>
+            </div>
+            <div class="field"><label for="st-msg">{s.form.message}</label><textarea id="st-msg" name="message" maxlength="2000" placeholder={s.form.messagePh}>{v.message || ''}</textarea></div>
+            <label class="checkbox"><input type="checkbox" name="consent" value="1" required /> <span>{s.form.consent}</span></label>
+            {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>}
+            <button class="btn btn--primary" type="submit" style="justify-self:start">{s.form.submit}</button>
+          </form>
+        )}
+      </div>
+      <aside>
+        <div class="card">
+          <h3 class="h3" style="margin-bottom:8px">{s.todayTitle}</h3>
+          <p class="muted">{s.todayBody}</p>
+          <a class="btn btn--sage btn--sm" href={L('/sessions')}>{s.todayCta}</a>
+          <p class="small muted" style="margin:14px 0 0">{t.common.notLodging}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow">
+      <h2 class="h2">{s.faqTitle}</h2>
+      <div class="faq" style="margin-top:16px">
+        {s.faq.map((q: any) => <details><summary>{q.q}</summary><div class="faq__a">{q.a}</div></details>)}
+      </div>
+    </div>
+  </section>
+  {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</Base>

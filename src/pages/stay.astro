@@ -1,0 +1,10 @@
+---
+export const prerender = false;
+import View from '@/views/StayView.astro';
+import { handleStayPost } from '@/lib/handlers';
+const lang = 'ko' as const;
+let result: any = null;
+if (Astro.request.method === 'POST') result = await handleStayPost(Astro as any, lang);
+const turnstileSiteKey = (Astro.locals as any)?.runtime?.env?.TURNSTILE_SITE_KEY || '';
+---
+<View lang={lang} result={result} turnstileSiteKey={turnstileSiteKey} />

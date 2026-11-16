@@ -1,0 +1,40 @@
+{
+  "kicker": "RESTEL STAY · SẮP RA MẮT",
+  "title": "RESTEL STAY\nMột đêm nghỉ ngơi kiểu Hàn",
+  "lead": "Có những ngày vài tiếng là chưa đủ. RESTEL STAY kéo dài cách nghỉ của RESTEL thành 2 ngày 1 đêm và chỉ mở tại cơ sở đã đăng ký kinh doanh lưu trú.",
+  "notice": "RESTEL Sinchon đang hoạt động là không gian nghỉ theo giờ nên không thể ở qua đêm. RESTEL STAY sẽ mở riêng tại cơ sở lưu trú đã đăng ký.",
+  "compareTitle": "RESTEL và RESTEL STAY",
+  "compareHead": ["", "RESTEL · dùng được ngay", "RESTEL STAY · đang chuẩn bị"],
+  "compare": [
+    ["Thời lượng", "60 phút đến tối đa 8 giờ, kết thúc trước nửa đêm", "2 ngày 1 đêm"],
+    ["Địa điểm", "RESTEL Sinchon và không gian đối tác", "Cơ sở đã đăng ký kinh doanh lưu trú (đang chuẩn bị)"],
+    ["Cách nghỉ", "Bục gỗ, nệm và chăn, trà, thiền có hướng dẫn", "Cách nghỉ của RESTEL, thêm một đêm ngủ ngon và tách trà buổi sáng"],
+    ["Đặt chỗ", "Gửi yêu cầu ngay", "Đăng ký nhận tin ra mắt"]
+  ],
+  "flowTitle": "Một đêm ở RESTEL STAY như chúng tôi hình dung",
+  "flowNote": "Đây là kế hoạch đang chuẩn bị, có thể khác nhau theo từng cơ sở.",
+  "flow": [
+    { "time": "Chiều tối", "title": "Một tách trà, đặt ngày dài xuống", "body": "Đặt hành lý xuống, uống trà ấm và để nhịp ngày chậm lại." },
+    { "time": "Ban đêm", "title": "Thở và sàn ấm", "body": "Thiền có hướng dẫn để điều hòa hơi thở, rồi nằm xuống trong căn phòng đã hạ đèn." },
+    { "time": "Buổi sáng", "title": "Trà lúa mạch và khởi đầu chậm rãi", "body": "Thức dậy theo ánh sáng sáng dần thay cho chuông báo thức, mở đầu bằng tách trà lúa mạch thơm." },
+    { "time": "Gần trưa", "title": "Đi dạo một chút, rồi tiếp tục chuyến đi", "body": "Thong thả dạo quanh khu phố và lên đường với cơ thể nhẹ nhõm." }
+  ],
+  "forTitle": "Dành cho ai",
+  "for": ["Du khách muốn có một đêm thật yên giữa chuyến đi bận rộn", "Người muốn trải nghiệm wellness và cách nghỉ ngơi kiểu Hàn ở Seoul", "Người muốn một đêm nghỉ ngơi thật sự, không chỉ là chỗ ngủ"],
+  "formTitle": "Nhận tin sớm nhất",
+  "formLead": "Để lại email, chúng tôi sẽ báo ngay khi địa điểm và ngày mở RESTEL STAY được xác định. Hiện chưa nhận đặt chỗ hay thanh toán.",
+  "form": { "name": "Họ tên", "email": "Email", "when": "Thời gian bạn dự định đến", "whenPh": "VD: mùa xuân 2027, tuần thứ hai của tháng 4", "people": "Số người", "peopleOpts": ["1 người", "2 người", "3–4 người", "5 người trở lên"], "lang": "Ngôn ngữ nhận tin", "message": "Lời nhắn", "messagePh": "Khu vực mong muốn, đi cùng ai, câu hỏi", "consent": "Tôi đồng ý để RESTEL lưu email nhằm gửi tin ra mắt.", "submit": "Đăng ký nhận tin", "done": "Đăng ký thành công. Bạn sẽ là người được báo đầu tiên khi RESTEL STAY mở cửa.", "error": "Chưa gửi được. Vui lòng kiểm tra email và thử lại." },
+  "faqTitle": "Câu hỏi về RESTEL STAY",
+  "faq": [
+    { "q": "Bây giờ có thể ở 2 ngày 1 đêm tại RESTEL Sinchon không?", "a": "Không. RESTEL Sinchon là không gian nghỉ theo giờ, mọi gói kết thúc trước nửa đêm. Gói 2 ngày 1 đêm sẽ có khi RESTEL STAY mở cửa." },
+    { "q": "RESTEL STAY mở khi nào, ở đâu?", "a": "Sẽ lần lượt mở tại các cơ sở đã hoàn tất đăng ký kinh doanh lưu trú. Khi có ngày và địa điểm, người đã đăng ký sẽ được báo trước." },
+    { "q": "Giá bao nhiêu?", "a": "Chưa được quyết định. Chúng tôi sẽ công bố cùng thông báo ra mắt." },
+    { "q": "Người nước ngoài có dùng được không?", "a": "Có. Thông tin và đặt chỗ RESTEL STAY cũng đang được chuẩn bị bằng nhiều ngôn ngữ như trang web RESTEL." }
+  ],
+  "todayTitle": "Muốn nghỉ ngay hôm nay?",
+  "todayBody": "Tại RESTEL Sinchon, bạn đã có thể đặt từ giấc chợp mắt 60 phút đến nghỉ cả ngày tối đa 8 giờ.",
+  "todayCta": "Gói & Giá",
+  "seoTitle": "RESTEL STAY — Một đêm nghỉ ngơi kiểu Hàn ở Seoul (sắp ra mắt)",
+  "seoDescription": "RESTEL STAY kéo dài cách nghỉ của RESTEL thành một đêm: trà, thở có hướng dẫn, sàn ấm và buổi sáng thong thả. Chỉ mở tại cơ sở đã đăng ký kinh doanh lưu trú — đăng ký để nhận tin sớm nhất.",
+  "keywords": ["RESTEL STAY", "chữa lành ở Seoul", "du lịch wellness Hàn Quốc", "nghỉ ngơi kiểu Hàn", "một đêm yên tĩnh ở Seoul", "RESTEL"]
+}

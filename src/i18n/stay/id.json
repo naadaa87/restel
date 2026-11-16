@@ -1,0 +1,40 @@
+{
+  "kicker": "RESTEL STAY · SEGERA HADIR",
+  "title": "RESTEL STAY\nSemalam beristirahat ala Korea",
+  "lead": "Ada hari ketika beberapa jam saja tidak cukup. RESTEL STAY memperpanjang cara istirahat RESTEL menjadi 2 hari 1 malam, dan hanya akan dibuka di lokasi yang terdaftar resmi sebagai usaha penginapan.",
+  "notice": "RESTEL Sinchon yang buka sekarang adalah ruang istirahat per jam, jadi tidak bisa dipakai bermalam. RESTEL STAY akan dibuka terpisah di fasilitas penginapan yang terdaftar.",
+  "compareTitle": "RESTEL dan RESTEL STAY",
+  "compareHead": ["", "RESTEL · bisa dipakai sekarang", "RESTEL STAY · sedang disiapkan"],
+  "compare": [
+    ["Durasi", "60 menit hingga 8 jam, berakhir sebelum tengah malam", "2 hari 1 malam"],
+    ["Lokasi", "RESTEL Sinchon dan ruang mitra", "Lokasi yang terdaftar sebagai usaha penginapan (sedang disiapkan)"],
+    ["Cara beristirahat", "Panggung kayu, matras dan selimut, teh, meditasi terpandu", "Cara istirahat RESTEL, ditambah tidur semalam dan teh pagi"],
+    ["Pemesanan", "Ajukan sesi sekarang", "Daftar untuk kabar pembukaan"]
+  ],
+  "flowTitle": "Semalam di RESTEL STAY, seperti yang kami bayangkan",
+  "flowNote": "Ini rencana yang sedang disiapkan dan bisa berbeda di tiap lokasi.",
+  "flow": [
+    { "time": "Sore", "title": "Secangkir teh untuk melepas hari", "body": "Taruh barang, minum teh hangat, dan biarkan ritme hari melambat." },
+    { "time": "Malam", "title": "Napas dan lantai hangat", "body": "Meditasi terpandu untuk menata napas, lalu berbaring di ruangan dengan lampu redup." },
+    { "time": "Pagi", "title": "Teh jelai dan awal yang pelan", "body": "Bangun oleh cahaya yang perlahan terang, bukan alarm, lalu mulai hari dengan teh jelai yang gurih." },
+    { "time": "Menjelang siang", "title": "Jalan santai, lalu kembali ke perjalanan", "body": "Berjalan pelan di sekitar lingkungan dan lanjutkan perjalanan dengan badan segar." }
+  ],
+  "forTitle": "Cocok untuk",
+  "for": ["Wisatawan yang ingin satu malam benar-benar tenang di tengah perjalanan yang padat", "Siapa pun yang datang ke Seoul untuk wellness dan istirahat ala Korea", "Orang yang ingin malam yang benar-benar beristirahat, bukan sekadar tempat tidur"],
+  "formTitle": "Dapatkan kabar pertama",
+  "formLead": "Tinggalkan email Anda, dan kami kabari begitu lokasi dan tanggal RESTEL STAY ditetapkan. Saat ini belum ada pemesanan atau pembayaran.",
+  "form": { "name": "Nama", "email": "Email", "when": "Kapan rencana datang?", "whenPh": "mis. musim semi 2027, minggu kedua April", "people": "Jumlah orang", "peopleOpts": ["1 orang", "2 orang", "3–4 orang", "5 orang atau lebih"], "lang": "Bahasa untuk kabar", "message": "Pesan lain", "messagePh": "Area yang diinginkan, datang bersama siapa, pertanyaan", "consent": "Saya setuju RESTEL menyimpan email saya untuk mengirim kabar pembukaan.", "submit": "Daftar", "done": "Anda sudah terdaftar. Kami akan mengabari Anda lebih dulu saat RESTEL STAY dibuka.", "error": "Gagal terkirim. Periksa alamat email Anda lalu coba lagi." },
+  "faqTitle": "FAQ RESTEL STAY",
+  "faq": [
+    { "q": "Bisakah saya bermalam di RESTEL Sinchon sekarang?", "a": "Tidak. RESTEL Sinchon adalah ruang istirahat per jam dan setiap sesi berakhir sebelum tengah malam. Istirahat semalam bisa dinikmati setelah RESTEL STAY dibuka." },
+    { "q": "Kapan dan di mana RESTEL STAY dibuka?", "a": "Bertahap, di lokasi yang sudah menyelesaikan pendaftaran usaha penginapan. Yang sudah mendaftar akan lebih dulu mendapat kabar tanggal dan lokasinya." },
+    { "q": "Berapa harganya?", "a": "Belum ditentukan. Kami umumkan bersama kabar pembukaan." },
+    { "q": "Bisakah wisatawan asing memesan?", "a": "Bisa. Seperti situs RESTEL, informasi dan pemesanan RESTEL STAY juga disiapkan dalam banyak bahasa." }
+  ],
+  "todayTitle": "Butuh istirahat hari ini?",
+  "todayBody": "Di RESTEL Sinchon Anda sudah bisa memesan mulai dari tidur siang 60 menit hingga istirahat seharian sampai 8 jam.",
+  "todayCta": "Sesi & harga",
+  "seoTitle": "RESTEL STAY — Semalam Beristirahat ala Korea di Seoul (Segera Hadir)",
+  "seoDescription": "RESTEL STAY memperpanjang cara istirahat RESTEL menjadi semalam: teh, napas terpandu, lantai hangat, dan pagi yang santai. Hanya di lokasi berizin penginapan — daftar untuk kabar pertama.",
+  "keywords": ["RESTEL STAY", "healing di Seoul", "wisata wellness Korea", "istirahat ala Korea", "malam tenang di Seoul", "RESTEL"]
+}

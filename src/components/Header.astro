@@ -13,7 +13,7 @@ const items = [
   { href: '/spaces', label: t.nav.spaces },
   { href: '/sessions', label: t.nav.sessions },
   { href: '/krest', label: t.nav.krest },
-  { href: '/guide', label: t.nav.guide },
+  { href: '/stay', label: t.nav.stay },
   { href: '/journal', label: t.nav.journal },
   { href: '/faq', label: t.nav.faq },
   { href: '/hosts', label: t.nav.hosts },
@@ -43,6 +43,7 @@ const current = localeList.find((l) => l.code === lang)!;
   </div>
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
     {items.map((it) => <a href={L(it.href)}>{it.label}</a>)}
+    <a href={L('/guide')}>{t.nav.guide}</a>
     <a href={L('/book/sinchon')} style="color:var(--coral-dark);font-weight:700">{t.nav.book}</a>
     <a href={L('/my')}>{t.nav.myRequest}</a>
     <a href="/host/login">{t.nav.hostLogin}</a>
@@ -53,5 +54,22 @@ const current = localeList.find((l) => l.code === lang)!;
     var btn = document.getElementById('menu-btn'); var nav = document.getElementById('mobile-nav');
     if (btn && nav) btn.addEventListener('click', function () { var open = nav.classList.toggle('is-open'); btn.setAttribute('aria-expanded', String(open)); });
     document.addEventListener('click', function (e) { document.querySelectorAll('details.lang[open]').forEach(function (d) { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+    // 메뉴 글자가 긴 언어(러시아어·독일어 등)는 넓은 화면에서도 한 줄에 다 들어가지 않을 수 있어, 넘치면 메뉴 버튼으로 접는다
+    var header = document.querySelector('.header'); var inner = header && header.querySelector('.header__inner'); var main = header && header.querySelector('.nav');
+    function tight() {
+      var logo = inner.querySelector('.logo'); var acts = inner.querySelector('.header__actions');
+      var n = main.getBoundingClientRect(); var lg = logo ? logo.getBoundingClientRect() : null; var ac = acts ? acts.getBoundingClientRect() : null;
+      return (lg && n.left - lg.right < 16) || (ac && ac.left - n.right < 16) || inner.scrollWidth > inner.clientWidth + 1;
+    }
+    function fit() {
+      if (!header || !inner || !main) return;
+      header.classList.remove('header--dense', 'header--compact');
+      if (getComputedStyle(main).display === 'none') return;
+      if (!tight()) return;
+      header.classList.add('header--dense'); // 먼저 글자·간격을 줄여 보고
+      if (tight()) header.classList.add('header--compact'); // 그래도 넘치면 메뉴 버튼으로 접는다
+    }
+    fit(); window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   })();
 </script>

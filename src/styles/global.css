@@ -74,13 +74,20 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* 헤더 */
 .header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: saturate(160%) blur(10px); border-bottom: 1px solid var(--line); }
 .header__inner { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
-.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .12em; color: var(--ink); }
+.logo { display: flex; flex-shrink: 0; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .12em; color: var(--ink); }
 .logo img { height: 34px; width: auto; }
 .logo span { font-size: 15px; }
 .nav { display: flex; align-items: center; gap: 4px; }
-.nav a { padding: 8px 12px; border-radius: 999px; font-size: 15px; color: var(--ink-2); }
+.nav a { padding: 8px 12px; border-radius: 999px; font-size: 15px; color: var(--ink-2); white-space: nowrap; }
+.lang__btn, .header__actions .btn { white-space: nowrap; }
+.header--dense .nav a { padding: 8px 8px; font-size: 14px; }
+.header--dense .header__actions .btn--sm { padding-left: 14px; padding-right: 14px; }
+.header--dense .header__inner { gap: 12px; }
+.header--compact .nav { display: none; }
+.header--compact .menu-btn { display: inline-flex; }
+@media (min-width: 700px) { .header--compact .mobile-nav.is-open { display: grid; grid-template-columns: 1fr 1fr; } }
 .nav a:hover, .nav a[aria-current='page'] { background: var(--paper-2); color: var(--ink); }
-.header__actions { display: flex; align-items: center; gap: 10px; }
+.header__actions { display: flex; flex-shrink: 0; align-items: center; gap: 10px; }
 .menu-btn { display: none; background: none; border: 1.5px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
 .lang { position: relative; }
 .lang__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 999px; background: #fff; cursor: pointer; font-size: 14px; }
@@ -92,9 +99,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .mobile-nav { display: none; border-top: 1px solid var(--line); background: #fff; }
 .mobile-nav.is-open { display: block; }
 .mobile-nav a { display: block; padding: 14px 20px; border-bottom: 1px solid var(--line); }
-@media (max-width: 920px) {
+@media (max-width: 1180px) {
   .nav { display: none; }
   .menu-btn { display: inline-flex; }
+}
+@media (max-width: 920px) {
   .header__actions .btn { display: none; }
 }
 
@@ -382,5 +391,35 @@ code { background: var(--paper-2); padding: 2px 6px; border-radius: 6px; font-si
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
 @media (max-width: 600px) { .prose { font-size: 16px; } }
 /* 상단 메뉴 항목이 늘어나 중간 폭 화면에서 줄을 줄인다 */
-@media (max-width: 1240px) and (min-width: 921px) { .nav a { padding: 8px 8px; font-size: 14px; } .header__actions .btn--sm { padding-left: 14px; padding-right: 14px; } }
+@media (max-width: 1360px) and (min-width: 1181px) { .nav a { padding: 8px 8px; font-size: 14px; } .header__actions .btn--sm { padding-left: 14px; padding-right: 14px; } }
 .home-journal .article-card h3 { font-size: 18px; }
+
+/* 12개 언어 메뉴: 두 줄 그리드 */
+.lang__menu { min-width: 340px; display: none; grid-template-columns: 1fr 1fr; gap: 2px; max-height: 75vh; overflow-y: auto; }
+.lang[open] .lang__menu, .lang.is-open .lang__menu { display: grid; }
+@media (max-width: 420px) { .lang__menu { min-width: 260px; grid-template-columns: 1fr; } }
+/* 메뉴 버튼이 보이는 폭에서 모바일 메뉴를 두 줄로 */
+@media (min-width: 700px) and (max-width: 1180px) { .mobile-nav.is-open { display: grid; grid-template-columns: 1fr 1fr; } }
+/* 레스텔 스테이 */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.stay-table th, .stay-table td { padding: 14px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.stay-table thead th { background: var(--paper); font-size: 14px; }
+.stay-table thead th:nth-child(3), .stay-table td:nth-child(3) { color: var(--coral-dark); }
+.stay-table tbody tr:last-child th, .stay-table tbody tr:last-child td { border-bottom: 0; }
+.stay-table tbody th { width: 18%; font-weight: 700; color: var(--ink); }
+/* 좁은 화면에서는 비교표를 항목별 카드처럼 세로로 쌓는다 */
+@media (max-width: 640px) {
+  .stay-table thead { display: none; }
+  .stay-table, .stay-table tbody, .stay-table tr, .stay-table th, .stay-table td { display: block; width: auto; }
+  .stay-table tbody tr { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .stay-table tbody tr:last-child { border-bottom: 0; }
+  .stay-table tbody th, .stay-table td { padding: 0; border: 0; }
+  .stay-table tbody th { width: auto; margin-bottom: 8px; font-size: 15px; }
+  .stay-table td { padding: 6px 0; font-size: 15px; }
+  .stay-table td::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); margin-bottom: 2px; }
+  .stay-table td:nth-child(3)::before { color: var(--coral-dark); }
+}
+.ways .card { display: flex; flex-direction: column; }
+.ways .card .btn { margin-top: auto; align-self: flex-start; }
+.ways .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--sage-soft); color: var(--sage); margin-bottom: 10px; }
+.ways .tag--soon { background: var(--coral-soft); color: var(--coral-dark); }

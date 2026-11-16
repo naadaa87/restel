@@ -1,0 +1,40 @@
+{
+  "kicker": "RESTEL STAY · BIENTÔT",
+  "title": "RESTEL STAY\nUne nuit de repos à la coréenne",
+  "lead": "Certains jours, quelques heures ne suffisent pas. RESTEL STAY prolonge la manière de se reposer de RESTEL sur deux jours et une nuit. Il ouvrira uniquement dans des lieux officiellement enregistrés comme établissements d’accueil de nuit.",
+  "notice": "RESTEL Sinchon, ouvert aujourd’hui, est un espace de repos loué à l’heure : on ne peut pas y passer la nuit. RESTEL STAY ouvrira séparément, dans des lieux enregistrés à cet effet.",
+  "compareTitle": "RESTEL et RESTEL STAY",
+  "compareHead": ["", "RESTEL · disponible", "RESTEL STAY · en préparation"],
+  "compare": [
+    ["Durée", "De 60 minutes à 8 heures, fin avant minuit", "Deux jours, une nuit"],
+    ["Où", "RESTEL Sinchon et espaces partenaires", "Lieux enregistrés pour l’accueil de nuit (en préparation)"],
+    ["Comment se reposer", "Estrade en bois, tapis et plaids, thé, méditation guidée", "Le repos RESTEL, avec une nuit de sommeil et un thé le matin"],
+    ["Réservation", "Envoyez une demande dès maintenant", "Inscrivez-vous pour être prévenu de l’ouverture"]
+  ],
+  "flowTitle": "Une nuit chez RESTEL STAY, telle que nous l’imaginons",
+  "flowNote": "Le programme est en préparation et peut varier selon les lieux.",
+  "flow": [
+    { "time": "Soir", "title": "Un thé pour poser la journée", "body": "Posez vos affaires, buvez un thé chaud et laissez la journée ralentir." },
+    { "time": "Nuit", "title": "Respiration et sol chaud", "body": "Calez votre souffle avec une méditation guidée, puis allongez-vous dans la pièce à la lumière tamisée." },
+    { "time": "Matin", "title": "Thé d’orge et réveil en douceur", "body": "Réveillez-vous avec une lumière qui monte peu à peu plutôt qu’avec une alarme, et commencez la journée par un thé d’orge grillée." },
+    { "time": "Fin de matinée", "title": "Une petite marche, puis la suite du voyage", "body": "Flânez dans le quartier et reprenez la route le corps léger." }
+  ],
+  "forTitle": "Pour qui",
+  "for": ["Les voyageurs qui veulent une nuit vraiment calme au milieu d’un séjour chargé", "Ceux qui viennent à Séoul pour le bien-être et le repos à la coréenne", "Ceux qui veulent une vraie nuit de repos, pas seulement un endroit où dormir"],
+  "formTitle": "Soyez prévenu en premier",
+  "formLead": "Laissez votre e-mail : nous vous écrirons dès que les lieux et les dates de RESTEL STAY seront fixés. Aucune réservation ni aucun paiement pour l’instant.",
+  "form": { "name": "Nom", "email": "E-mail", "when": "Quand pensez-vous venir ?", "whenPh": "ex. printemps 2027, deuxième semaine d’avril", "people": "Nombre de personnes", "peopleOpts": ["1 personne", "2 personnes", "3–4 personnes", "5 ou plus"], "lang": "Langue des nouvelles", "message": "Autre chose ?", "messagePh": "Quartier souhaité, avec qui vous venez, questions", "consent": "J’accepte que RESTEL conserve mon e-mail pour m’envoyer les nouvelles de l’ouverture.", "submit": "M’inscrire", "done": "C’est noté. Vous serez parmi les premiers prévenus à l’ouverture de RESTEL STAY.", "error": "L’envoi a échoué. Vérifiez votre e-mail et réessayez." },
+  "faqTitle": "Questions sur RESTEL STAY",
+  "faq": [
+    { "q": "Puis-je passer la nuit chez RESTEL Sinchon dès maintenant ?", "a": "Non. RESTEL Sinchon se loue à l’heure et chaque session se termine avant minuit. La formule deux jours, une nuit arrivera avec l’ouverture de RESTEL STAY." },
+    { "q": "Quand et où RESTEL STAY ouvrira-t-il ?", "a": "Progressivement, dans les lieux dont l’enregistrement est terminé. Les inscrits connaîtront les dates et les adresses en premier." },
+    { "q": "Combien cela coûtera-t-il ?", "a": "Ce n’est pas encore fixé. Les prix seront annoncés avec l’ouverture." },
+    { "q": "Les visiteurs étrangers pourront-ils réserver ?", "a": "Oui. Comme le site RESTEL, les informations et les réservations RESTEL STAY sont préparées en plusieurs langues." }
+  ],
+  "todayTitle": "Besoin de repos aujourd’hui ?",
+  "todayBody": "Chez RESTEL Sinchon, vous pouvez déjà réserver d’une sieste de 60 minutes à une journée de repos de 8 heures maximum.",
+  "todayCta": "Sessions et tarifs",
+  "seoTitle": "RESTEL STAY — Une nuit de repos à la coréenne à Séoul (bientôt)",
+  "seoDescription": "RESTEL STAY prolonge le repos RESTEL sur une nuit : thé, respiration guidée, sol chaud et matin sans hâte. Uniquement dans des lieux enregistrés pour l’accueil de nuit ; inscrivez-vous pour être prévenu en premier.",
+  "keywords": ["RESTEL STAY", "se reposer à Séoul", "tourisme bien-être Corée", "repos à la coréenne", "nuit calme à Séoul", "RESTEL"]
+}

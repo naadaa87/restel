@@ -10,6 +10,11 @@ const forbidden = [
   /\bcheck[- ]?in\b|\bcheck[- ]?out\b|\bovernight stay\b|\bhotel room\b|\bbed(s)?\b|\bduvet\b|\blodging\b/gi,
   /チェックイン|チェックアウト|客室|宿泊パック|1泊/g,
   /入住|退房|客房|住宿套餐|一晚/g,
+  /\bmenginap\b|kamar hotel|\bcheck-in\b/gi,                       // id
+  /заселени|выселени|номер в отеле|ночлег|ночёвк/gi,                // ru
+  /\bpernoctar|\bpernoctación|habitación de hotel/gi,               // es
+  /\bnuitée|chambre d['’]hôtel|\bhébergement\b/gi,                 // fr
+  /Übernachtung|übernachten|Hotelzimmer|\bUnterkunft\b/gi,          // de
 ];
 // 허용 문맥: 숙박이 아님을 밝히거나 비교·금지 규칙을 설명하는 문장
 const allow = [
@@ -18,6 +23,13 @@ const allow = [
   /ではありません|ではなく|ありません|使いません|禁止|代わり|違い|ない/,
   /不是|並非|并非|不提供|沒有|没有|不用|禁止|取代|不同|而非|無|无/,
   /không|Không|thay cho|thay vì|ไม่|แทน/,
+  /bukan|tidak|tanpa|alih-alih/i,
+  /(^|[^а-яё])(не|нет|без|ни)(?![а-яё])|вместо|нельзя/i,
+  /\bno\b|en lugar|\bsin\b|nunca/i,
+  /\bpas\b|\bne\b|au lieu|\bsans\b|jamais/i,
+  /nicht\b|\bkein|statt|\bohne\b|niemals/i,
+  // 레스텔 스테이는 숙박업 등록 지점 전용의 별도 트랙이라 그 이름이 들어간 문장은 허용
+  /RESTEL STAY|레스텔 스테이/,
 ];
 let hits = 0;
 function scan(file) {

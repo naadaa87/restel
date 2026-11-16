@@ -1,0 +1,58 @@
+{
+  "kicker": "RESTEL STAY · COMING SOON",
+  "title": "RESTEL STAY\nA night of Korean-style rest",
+  "lead": "Some days a few hours isn't enough. RESTEL STAY stretches the RESTEL way of resting into one night and two days. It will open only at locations registered as lodging.",
+  "notice": "RESTEL Sinchon, open now, is an hourly rest space rental, so overnight use isn't available there. RESTEL STAY will open separately at licensed lodging locations.",
+  "compareTitle": "RESTEL and RESTEL STAY",
+  "compareHead": ["", "RESTEL · open now", "RESTEL STAY · coming soon"],
+  "compare": [
+    ["Length", "60 minutes to 8 hours, ending before midnight", "One night, two days"],
+    ["Where", "RESTEL Sinchon and partner rest spaces", "Locations registered as lodging (in preparation)"],
+    ["How you rest", "Floor platform, mats and blankets, tea, guided meditation", "The RESTEL routine, plus a night’s sleep and a morning tea"],
+    ["Booking", "Request a session now", "Join the list for opening news"]
+  ],
+  "flowTitle": "A RESTEL STAY night, as we imagine it",
+  "flowNote": "This is a planned programme and may differ by location.",
+  "flow": [
+    { "time": "Evening", "title": "Put the day down with a cup of tea", "body": "Drop your bags, pour a warm tea and let the pace of the day fall away." },
+    { "time": "Night", "title": "Breathing and a warm floor", "body": "A guided meditation, then lie back in a room with the lights turned low." },
+    { "time": "Morning", "title": "Barley tea and a slow start", "body": "Wake to slowly brightening light instead of an alarm, and begin with a cup of nutty barley tea." },
+    { "time": "Late morning", "title": "A short walk, then back to your trip", "body": "Stroll the neighbourhood and head on, properly rested." }
+  ],
+  "forTitle": "Who it’s for",
+  "for": [
+    "Travellers who want one truly quiet night in the middle of a busy trip",
+    "Anyone coming to Seoul for a Korean wellness break",
+    "People who want a night of real rest, not just somewhere to sleep"
+  ],
+  "formTitle": "Hear about it first",
+  "formLead": "Leave your email and we’ll tell you as soon as locations and dates for RESTEL STAY are set. No booking or payment is taken at this stage.",
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "when": "When are you thinking of coming?",
+    "whenPh": "e.g. spring 2027, second week of April",
+    "people": "Group size",
+    "peopleOpts": ["1 person", "2 people", "3–4 people", "5 or more"],
+    "lang": "Language for updates",
+    "message": "Anything else?",
+    "messagePh": "Area you’d like, who you’re travelling with, questions",
+    "consent": "I agree that RESTEL may keep my email to send opening news.",
+    "submit": "Join the list",
+    "done": "You’re on the list. We’ll tell you first when RESTEL STAY opens.",
+    "error": "We couldn’t send that. Please check your email address and try again."
+  },
+  "faqTitle": "RESTEL STAY FAQ",
+  "faq": [
+    { "q": "Can I stay overnight at RESTEL Sinchon now?", "a": "No. RESTEL Sinchon is an hourly rest space and every session ends before midnight. Overnight rest will be possible once RESTEL STAY opens." },
+    { "q": "When and where will RESTEL STAY open?", "a": "Location by location, as lodging registration is completed. People on the list hear about dates and places first." },
+    { "q": "How much will it cost?", "a": "Prices haven’t been set yet. We’ll share them with the opening announcement." },
+    { "q": "Can international visitors book?", "a": "Yes. Like the RESTEL website, RESTEL STAY information and booking are being prepared in many languages." }
+  ],
+  "todayTitle": "Need rest today?",
+  "todayBody": "At RESTEL Sinchon you can already book anything from a 60-minute nap to a full day of rest of up to 8 hours.",
+  "todayCta": "Sessions & prices",
+  "seoTitle": "RESTEL STAY — A Night of Korean-Style Rest in Seoul (Coming Soon)",
+  "seoDescription": "RESTEL STAY stretches the RESTEL way of resting into one night: tea, guided breathing, a warm floor and a slow morning. Opening only at licensed lodging locations — join the list to hear first.",
+  "keywords": ["RESTEL STAY", "wellness stay Seoul", "healing stay Korea", "Korean-style rest", "quiet night in Seoul", "RESTEL"]
+}

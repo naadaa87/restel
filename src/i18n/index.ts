@@ -6,9 +6,14 @@ import zhTw from './locales/zh-tw.json';
 import zhCn from './locales/zh-cn.json';
 import th from './locales/th.json';
 import vi from './locales/vi.json';
+import id from './locales/id.json';
+import ru from './locales/ru.json';
+import es from './locales/es.json';
+import fr from './locales/fr.json';
+import de from './locales/de.json';
 
 export type Dict = typeof ko;
-const dicts: Record<Locale, any> = { ko, en, ja, 'zh-tw': zhTw, 'zh-cn': zhCn, th, vi };
+const dicts: Record<Locale, any> = { ko, en, ja, 'zh-tw': zhTw, 'zh-cn': zhCn, th, vi, id, ru, es, fr, de };
 
 export { locales, defaultLocale, localeMeta };
 export type { Locale };
@@ -83,6 +88,11 @@ const refRates: Record<Locale, { cur: string; rate: number; fmt: (n: number) => 
   'zh-tw': { cur: 'TWD', rate: 1 / 43, fmt: (n) => `≈ NT$${Math.round(n).toLocaleString('zh-TW')}` },
   'zh-cn': { cur: 'CNY', rate: 1 / 195, fmt: (n) => `≈ ¥${Math.round(n)}` },
   th: { cur: 'THB', rate: 1 / 40, fmt: (n) => `≈ ฿${Math.round(n).toLocaleString('th-TH')}` },
+  id: { cur: 'IDR', rate: 11.6, fmt: (n) => `≈ Rp ${(Math.round(n / 1000) * 1000).toLocaleString('id-ID')}` },
+  ru: { cur: 'RUB', rate: 1 / 17.5, fmt: (n) => `≈ ${Math.round(n).toLocaleString('ru-RU')} ₽` },
+  es: { cur: 'EUR', rate: 1 / 1600, fmt: (n) => `≈ ${Math.round(n)} €` },
+  fr: { cur: 'EUR', rate: 1 / 1600, fmt: (n) => `≈ ${Math.round(n)} €` },
+  de: { cur: 'EUR', rate: 1 / 1600, fmt: (n) => `≈ ${Math.round(n)} €` },
   vi: { cur: 'VND', rate: 18.5, fmt: (n) => `≈ ${Math.round(n / 1000) * 1000} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') },
 };
 export function formatKRW(n: number) {

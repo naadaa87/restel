@@ -15,7 +15,7 @@ faq:
   - q: "Có giống quán cà phê ngủ trưa không?"
     a: "Gần giống nhưng khác. Quán ngủ trưa thường cho nhiều người dùng chung một phòng và tính theo chỗ ngồi. Ở RESTEL bạn thuê trọn không gian cho mình hoặc nhóm của mình."
   - q: "Có ở lại qua đêm được không?"
-    a: "Không. Mọi gói của RESTEL kết thúc trước nửa đêm và không có gói qua đêm."
+    a: "Tại RESTEL Sinchon thì không — mọi gói đều kết thúc trước nửa đêm. Hình thức nghỉ qua đêm đang được chuẩn bị riêng với tên RESTEL STAY và chỉ mở tại cơ sở đã đăng ký kinh doanh lưu trú."
   - q: "Đi một mình có ngại không?"
     a: "Không hề. Vì thuê cả không gian, những ngày muốn yên tĩnh một mình lại là lúc hợp nhất."
 related: ["where-to-rest-in-seoul", "how-to-rest-in-60-minutes", "korean-way-to-rest"]

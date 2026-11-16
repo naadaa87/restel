@@ -56,4 +56,6 @@ const kw = keywords || t.meta.keywords;
 {site.verification.google && <meta name="google-site-verification" content={site.verification.google} />}
 {site.verification.naver && <meta name="naver-site-verification" content={site.verification.naver} />}
 {site.verification.bing && <meta name="msvalidate.01" content={site.verification.bing} />}
+{site.verification.yandex && <meta name="yandex-verification" content={site.verification.yandex} />}
+{site.verification.baidu && <meta name="baidu-site-verification" content={site.verification.baidu} />}
 {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}

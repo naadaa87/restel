@@ -35,7 +35,7 @@ ${items}
 </rss>`;
 }
 
-export const STATIC_PATHS = ['/', '/about', '/sessions', '/spaces', '/krest', '/guide', '/journal', '/faq', '/hosts', '/contact', '/terms', '/privacy', '/refund'];
+export const STATIC_PATHS = ['/', '/about', '/sessions', '/spaces', '/krest', '/stay', '/guide', '/journal', '/faq', '/hosts', '/contact', '/terms', '/privacy', '/refund'];
 
 export type SitemapEntry = { path: string; locales: Locale[]; lastmod: string; changefreq: string; priority: string; image?: string };
 

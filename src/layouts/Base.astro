@@ -37,6 +37,9 @@ const orgLd = {
   email: site.contact.email,
   telephone: site.contact.phone,
   sameAs: [site.contact.instagram, site.contact.kakao].filter(Boolean),
+  // 문의 응대는 한국어·영어, 홈페이지 안내는 12개 언어
+  contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: site.contact.email, availableLanguage: ['ko', 'en'] },
+  knowsLanguage: ['ko', 'en'],
 };
 const websiteLd = {
   '@context': 'https://schema.org',
@@ -89,7 +92,7 @@ const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}
           if (saved && saved !== lang) return; // 이미 선택한 언어가 있으면 제안하지 않음
           var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
           nav = nav.toLowerCase();
-          var map = { ko: 'ko', en: 'en', ja: 'ja', th: 'th', vi: 'vi' };
+          var map = { ko: 'ko', en: 'en', ja: 'ja', th: 'th', vi: 'vi', id: 'id', ms: 'id', ru: 'ru', uk: 'ru', be: 'ru', kk: 'ru', ky: 'ru', uz: 'ru', mn: 'ru', es: 'es', ca: 'es', gl: 'es', fr: 'fr', de: 'de' };
           var target = null;
           if (nav.startsWith('zh')) target = (nav.includes('tw') || nav.includes('hk') || nav.includes('hant') || nav.includes('mo')) ? 'zh-tw' : 'zh-cn';
           else target = map[nav.split('-')[0]] || null;

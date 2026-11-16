@@ -2,8 +2,9 @@
 // 가격은 원(KRW) 단위이며, 기본 인원 가격입니다. 숫자는 운영 데이터에 맞춰 조정하세요.
 import type { Locale } from '@/config/site';
 
-type I18n = Record<Locale, string>;
-type I18nList = Record<Locale, string[]>;
+// ko·en은 필수, 나머지 언어는 없으면 영어로 표시
+type I18n = Partial<Record<Locale, string>> & { ko: string; en: string };
+type I18nList = Partial<Record<Locale, string[]>> & { ko: string[]; en: string[] };
 
 export interface SessionDef {
   code: 'nap60' | 'rest180' | 'dayrest' | 'krest90';
@@ -44,8 +45,8 @@ export const flagships: FlagshipStore[] = [
   {
     slug: 'sinchon',
     type: 'flagship',
-    region: { ko: '서울 신촌', en: 'Sinchon, Seoul', ja: 'ソウル 新村', 'zh-tw': '首爾 新村', 'zh-cn': '首尔 新村', th: 'ชินชน โซล', vi: 'Sinchon, Seoul' },
-    name: { ko: '레스텔 신촌', en: 'RESTEL Sinchon', ja: 'レステル新村', 'zh-tw': 'RESTEL 新村', 'zh-cn': 'RESTEL 新村', th: 'RESTEL ชินชน', vi: 'RESTEL Sinchon' },
+    region: { ko: '서울 신촌', en: 'Sinchon, Seoul', ja: 'ソウル 新村', 'zh-tw': '首爾 新村', 'zh-cn': '首尔 新村', th: 'ชินชน โซล', vi: 'Sinchon, Seoul', id: 'Sinchon, Seoul', ru: 'Синчхон, Сеул', es: 'Sinchon, Seúl', fr: 'Sinchon, Séoul', de: 'Sinchon, Seoul' },
+    name: { ko: '레스텔 신촌', en: 'RESTEL Sinchon', ja: 'レステル新村', 'zh-tw': 'RESTEL 新村', 'zh-cn': 'RESTEL 新村', th: 'RESTEL ชินชน', vi: 'RESTEL Sinchon', id: 'RESTEL Sinchon', ru: 'RESTEL Синчхон', es: 'RESTEL Sinchon', fr: 'RESTEL Sinchon', de: 'RESTEL Sinchon' },
     tagline: {
       ko: '기와 담장선 아래, 신발을 벗고 올라서는 쉼의 단',
       en: 'A wooden rest platform under a line of black roof tiles',
@@ -54,6 +55,11 @@ export const flagships: FlagshipStore[] = [
       'zh-cn': '黑瓦屋脊线下，脱鞋踏上的休息平台',
       th: 'แท่นไม้พักผ่อนใต้แนวกระเบื้องหลังคาสีดำ',
       vi: 'Bục gỗ nghỉ ngơi dưới hàng ngói đen',
+      id: 'Panggung kayu untuk beristirahat di bawah deretan genteng hitam',
+      ru: 'Деревянный помост для отдыха под линией чёрной черепицы',
+      es: 'Una plataforma de madera para descansar bajo una línea de tejas negras',
+      fr: 'Une estrade en bois pour se reposer sous une ligne de tuiles noires',
+      de: 'Ein hölzernes Ruhepodest unter einer Reihe schwarzer Dachziegel',
     },
     description: {
       ko: [
@@ -91,6 +97,31 @@ export const flagships: FlagshipStore[] = [
         'Trên bục có nệm gấp, chăn và gối kiều mạch hoặc cao su — không có giường. Ở giữa là một chiếc bàn để ngồi uống trà yên tĩnh; cạnh cửa sổ là góc trà với máy nước, trà và bánh nhỏ. Qua cửa kính là sân hiên để hít thở và nghe điện thoại.',
         'RESTEL Sinchon là dịch vụ cho thuê không gian nghỉ ngơi, không phải cơ sở lưu trú. Mọi gói kết thúc trước nửa đêm, có bồn rửa nhưng không có vòi sen.',
       ],
+      id: [
+        'Ruang di lantai atas dekat Stasiun Sinchon, dengan jendela panjang yang menghadap kota. Di sepanjang dinding utama ada panggung kayu yang ditinggikan; di atasnya, deretan genteng hitam diterangi cahaya tidak langsung yang lembut, dan ceruk lengkung berbentuk bulan bersinar di tengahnya.',
+        'Di atas panggung tersedia matras lipat, selimut, serta bantal sekam soba atau lateks — tanpa ranjang. Di tengah ada meja untuk duduk tenang sambil minum teh; di dekat jendela, sudut teh dengan dispenser air, teh, dan camilan kecil. Di balik pintu kaca ada teras untuk menghirup udara segar dan menelepon.',
+        'RESTEL Sinchon adalah penyewaan ruang istirahat, bukan akomodasi. Setiap sesi berakhir sebelum tengah malam; ada wastafel, tetapi tidak ada pancuran.',
+      ],
+      ru: [
+        'Помещение на верхнем этаже рядом со станцией Синчхон, с длинным окном на город. Вдоль главной стены тянется приподнятый деревянный помост; над ним линия чёрной черепицы в мягкой рассеянной подсветке, а в центре светится арочная ниша в форме луны.',
+        'На помосте — складные маты, пледы и подушки с гречневой лузгой или из латекса; кроватей нет. В центре стол, за которым можно спокойно посидеть с чаем; у окна чайный уголок с кулером, чаем и сладостями. За стеклянной дверью терраса, где можно подышать воздухом и поговорить по телефону.',
+        'RESTEL Синчхон — это аренда пространства для отдыха, а не место проживания. Каждый сеанс заканчивается до полуночи; есть раковина, но нет душа.',
+      ],
+      es: [
+        'Un espacio en una planta alta cerca de la estación de Sinchon, con un ventanal alargado sobre la ciudad. A lo largo de la pared principal se extiende una plataforma de madera elevada; encima, una línea de tejas negras recibe una luz indirecta suave y en el centro brilla un nicho en arco con forma de luna.',
+        'Sobre la plataforma hay colchonetas plegables, mantas y almohadas de cáscara de trigo sarraceno o de látex; no hay camas. En el centro, una mesa para sentarse tranquilamente con un té; junto a la ventana, un rincón de té con dispensador de agua, tés y dulces. Tras la puerta de cristal, una terraza para tomar el aire y hacer llamadas.',
+        'RESTEL Sinchon es un alquiler de espacio para descansar, no un alojamiento. Todas las sesiones terminan antes de medianoche; hay lavabo, pero no ducha.',
+      ],
+      fr: [
+        'Un espace en étage près de la station Sinchon, avec une longue fenêtre sur la ville. Le long du mur principal court une estrade en bois surélevée ; au-dessus, une ligne de tuiles noires capte une lumière indirecte douce, et une niche en arc en forme de lune brille au centre.',
+        'Sur l’estrade : matelas pliants, couvertures et oreillers en balle de sarrasin ou en latex — pas de lits. Au centre, une table pour s’asseoir au calme autour d’un thé ; près de la fenêtre, un coin thé avec fontaine à eau, thés et petites douceurs. Derrière la porte vitrée, une terrasse pour prendre l’air et passer un appel.',
+        'RESTEL Sinchon est une location d’espace de repos, pas un hébergement. Chaque séance se termine avant minuit ; il y a un lavabo, mais pas de douche.',
+      ],
+      de: [
+        'Ein Raum im oberen Stockwerk nahe der Station Sinchon, mit einem langen Fenster über der Stadt. An der Hauptwand entlang verläuft ein erhöhtes Holzpodest; darüber fängt eine Reihe schwarzer Dachziegel weiches indirektes Licht ein, und in der Mitte leuchtet eine mondförmige Bogennische.',
+        'Auf dem Podest liegen Klappmatten, Decken und Kissen mit Buchweizenschalen oder Latex – Betten gibt es keine. In der Mitte steht ein Tisch, an dem man in Ruhe Tee trinken kann; am Fenster eine Teeecke mit Wasserspender, Tee und kleinen Süßigkeiten. Hinter der Glastür liegt eine Terrasse für frische Luft und Telefonate.',
+        'RESTEL Sinchon ist eine Vermietung von Ruheräumen, keine Unterkunft. Jede Session endet vor Mitternacht; es gibt ein Waschbecken, aber keine Dusche.',
+      ],
     },
     features: {
       ko: ['쉼의 단 (좌식 단상·접이식 매트·담요)', '담장선 (기와 몰딩 간접조명)', '달문 (아치 니치 조명)', '바람마루 (테라스)', '차림 코너 (정수기·차 3종·다식)', '조명 3단계', '사운드 채널·가이드 명상', '세면대 (샤워 없음)'],
@@ -100,6 +131,11 @@ export const flagships: FlagshipStore[] = [
       'zh-cn': ['休息平台 (席地木台・折叠垫・毯子)', '屋脊线 (黑瓦线条间接照明)', '月门 (拱形壁龛灯光)', '风之露台', '茶水角 (饮水机・3 种茶・茶点)', '三档灯光', '声音频道・引导冥想', '洗手台 (无淋浴)'],
       th: ['แท่นพักผ่อน (พื้นยก เบาะพับ ผ้าห่ม)', 'แนวหลังคา (บัวกระเบื้องดำพร้อมแสงอ้อม)', 'ประตูจันทร์ (ซุ้มโค้งมีไฟ)', 'ระเบียงรับลม', 'มุมชา (ตู้กดน้ำ ชา 3 ชนิด ขนม)', 'แสง 3 ระดับ', 'ช่องเสียงและสมาธินำทาง', 'อ่างล้างหน้า (ไม่มีฝักบัว)'],
       vi: ['Bục nghỉ (sàn nâng, nệm gấp, chăn)', 'Hàng ngói (phào ngói đen với đèn gián tiếp)', 'Cổng trăng (hốc vòm có đèn)', 'Sân hiên đón gió', 'Góc trà (máy nước, 3 loại trà, bánh)', 'Ba mức ánh sáng', 'Kênh âm thanh & thiền có hướng dẫn', 'Bồn rửa (không vòi sen)'],
+      id: ['Panggung istirahat (lantai ditinggikan, matras lipat, selimut)', 'Garis atap (list genteng hitam dengan cahaya tidak langsung)', 'Gerbang bulan (ceruk lengkung bercahaya)', 'Teras angin', 'Sudut teh (dispenser air, 3 jenis teh, camilan)', 'Tiga tingkat cahaya', 'Kanal suara & meditasi terpandu', 'Wastafel (tanpa pancuran)'],
+      ru: ['Помост для отдыха (приподнятый пол, складные маты, пледы)', 'Линия кровли (молдинг из чёрной черепицы с подсветкой)', 'Лунные врата (арочная ниша с подсветкой)', 'Терраса ветра', 'Чайный уголок (кулер, 3 вида чая, сладости)', 'Три уровня освещения', 'Звуковые каналы и медитация с гидом', 'Раковина (без душа)'],
+      es: ['Plataforma de descanso (suelo elevado, colchonetas plegables, mantas)', 'Línea de tejado (moldura de tejas negras con luz indirecta)', 'Puerta de la luna (nicho en arco iluminado)', 'Terraza del viento', 'Rincón de té (dispensador de agua, 3 tés, dulces)', 'Tres niveles de luz', 'Canales de sonido y meditación guiada', 'Lavabo (sin ducha)'],
+      fr: ['Estrade de repos (plancher surélevé, matelas pliants, couvertures)', 'Ligne de toit (moulure de tuiles noires, lumière indirecte)', 'Porte de lune (niche en arc éclairée)', 'Terrasse du vent', 'Coin thé (fontaine à eau, 3 thés, douceurs)', 'Trois niveaux de lumière', 'Ambiances sonores et méditation guidée', 'Lavabo (pas de douche)'],
+      de: ['Ruhepodest (erhöhter Boden, Klappmatten, Decken)', 'Dachlinie (Leiste aus schwarzen Ziegeln mit indirektem Licht)', 'Mondtor (beleuchtete Bogennische)', 'Windterrasse', 'Teeecke (Wasserspender, 3 Teesorten, Süßes)', 'Drei Lichtstufen', 'Klangkanäle & geführte Meditation', 'Waschbecken (keine Dusche)'],
     },
     rules: {
       ko: ['운영 07:00~24:00, 세션은 자정 전 종료', '만 19세 이상', '최대 6인 (기본 2인 + 추가 인원)', '통화는 테라스에서, 스피커 음량 3 이하', '간단한 간식만, 조리·음주 불가', '금연 · 반려동물 동반 불가'],
@@ -109,6 +145,11 @@ export const flagships: FlagshipStore[] = [
       'zh-cn': ['营业 07:00–24:00，方案于午夜前结束', '19 岁以上', '最多 6 人 (含 2 人 + 加人)', '通话请至露台，音箱音量 3 以下', '仅限简单零食，禁止烹饪与饮酒', '禁烟 · 不可携带宠物'],
       th: ['เปิด 07:00–24:00 แพ็กเกจจบก่อนเที่ยงคืน', 'อายุ 19 ปีขึ้นไป', 'สูงสุด 6 คน (รวม 2 คน + เพิ่ม)', 'คุยโทรศัพท์ที่ระเบียง เสียงลำโพงไม่เกิน 3', 'ของว่างเบา ๆ เท่านั้น ห้ามทำอาหารและแอลกอฮอล์', 'ห้ามสูบบุหรี่ · ห้ามนำสัตว์เลี้ยง'],
       vi: ['Mở 07:00–24:00; gói kết thúc trước nửa đêm', 'Từ 19 tuổi', 'Tối đa 6 người (gồm 2 + thêm)', 'Nghe điện thoại ở sân hiên; âm lượng loa ≤ 3', 'Chỉ đồ ăn nhẹ; không nấu nướng, không rượu bia', 'Không hút thuốc · không thú cưng'],
+      id: ['Buka 07.00–24.00; sesi berakhir sebelum tengah malam', 'Usia 19+', 'Maks. 6 orang (2 termasuk + tambahan)', 'Telepon di teras; volume speaker maks. 3', 'Hanya camilan ringan; dilarang memasak dan minum alkohol', 'Dilarang merokok · tidak boleh membawa hewan'],
+      ru: ['Открыто 07:00–24:00; сеансы заканчиваются до полуночи', 'С 19 лет', 'До 6 человек (2 включены + доплата)', 'Звонки — на террасе; громкость колонки не выше 3', 'Только лёгкие закуски; без готовки и алкоголя', 'Не курить · без животных'],
+      es: ['Abierto 07:00–24:00; las sesiones terminan antes de medianoche', 'Mayores de 19 años', 'Hasta 6 personas (2 incluidas + extras)', 'Llamadas en la terraza; volumen del altavoz 3 o menos', 'Solo tentempiés ligeros; sin cocinar ni alcohol', 'Prohibido fumar · sin mascotas'],
+      fr: ['Ouvert 07h00–24h00 ; séances terminées avant minuit', 'À partir de 19 ans', 'Jusqu’à 6 personnes (2 incluses + suppléments)', 'Appels sur la terrasse ; volume de l’enceinte 3 maximum', 'Encas légers uniquement ; ni cuisine ni alcool', 'Non-fumeur · animaux non admis'],
+      de: ['Geöffnet 07:00–24:00; Sessions enden vor Mitternacht', 'Ab 19 Jahren', 'Bis zu 6 Personen (2 inklusive + Aufpreis)', 'Telefonate auf der Terrasse; Lautsprecher höchstens Stufe 3', 'Nur kleine Snacks; kein Kochen, kein Alkohol', 'Rauchfrei · keine Haustiere'],
     },
     directions: {
       ko: ['지하철 2호선 신촌역에서 도보 약 5분', '건물 공동 현관 비밀번호와 층수는 예약 확정 안내에 포함됩니다', '주차는 제공하지 않습니다. 인근 공영주차장을 이용해 주세요'],
@@ -118,16 +159,21 @@ export const flagships: FlagshipStore[] = [
       'zh-cn': ['地铁 2 号线新村站步行约 5 分钟', '大楼公用门禁密码与楼层会写在确认信息中', '不提供停车，请使用附近公共停车场'],
       th: ['เดินประมาณ 5 นาทีจากสถานีชินชน (สาย 2)', 'รหัสประตูอาคารและชั้นจะระบุในข้อความยืนยัน', 'ไม่มีที่จอดรถ กรุณาใช้ลานจอดสาธารณะใกล้เคียง'],
       vi: ['Khoảng 5 phút đi bộ từ ga Sinchon (tuyến 2)', 'Mã cửa tòa nhà và tầng được ghi trong tin nhắn xác nhận', 'Không có bãi đỗ xe; vui lòng dùng bãi công cộng gần đó'],
+      id: ['Sekitar 5 menit jalan kaki dari Stasiun Sinchon (Jalur 2)', 'Kode pintu gedung dan lantainya tercantum dalam konfirmasi Anda', 'Tidak ada parkir; silakan gunakan parkir umum terdekat'],
+      ru: ['Около 5 минут пешком от станции Синчхон (линия 2)', 'Код входа в здание и этаж указаны в подтверждении', 'Парковки нет; пользуйтесь ближайшими общественными парковками'],
+      es: ['A unos 5 minutos a pie de la estación de Sinchon (línea 2)', 'El código de entrada del edificio y la planta vienen en tu confirmación', 'Sin aparcamiento; usa los aparcamientos públicos cercanos'],
+      fr: ['À environ 5 minutes à pied de la station Sinchon (ligne 2)', 'Le code d’entrée de l’immeuble et l’étage figurent dans votre confirmation', 'Pas de parking ; merci d’utiliser les parkings publics à proximité'],
+      de: ['Etwa 5 Gehminuten von der Station Sinchon (Linie 2)', 'Eingangscode des Gebäudes und Stockwerk stehen in Ihrer Bestätigung', 'Keine Parkplätze; bitte öffentliche Parkhäuser in der Nähe nutzen'],
     },
-    address: { ko: '서울특별시 서대문구 신촌 (상세 주소는 확정 안내에 포함)', en: 'Sinchon, Seodaemun-gu, Seoul (full address in your confirmation)', ja: 'ソウル特別市 西大門区 新村(詳細住所は確定案内に記載)', 'zh-tw': '首爾特別市西大門區新村 (詳細地址見確認訊息)', 'zh-cn': '首尔特别市西大门区新村 (详细地址见确认信息)', th: 'ชินชน เขตซอแดมุน โซล (ที่อยู่เต็มในข้อความยืนยัน)', vi: 'Sinchon, quận Seodaemun, Seoul (địa chỉ đầy đủ trong tin xác nhận)' },
+    address: { ko: '서울특별시 서대문구 신촌 (상세 주소는 확정 안내에 포함)', en: 'Sinchon, Seodaemun-gu, Seoul (full address in your confirmation)', ja: 'ソウル特別市 西大門区 新村(詳細住所は確定案内に記載)', 'zh-tw': '首爾特別市西大門區新村 (詳細地址見確認訊息)', 'zh-cn': '首尔特别市西大门区新村 (详细地址见确认信息)', th: 'ชินชน เขตซอแดมุน โซล (ที่อยู่เต็มในข้อความยืนยัน)', vi: 'Sinchon, quận Seodaemun, Seoul (địa chỉ đầy đủ trong tin xác nhận)', id: 'Sinchon, Seodaemun-gu, Seoul (alamat lengkap ada di konfirmasi Anda)', ru: 'Синчхон, район Содэмун-гу, Сеул (полный адрес — в подтверждении)', es: 'Sinchon, Seodaemun-gu, Seúl (dirección completa en tu confirmación)', fr: 'Sinchon, Seodaemun-gu, Séoul (adresse complète dans votre confirmation)', de: 'Sinchon, Seodaemun-gu, Seoul (vollständige Adresse in Ihrer Bestätigung)' },
     lat: 37.5559,
     lng: 126.9368,
     photos: [
-      { src: '/images/sinchon/hall.webp', sm: '/images/sinchon/hall-sm.webp', alt: { ko: '레스텔 신촌 전체 공간 — 테이블과 좌식 단상', en: 'RESTEL Sinchon — main room with table and rest platform', ja: 'レステル新村 全体 — テーブルと小上がり', 'zh-tw': 'RESTEL 新村整體空間 — 桌子與休息平台', 'zh-cn': 'RESTEL 新村整体空间 — 桌子与休息平台', th: 'RESTEL ชินชน — ห้องหลักพร้อมโต๊ะและแท่นพัก', vi: 'RESTEL Sinchon — phòng chính với bàn và bục nghỉ' } },
-      { src: '/images/sinchon/mats.webp', sm: '/images/sinchon/mats-sm.webp', alt: { ko: '좌식 단상 위 매트와 달문 조명', en: 'Mats on the platform and the lit moon-gate niche', ja: '小上がりのマットと月の門の照明', 'zh-tw': '平台上的墊子與月門燈光', 'zh-cn': '平台上的垫子与月门灯光', th: 'เบาะบนแท่นและซุ้มประตูจันทร์ที่มีไฟ', vi: 'Nệm trên bục và hốc cổng trăng có đèn' } },
-      { src: '/images/sinchon/terrace.webp', sm: '/images/sinchon/terrace-sm.webp', alt: { ko: '바람마루 테라스 야간', en: 'The terrace at night', ja: '夜のテラス', 'zh-tw': '夜晚的露台', 'zh-cn': '夜晚的露台', th: 'ระเบียงยามค่ำคืน', vi: 'Sân hiên về đêm' } },
-      { src: '/images/sinchon/amenities.webp', sm: '/images/sinchon/amenities-sm.webp', alt: { ko: '차림 코너와 가전', en: 'Tea corner and amenities', ja: 'ティーコーナーと家電', 'zh-tw': '茶水角與設備', 'zh-cn': '茶水角与设备', th: 'มุมชาและสิ่งอำนวยความสะดวก', vi: 'Góc trà và tiện nghi' } },
-      { src: '/images/sinchon/family.webp', sm: '/images/sinchon/family-sm.webp', alt: { ko: '좌식 단상에서 함께 쉬는 장면 (연출)', en: 'Resting together on the platform (staged)', ja: '小上がりで一緒に休む様子(演出)', 'zh-tw': '在平台上一起休息 (情境示意)', 'zh-cn': '在平台上一起休息 (情境示意)', th: 'พักผ่อนด้วยกันบนแท่น (จัดฉาก)', vi: 'Cùng nghỉ trên bục (dàn dựng)' } },
+      { src: '/images/sinchon/hall.webp', sm: '/images/sinchon/hall-sm.webp', alt: { ko: '레스텔 신촌 전체 공간 — 테이블과 좌식 단상', en: 'RESTEL Sinchon — main room with table and rest platform', ja: 'レステル新村 全体 — テーブルと小上がり', 'zh-tw': 'RESTEL 新村整體空間 — 桌子與休息平台', 'zh-cn': 'RESTEL 新村整体空间 — 桌子与休息平台', th: 'RESTEL ชินชน — ห้องหลักพร้อมโต๊ะและแท่นพัก', vi: 'RESTEL Sinchon — phòng chính với bàn và bục nghỉ', id: 'RESTEL Sinchon — ruang utama dengan meja dan panggung istirahat', ru: 'RESTEL Синчхон — главный зал со столом и помостом для отдыха', es: 'RESTEL Sinchon — sala principal con mesa y plataforma de descanso', fr: 'RESTEL Sinchon — pièce principale avec table et estrade de repos', de: 'RESTEL Sinchon — Hauptraum mit Tisch und Ruhepodest' } },
+      { src: '/images/sinchon/mats.webp', sm: '/images/sinchon/mats-sm.webp', alt: { ko: '좌식 단상 위 매트와 달문 조명', en: 'Mats on the platform and the lit moon-gate niche', ja: '小上がりのマットと月の門の照明', 'zh-tw': '平台上的墊子與月門燈光', 'zh-cn': '平台上的垫子与月门灯光', th: 'เบาะบนแท่นและซุ้มประตูจันทร์ที่มีไฟ', vi: 'Nệm trên bục và hốc cổng trăng có đèn', id: 'Matras di panggung dan ceruk gerbang bulan yang bercahaya', ru: 'Маты на помосте и подсвеченная ниша «лунные врата»', es: 'Colchonetas en la plataforma y el nicho iluminado de la puerta de la luna', fr: 'Matelas sur l’estrade et niche éclairée en porte de lune', de: 'Matten auf dem Podest und die beleuchtete Mondtor-Nische' } },
+      { src: '/images/sinchon/terrace.webp', sm: '/images/sinchon/terrace-sm.webp', alt: { ko: '바람마루 테라스 야간', en: 'The terrace at night', ja: '夜のテラス', 'zh-tw': '夜晚的露台', 'zh-cn': '夜晚的露台', th: 'ระเบียงยามค่ำคืน', vi: 'Sân hiên về đêm', id: 'Teras di malam hari', ru: 'Терраса вечером', es: 'La terraza de noche', fr: 'La terrasse de nuit', de: 'Die Terrasse bei Nacht' } },
+      { src: '/images/sinchon/amenities.webp', sm: '/images/sinchon/amenities-sm.webp', alt: { ko: '차림 코너와 가전', en: 'Tea corner and amenities', ja: 'ティーコーナーと家電', 'zh-tw': '茶水角與設備', 'zh-cn': '茶水角与设备', th: 'มุมชาและสิ่งอำนวยความสะดวก', vi: 'Góc trà và tiện nghi', id: 'Sudut teh dan perlengkapan', ru: 'Чайный уголок и удобства', es: 'Rincón de té y comodidades', fr: 'Coin thé et équipements', de: 'Teeecke und Ausstattung' } },
+      { src: '/images/sinchon/family.webp', sm: '/images/sinchon/family-sm.webp', alt: { ko: '좌식 단상에서 함께 쉬는 장면 (연출)', en: 'Resting together on the platform (staged)', ja: '小上がりで一緒に休む様子(演出)', 'zh-tw': '在平台上一起休息 (情境示意)', 'zh-cn': '在平台上一起休息 (情境示意)', th: 'พักผ่อนด้วยกันบนแท่น (จัดฉาก)', vi: 'Cùng nghỉ trên bục (dàn dựng)', id: 'Beristirahat bersama di panggung (ilustrasi)', ru: 'Отдых вместе на помосте (постановочное фото)', es: 'Descansando juntos en la plataforma (escena preparada)', fr: 'Se reposer ensemble sur l’estrade (mise en scène)', de: 'Gemeinsam auf dem Podest ausruhen (gestellt)' } },
     ],
     sessions: [
       { code: 'nap60', durationMin: 60, priceWeekday: 18000, priceWeekend: 20000, basePeople: 2, maxPeople: 6, extraPersonPrice: 6000, startWindow: '07:00–22:30' },

@@ -19,6 +19,8 @@ export const GET: APIRoute = () =>
       '',
       `Sitemap: ${site.url}/sitemap.xml`,
       '',
+      // Daum 웹마스터도구 소유 확인 줄 (site.ts의 verification.daum)
+      ...(site.verification.daum ? [site.verification.daum, ''] : []),
     ].join('\n'),
     { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
   );

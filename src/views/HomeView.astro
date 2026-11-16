@@ -22,7 +22,7 @@ const faqLd = {
 const bizLd = {
   '@context': 'https://schema.org', '@type': 'LocalBusiness', '@id': site.url + '/spaces/sinchon',
   name: flagship.name, image: site.url + flagship.photos[0].src, url: site.url + L('/spaces/sinchon'),
-  description: flagship.tagline, telephone: site.contact.phone, email: site.contact.email, priceRange: '₩₩',
+  description: flagship.tagline, knowsLanguage: ['ko', 'en'], telephone: site.contact.phone, email: site.contact.email, priceRange: '₩₩',
   address: { '@type': 'PostalAddress', addressLocality: 'Seodaemun-gu', addressRegion: 'Seoul', addressCountry: 'KR' },
   geo: { '@type': 'GeoCoordinates', latitude: flagship.lat, longitude: flagship.lng },
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '07:00', closes: '23:59' }],
@@ -44,6 +44,23 @@ const bizLd = {
       <div class="hero__visual">
         <img class="photo" src={flagship.photos[1].src} alt={flagship.photos[1].alt} width="1400" height="1050" fetchpriority="high" />
         <img class="hero__mascot" src="/brand/mascot.webp" alt="" width="150" height="198" aria-hidden="true" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight ways">
+    <div class="container">
+      <h2 class="h2 center">{t.home.waysTitle}</h2>
+      <p class="sub center" style="margin-bottom:24px">{t.home.waysSub}</p>
+      <div class="grid grid--3">
+        {t.home.ways.map((w: any) => (
+          <div class="card">
+            <span class={w.soon ? 'tag tag--soon' : 'tag'}>{w.tag}</span>
+            <h3 class="h3" style="margin-bottom:6px">{w.title}</h3>
+            <p class="muted" style="margin:0 0 16px">{w.body}</p>
+            <a class={w.soon ? 'btn btn--primary btn--sm' : 'btn btn--ghost btn--sm'} href={L(w.href)}>{w.cta}</a>
+          </div>
+        ))}
       </div>
     </div>
   </section>

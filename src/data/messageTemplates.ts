@@ -1,4 +1,4 @@
-// 호스트가 고객에게 보내는 안내 메시지 템플릿 (7개 언어)
+// 호스트가 고객에게 보내는 안내 메시지 템플릿 (12개 언어)
 // 자리표시자: {name} {code} {space} {date} {time} {people} {amount} {method} {bank} {holder} {account} {deadline} {entry} {address} {host} {phone} {link}
 // 숙박 어휘를 쓰지 않는다 — "입장/도착", "세션", "휴식 공간"으로 표현한다.
 
@@ -68,6 +68,51 @@ export const messageTemplates: Record<string, Record<TemplateKey, string>> = {
     cancel: 'Chào {name}, phiên {space} vào {date} lúc {time} đã bị hủy. Nếu đã thanh toán, khoản tiền sẽ được xử lý theo chính sách hoàn tiền. Mã yêu cầu {code}',
     thanks: 'Chào {name}, cảm ơn bạn đã nghỉ ngơi tại {space} hôm nay. Hãy quay lại bất cứ khi nào bạn cần một khoảng lặng. Mọi góp ý xin để lại tại đây.',
   },
+  id: {
+    confirm: 'Halo {name}, sesi Anda di {space} sudah dikonfirmasi.\nWaktu: {date} {time} (waktu Korea) · {people} orang\nJumlah: {amount}\nInfo pembayaran akan segera menyusul. Pantau permintaan Anda di {link}.',
+    payment: 'Halo {name}, berikut info pembayaran untuk sesi {space}.\nJumlah: {amount}\nMetode: {method}\n{bank} {account} (a.n. {holder})\nMohon bayar sebelum {deadline}. Setelah pembayaran kami terima, petunjuk masuk akan dikirim. Permintaan {code}',
+    entry: 'Halo {name}, petunjuk masuk untuk sesi {date} {time}.\nAlamat: {address}\n{entry}\nAnda bisa masuk 10 menit sebelum sesi dan mohon keluar tepat di jam selesai. RESTEL adalah ruang istirahat untuk tamu usia 19+. Pertanyaan: {phone}',
+    reminder: 'Halo {name}, pengingat bahwa sesi {space} Anda besok, {date} pukul {time}. Balas pesan ini jika ada perubahan. Selamat beristirahat.',
+    decline: 'Halo {name}, mohon maaf sesi {space} pada {date} pukul {time} tidak bisa kami terima. Kirimkan tanggal atau jam lain dan kami cek lagi. Permintaan {code}',
+    cancel: 'Halo {name}, sesi {space} pada {date} pukul {time} telah dibatalkan. Pembayaran, jika ada, diproses sesuai kebijakan pengembalian dana. Permintaan {code}',
+    thanks: 'Halo {name}, terima kasih sudah beristirahat bersama kami di {space} hari ini. Datang lagi kapan pun Anda butuh jeda. Masukan Anda boleh dikirim di sini.',
+  },
+  ru: {
+    confirm: 'Здравствуйте, {name}! Ваша сессия в {space} подтверждена.\nКогда: {date} {time} (по корейскому времени) · {people} чел.\nСумма: {amount}\nДетали оплаты пришлём следом. Статус запроса: {link}',
+    payment: 'Здравствуйте, {name}! Детали оплаты сессии в {space}.\nСумма: {amount}\nСпособ: {method}\n{bank} {account} (получатель {holder})\nОплатите, пожалуйста, до {deadline}. После поступления оплаты пришлём инструкцию по входу. Запрос {code}',
+    entry: 'Здравствуйте, {name}! Инструкция по входу на сессию {date} {time}.\nАдрес: {address}\n{entry}\nВойти можно за 10 минут до начала, а уйти нужно ко времени окончания. RESTEL — пространство для отдыха для гостей от 19 лет. Вопросы: {phone}',
+    reminder: 'Здравствуйте, {name}! Напоминаем: ваша сессия в {space} завтра, {date} в {time}. Если что-то изменится, ответьте на это сообщение. Хорошего отдыха.',
+    decline: 'Здравствуйте, {name}! К сожалению, мы не можем принять сессию в {space} {date} в {time}. Предложите другую дату или время, и мы проверим ещё раз. Запрос {code}',
+    cancel: 'Здравствуйте, {name}! Сессия в {space} {date} в {time} отменена. Если оплата уже была, возврат пройдёт по правилам возврата. Запрос {code}',
+    thanks: 'Здравствуйте, {name}! Спасибо, что отдохнули у нас в {space} сегодня. Приходите снова, когда понадобится пауза. Отзывы можно оставить здесь.',
+  },
+  es: {
+    confirm: 'Hola, {name}: tu sesión en {space} está confirmada.\nCuándo: {date} {time} (hora de Corea) · {people} personas\nImporte: {amount}\nEn breve te enviamos los datos de pago. Puedes seguir tu solicitud en {link}.',
+    payment: 'Hola, {name}: estos son los datos de pago de tu sesión en {space}.\nImporte: {amount}\nMétodo: {method}\n{bank} {account} (titular: {holder})\nPor favor, paga antes de {deadline}. Cuando recibamos el pago te enviaremos las instrucciones de acceso. Solicitud {code}',
+    entry: 'Hola, {name}: instrucciones de acceso para el {date} a las {time}.\nDirección: {address}\n{entry}\nPuedes entrar 10 minutos antes de la sesión y te pedimos salir a la hora de fin. RESTEL es un espacio de descanso para mayores de 19 años. Dudas: {phone}',
+    reminder: 'Hola, {name}: te recordamos que tu sesión en {space} es mañana, {date} a las {time}. Si algo cambia, responde a este mensaje. Que descanses.',
+    decline: 'Hola, {name}: lo sentimos, no podemos acoger tu sesión en {space} el {date} a las {time}. Envíanos otra fecha u hora y lo revisamos. Solicitud {code}',
+    cancel: 'Hola, {name}: tu sesión en {space} del {date} a las {time} se ha cancelado. Si hubo pago, se gestiona según la política de reembolso. Solicitud {code}',
+    thanks: 'Hola, {name}: gracias por descansar hoy con nosotros en {space}. Vuelve cuando necesites una pausa. Puedes dejarnos tu opinión aquí.',
+  },
+  fr: {
+    confirm: 'Bonjour {name}, votre session chez {space} est confirmée.\nQuand : {date} {time} (heure coréenne) · {people} personnes\nMontant : {amount}\nLes détails de paiement suivent. Suivez votre demande ici : {link}',
+    payment: 'Bonjour {name}, voici les détails de paiement de votre session chez {space}.\nMontant : {amount}\nMoyen : {method}\n{bank} {account} (titulaire : {holder})\nMerci de régler avant {deadline}. Dès réception, nous vous enverrons les instructions d’accès. Demande {code}',
+    entry: 'Bonjour {name}, voici les instructions d’accès pour le {date} à {time}.\nAdresse : {address}\n{entry}\nVous pouvez entrer 10 minutes avant la session ; merci de partir à l’heure de fin. RESTEL est un espace de repos réservé aux 19 ans et plus. Questions : {phone}',
+    reminder: 'Bonjour {name}, petit rappel : votre session chez {space} a lieu demain, le {date} à {time}. Répondez à ce message en cas de changement. Bon repos.',
+    decline: 'Bonjour {name}, nous ne pouvons malheureusement pas accueillir votre session chez {space} le {date} à {time}. Proposez-nous une autre date ou heure et nous vérifierons. Demande {code}',
+    cancel: 'Bonjour {name}, votre session chez {space} du {date} à {time} est annulée. Un éventuel paiement est traité selon la politique de remboursement. Demande {code}',
+    thanks: 'Bonjour {name}, merci d’être venu vous reposer chez {space} aujourd’hui. Revenez quand vous aurez besoin d’une pause. Vos remarques sont les bienvenues ici.',
+  },
+  de: {
+    confirm: 'Hallo {name}, Ihre Session im {space} ist bestätigt.\nWann: {date} {time} (koreanische Zeit) · {people} Personen\nBetrag: {amount}\nDie Zahlungsdetails folgen gleich. Ihre Anfrage verfolgen Sie unter {link}.',
+    payment: 'Hallo {name}, hier die Zahlungsdetails für Ihre Session im {space}.\nBetrag: {amount}\nZahlungsart: {method}\n{bank} {account} (Inhaber: {holder})\nBitte zahlen Sie bis {deadline}. Nach Zahlungseingang schicken wir Ihnen die Zugangsinfos. Anfrage {code}',
+    entry: 'Hallo {name}, hier die Zugangsinfos für {date} {time}.\nAdresse: {address}\n{entry}\nSie können 10 Minuten vor Beginn eintreten; bitte verlassen Sie den Raum zur Endzeit. RESTEL ist ein Ruheraum für Gäste ab 19 Jahren. Fragen: {phone}',
+    reminder: 'Hallo {name}, zur Erinnerung: Ihre Session im {space} ist morgen, {date} um {time}. Antworten Sie hier, falls sich etwas ändert. Gute Erholung.',
+    decline: 'Hallo {name}, leider können wir Ihre Session im {space} am {date} um {time} nicht annehmen. Nennen Sie uns ein anderes Datum oder eine andere Zeit, dann prüfen wir erneut. Anfrage {code}',
+    cancel: 'Hallo {name}, Ihre Session im {space} am {date} um {time} wurde storniert. Eine bereits geleistete Zahlung wird nach den Erstattungsregeln behandelt. Anfrage {code}',
+    thanks: 'Hallo {name}, danke, dass Sie heute bei uns im {space} ausgeruht haben. Kommen Sie wieder, wenn Sie eine Pause brauchen. Feedback gern hier.',
+  },
 };
 
 export const methodLabels: Record<string, Record<string, string>> = {
@@ -78,6 +123,11 @@ export const methodLabels: Record<string, Record<string, string>> = {
   'zh-cn': { transfer: '银行转账', onsite: '现场付款', card: '信用卡' },
   th: { transfer: 'โอนเงินผ่านธนาคาร', onsite: 'ชำระที่สถานที่', card: 'บัตรเครดิต' },
   vi: { transfer: 'Chuyển khoản', onsite: 'Thanh toán tại chỗ', card: 'Thẻ' },
+  id: { transfer: 'Transfer bank', onsite: 'Bayar di tempat', card: 'Kartu' },
+  ru: { transfer: 'Банковский перевод', onsite: 'Оплата на месте', card: 'Карта' },
+  es: { transfer: 'Transferencia bancaria', onsite: 'Pago en el local', card: 'Tarjeta' },
+  fr: { transfer: 'Virement bancaire', onsite: 'Paiement sur place', card: 'Carte' },
+  de: { transfer: 'Banküberweisung', onsite: 'Zahlung vor Ort', card: 'Karte' },
 };
 
 export function templateFor(lang: string, key: TemplateKey) {
