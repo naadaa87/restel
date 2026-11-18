@@ -4,11 +4,13 @@ import Portal from '@/layouts/Portal.astro';
 import { db, adminStats, listAllBookings, listHosts, listAllSpaces } from '@/lib/db';
 import { flash, STATUS_KO } from '@/lib/portal';
 import { fmtDate } from '@/lib/text';
+import { kpiSnapshot, fmtNum } from '@/lib/analytics';
 
 const me = (Astro.locals as any).admin;
 const d = await db(Astro.locals);
 const { msg, err } = flash(Astro.url);
 const stats = d ? await adminStats(d) : null;
+const kpi = d ? await kpiSnapshot(d).catch(() => null) : null;
 const recent = d ? (await listAllBookings(d)).slice(0, 8) : [];
 const pendingHosts = d ? (await listHosts(d)).filter((h) => h.status === 'pending').slice(0, 5) : [];
 const submitted = d ? (await listAllSpaces(d)).filter((s) => s.status === 'submitted').slice(0, 5) : [];
@@ -21,6 +23,17 @@ if (!(Astro.locals as any).runtime?.env?.MEDIA) warnings.push('R2(MEDIA)가 연�
   <h1>총괄 관리자 대시보드</h1>
   {!d && <div class="alert alert--error">D1 데이터베이스가 연결되지 않았습니다. wrangler.jsonc 의 d1_databases 바인딩과 배포 로그를 확인해 주세요.</div>}
   {warnings.map((w) => <div class="alert alert--info" style="margin-bottom:10px">{w}</div>)}
+  {kpi && (
+    <>
+      <div class="toolbar" style="margin:16px 0 10px"><h2 class="h3" style="margin:0">홈페이지 방문</h2><a class="small" href="/admin/analytics">KPI 자세히 →</a></div>
+      <div class="dash-kpi">
+        <a class="stat" href="/admin/analytics?range=today"><b>{fmtNum(kpi.todayVisitors)}</b><span>오늘 방문자 (페이지뷰 {fmtNum(kpi.todayPv)})</span></a>
+        <a class="stat" href="/admin/analytics?range=7d"><b>{fmtNum(kpi.weekVisitors)}</b><span>최근 7일 방문자</span></a>
+        <a class="stat" href="/admin/analytics?range=7d"><b>{fmtNum(kpi.weekPv)}</b><span>최근 7일 페이지뷰 (방문 {fmtNum(kpi.weekSessions)})</span></a>
+        <a class="stat" href="/admin/analytics?range=7d"><b>{fmtNum(kpi.weekConv)}</b><span>최근 7일 전환 (예약 요청·문의·스테이 알림)</span></a>
+      </div>
+    </>
+  )}
   {stats && (
     <div class="grid grid--4" style="margin:16px 0 22px">
       <a class="stat" href="/admin/hosts"><b>{stats.hostsPending}</b><span>승인 대기 호스트 (승인됨 {stats.hostsApproved})</span></a>

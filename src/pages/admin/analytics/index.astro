@@ -1,0 +1,428 @@
+---
+export const prerender = false;
+import Portal from '@/layouts/Portal.astro';
+import ColumnChart from '@/components/admin/ColumnChart.astro';
+import { db, getSettings, setSetting, audit } from '@/lib/db';
+import { sameOrigin } from '@/lib/auth';
+import { flash } from '@/lib/portal';
+import {
+  resolveRange, kpiReport, realtime, monthProgress, addDays, SECTION_KO, KIND_KO, DEVICE_KO,
+  countryName, flag, langName, fmtDur, fmtNum, fmtPct,
+} from '@/lib/analytics';
+
+const me = (Astro.locals as any).admin;
+const d = await db(Astro.locals);
+
+// 이번 달 목표 저장
+if (Astro.request.method === 'POST' && d) {
+  if (!sameOrigin(Astro.request)) return Astro.redirect('/admin/analytics?err=' + encodeURIComponent('잘못된 요청입니다.'), 303);
+  const fd = await Astro.request.formData();
+  const num = (k: string) => Math.max(0, Math.round(Number(String(fd.get(k) || '0').replace(/[^\d.]/g, '')) || 0));
+  const targets = { visitors: num('visitors'), bookings: num('bookings'), cvr: Math.min(100, Number(String(fd.get('cvr') || '0').replace(/[^\d.]/g, '')) || 0) };
+  await setSetting(d, 'kpi_targets', JSON.stringify(targets));
+  await audit(d, me?.email || 'admin', 'KPI 목표 변경', 'kpi', JSON.stringify(targets));
+  return Astro.redirect('/admin/analytics?' + new URLSearchParams({ range: String(fd.get('range') || '7d'), msg: '이번 달 목표를 저장했습니다.' }), 303);
+}
+
+const { msg, err } = flash(Astro.url);
+const R = resolveRange(Astro.url.searchParams);
+let rep: Awaited<ReturnType<typeof kpiReport>> | null = null, live: Awaited<ReturnType<typeof realtime>> | null = null, month: Awaited<ReturnType<typeof monthProgress>> | null = null;
+let loadErr = '';
+let targets = { visitors: 0, bookings: 0, cvr: 0 };
+if (d) {
+  try { [rep, live, month] = await Promise.all([kpiReport(d, R), realtime(d), monthProgress(d)]); }
+  catch (e: any) { loadErr = String(e?.message || e); }
+  try { targets = { ...targets, ...JSON.parse((await getSettings(d)).kpi_targets || '{}') }; } catch {}
+}
+
+// ---------- 표시 도우미 ----------
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const dayLabel = (s: string) => `${+s.slice(5, 7)}.${+s.slice(8, 10)} (${WD[new Date(s + 'T00:00:00Z').getUTCDay()]})`;
+function delta(cur: number, prev: number, opt: { goodUp?: boolean; rate?: boolean } = {}) {
+  const goodUp = opt.goodUp ?? true;
+  if (!prev && !cur) return { text: '변화 없음', cls: 'flat' };
+  if (opt.rate) {
+    const diff = (cur - prev) * 100;
+    if (Math.abs(diff) < 0.05) return { text: '변화 없음', cls: 'flat' };
+    return { text: `${diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(1)}%p`, cls: (diff > 0) === goodUp ? 'good' : 'bad' };
+  }
+  if (!prev) return { text: '직전 기간 기록 없음', cls: 'flat' };
+  const ch = (cur - prev) / prev * 100;
+  if (Math.abs(ch) < 0.5) return { text: '변화 없음', cls: 'flat' };
+  return { text: `${ch > 0 ? '▲' : '▼'} ${Math.abs(ch).toFixed(ch > -10 && ch < 10 ? 1 : 0)}%`, cls: (ch > 0) === goodUp ? 'good' : 'bad' };
+}
+const cleanTitle = (t: string) => String(t || '').split(/ \| | — /)[0].trim();
+const share = (v: number, total: number) => (total ? v / total : 0);
+const sum = (rows: any[], k: string) => rows.reduce((a, r) => a + (r[k] || 0), 0);
+const qs = (o: Record<string, string>) => '?' + new URLSearchParams(o).toString();
+const ranges = [['today', '오늘'], ['yesterday', '어제'], ['7d', '7일'], ['30d', '30일'], ['90d', '90일'], ['month', '이번 달']];
+
+let tiles: { label: string; value: string; d: { text: string; cls: string }; help: string }[] = [];
+let series: Record<string, { label: string; value: number; display: string; short?: string }[]> = {};
+let hours: any[] = [], dows: any[] = [];
+if (rep) {
+  const c = rep.cur, p = rep.prev;
+  tiles = [
+    { label: '방문자', value: fmtNum(c.visitors), d: delta(c.visitors, p.visitors), help: '하루 단위 순방문자의 합' },
+    { label: '방문 수(세션)', value: fmtNum(c.sessions), d: delta(c.sessions, p.sessions), help: '30분 넘게 움직임이 없으면 새 방문' },
+    { label: '페이지뷰', value: fmtNum(c.pv), d: delta(c.pv, p.pv), help: '페이지를 연 횟수' },
+    { label: '방문당 페이지', value: c.pagesPerSession.toFixed(2), d: delta(c.pagesPerSession, p.pagesPerSession), help: '한 번 방문에서 본 페이지 수' },
+    { label: '평균 방문 시간', value: fmtDur(c.avgSession), d: delta(c.avgSession, p.avgSession), help: '화면을 실제로 보고 있던 시간' },
+    { label: '이탈률', value: fmtPct(c.bounceRate), d: delta(c.bounceRate, p.bounceRate, { goodUp: false, rate: true }), help: '한 페이지만 보고 나간 방문 비율' },
+    { label: '클릭 수', value: fmtNum(c.clicks), d: delta(c.clicks, p.clicks), help: '버튼·링크를 누른 횟수' },
+    { label: '예약 요청 전환율', value: fmtPct(c.bookingRate, 2), d: delta(c.bookingRate, p.bookingRate, { rate: true }), help: '예약 요청을 보낸 방문 ÷ 전체 방문' },
+  ];
+  const byKey = Object.fromEntries(rep.series.map((r: any) => [String(r.k), r]));
+  const keys: { k: string; label: string; short: string }[] = [];
+  if (R.hourly) for (let h = 0; h < 24; h++) keys.push({ k: String(h), label: `${R.from} ${h}시`, short: `${h}시` });
+  else for (let day = R.from; day <= R.to; day = addDays(day, 1)) keys.push({ k: day, label: dayLabel(day), short: `${+day.slice(5, 7)}.${+day.slice(8, 10)}` });
+  const mk = (field: string, kind: 'count' | 'sec', unitWord: string) => keys.map(({ k, label, short }) => {
+    const v = Number(byKey[k]?.[field] || 0);
+    return { label, short, value: v, display: kind === 'sec' ? fmtDur(v) : `${fmtNum(v)}${unitWord}` };
+  });
+  series = { visitors: mk('visitors', 'count', '명'), pv: mk('pv', 'count', '회'), sessions: mk('sessions', 'count', '회'), dur: mk('dur', 'sec', '') };
+  const hb = Object.fromEntries(rep.hours.map((r: any) => [r.hour, r]));
+  hours = Array.from({ length: 24 }, (_, h) => ({ label: `${h}시`, short: `${h}`, value: hb[h]?.pv || 0, display: `${fmtNum(hb[h]?.pv || 0)}회 (방문자 ${fmtNum(hb[h]?.visitors || 0)}명)` }));
+  const db_ = Object.fromEntries(rep.dows.map((r: any) => [r.dow, r]));
+  dows = [1, 2, 3, 4, 5, 6, 0].map((w) => ({ label: `${WD[w]}요일`, short: WD[w], value: db_[w]?.pv || 0, display: `${fmtNum(db_[w]?.pv || 0)}회 (방문자 ${fmtNum(db_[w]?.visitors || 0)}명)` }));
+}
+const pvTotal = rep ? sum(rep.sections, 'pv') : 0;
+const visitorTotal = rep ? rep.cur.visitors : 0;
+const entryTotal = rep ? sum(rep.sources, 'sessions') : 0;
+const kindTotal = rep ? sum(rep.kinds, 'sessions') : 0;
+const devTotal = rep ? sum(rep.devices, 'visitors') : 0;
+const osTotal = rep ? sum(rep.oses, 'visitors') : 0;
+const brTotal = rep ? sum(rep.browsers, 'visitors') : 0;
+const countryTotal = rep ? sum(rep.countries, 'visitors') : 0;
+const langTotal = rep ? sum(rep.langs, 'pv') : 0;
+const blangTotal = rep ? sum(rep.blangs, 'visitors') : 0;
+const inq = rep ? Object.fromEntries(rep.db.inquiries.map((r: any) => [r.topic, r.n])) : {};
+const inqTotal = rep ? sum(rep.db.inquiries, 'n') : 0;
+const funnel = rep ? [
+  { label: '전체 방문', n: rep.funnel.all_s || 0 },
+  { label: '상품 정보 확인 (세션·요금, 공간, K-REST, 스테이)', n: rep.funnel.offer_s || 0 },
+  { label: '예약 요청 작성 페이지', n: rep.funnel.book_s || 0 },
+  { label: '예약 요청 완료', n: rep.cur.conv.booking?.s || 0 },
+] : [];
+const mProg = month ? [
+  { label: '방문자', cur: month.visitors, target: targets.visitors, fmt: (v: number) => fmtNum(v) + '명', pace: month.visitors / Math.max(1, month.elapsed) * month.daysInMonth },
+  { label: '예약 요청', cur: month.bookings, target: targets.bookings, fmt: (v: number) => fmtNum(v) + '건', pace: month.bookings / Math.max(1, month.elapsed) * month.daysInMonth },
+  { label: '예약 요청 전환율', cur: month.bookingRate * 100, target: targets.cvr, fmt: (v: number) => v.toFixed(2) + '%', pace: null as number | null },
+] : [];
+---
+<Portal title="KPI · 방문 통계" kind="admin" user={me} current="analytics" msg={msg} err={err}>
+  <div class="toolbar kpi-head">
+    <div>
+      <h1 style="margin:0">KPI · 방문 통계</h1>
+      <p class="help" style="margin:4px 0 0">{R.label} ({R.from === R.to ? R.from : `${R.from} ~ ${R.to}`}) · 직전 같은 기간({R.prevFrom === R.prevTo ? R.prevFrom : `${R.prevFrom} ~ ${R.prevTo}`})과 비교 · 한국 시간 기준</p>
+    </div>
+    <div class="kpi-range">
+      {ranges.map(([k, l]) => <a href={qs({ range: k })} aria-current={R.key === k ? 'page' : undefined}>{l}</a>)}
+      <form method="get" class="kpi-custom">
+        <input type="hidden" name="range" value="custom" />
+        <input type="date" name="from" value={R.from} aria-label="시작일" />
+        <span>~</span>
+        <input type="date" name="to" value={R.to} aria-label="종료일" />
+        <button class="btn btn--ghost btn--sm" type="submit">조회</button>
+      </form>
+      <a class="btn btn--ghost btn--sm" href={`/admin/analytics/export${qs({ from: R.from, to: R.to })}`}>CSV 내려받기</a>
+    </div>
+  </div>
+
+  {!d && <div class="alert alert--error">D1 데이터베이스가 연결되지 않아 통계를 볼 수 없습니다.</div>}
+  {loadErr && <div class="alert alert--error">통계를 불러오지 못했습니다: {loadErr}</div>}
+
+  {live && (
+    <div class="kpi-live">
+      <span class="kpi-live__dot" aria-hidden="true"></span>
+      <strong>최근 30분 방문자 {fmtNum(live.visitors)}명</strong>
+      <span class="muted">페이지뷰 {fmtNum(live.pv)}회</span>
+      {live.pages.length > 0 && <span class="muted">· 많이 보는 페이지: {live.pages.map((p: any, i: number) => <span>{i ? ', ' : ''}{cleanTitle(p.title) || p.page_key} ({p.v})</span>)}</span>}
+    </div>
+  )}
+
+  {rep && (
+    <>
+      <h2 class="h3 kpi-h">핵심 지표</h2>
+      <div class="kpi-tiles">
+        {tiles.map((t) => (
+          <div class="kpi-tile" title={t.help}>
+            <span class="kpi-tile__label">{t.label}</span>
+            <b class="kpi-tile__value">{t.value}</b>
+            <span class={`kpi-delta kpi-delta--${t.d.cls}`}>{t.d.text}</span>
+            <span class="kpi-tile__help">{t.help}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="kpi-grid kpi-grid--wide">
+        <div class="panel">
+          <div data-tabs>
+            <div class="toolbar" style="margin-bottom:6px"><h2 class="h3" style="margin:0">{R.hourly ? '시간대별 추이' : '일별 추이'}</h2></div>
+            <div class="tabs">
+              <button class="is-active">방문자</button><button>페이지뷰</button><button>방문 수</button><button>평균 체류</button>
+            </div>
+            <div class="tabpanel is-active"><ColumnChart title="방문자 추이" points={series.visitors} tableHead={[R.hourly ? '시간' : '날짜', '방문자']} /></div>
+            <div class="tabpanel"><ColumnChart title="페이지뷰 추이" points={series.pv} tableHead={[R.hourly ? '시간' : '날짜', '페이지뷰']} /></div>
+            <div class="tabpanel"><ColumnChart title="방문 수 추이" points={series.sessions} tableHead={[R.hourly ? '시간' : '날짜', '방문 수']} /></div>
+            <div class="tabpanel"><ColumnChart title="페이지 평균 체류 시간 추이" points={series.dur} unit="sec" tableHead={[R.hourly ? '시간' : '날짜', '평균 체류']} /></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="toolbar" style="margin-bottom:6px"><h2 class="h3" style="margin:0">이번 달 목표</h2><span class="small muted">{month?.elapsed}/{month?.daysInMonth}일 경과</span></div>
+          {mProg.map((m) => {
+            const pct = m.target ? Math.min(1, m.cur / m.target) : 0;
+            return (
+              <div class="kpi-goal">
+                <div class="kpi-goal__row"><span>{m.label}</span><span><b>{m.fmt(m.cur)}</b>{m.target ? <span class="muted"> / {m.fmt(m.target)}</span> : <span class="muted"> · 목표 미설정</span>}</span></div>
+                <div class="kpi-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(pct * 100)} aria-label={`${m.label} 달성률`}><i style={`width:${(pct * 100).toFixed(1)}%`}></i></div>
+                <div class="small muted">{m.target ? `달성률 ${(pct * 100).toFixed(0)}%` : '아래에서 목표를 입력하세요'}{m.pace !== null && m.target ? ` · 이 속도면 월말 ${m.fmt(m.pace)} 예상` : ''}</div>
+              </div>
+            );
+          })}
+          <details class="kpi-goalform">
+            <summary>목표 수정</summary>
+            <form method="post">
+              <input type="hidden" name="range" value={R.key} />
+              <label class="field"><span>월 방문자 목표(명)</span><input name="visitors" inputmode="numeric" value={targets.visitors || ''} placeholder="예: 3000" /></label>
+              <label class="field"><span>월 예약 요청 목표(건)</span><input name="bookings" inputmode="numeric" value={targets.bookings || ''} placeholder="예: 60" /></label>
+              <label class="field"><span>예약 요청 전환율 목표(%)</span><input name="cvr" inputmode="decimal" value={targets.cvr || ''} placeholder="예: 2" /></label>
+              <button class="btn btn--primary btn--sm" type="submit">저장</button>
+            </form>
+          </details>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">전환</h2>
+          <p class="help">예약·문의 수는 실제 접수 기록 기준이고, 괄호 안은 방문 기록으로 출처를 확인할 수 있는 건수입니다.</p>
+          <table class="list kpi-table">
+            <tbody>
+              <tr><td>예약 요청</td><td class="num"><b>{fmtNum(rep.db.bookings)}건</b> <span class="muted">({fmtNum(rep.cur.conv.booking?.n || 0)})</span></td><td class="num"><span class={`kpi-delta kpi-delta--${delta(rep.db.bookings, rep.db.prevBookings).cls}`}>{delta(rep.db.bookings, rep.db.prevBookings).text}</span></td></tr>
+              <tr><td>└ 그중 확정·이용 완료</td><td class="num">{fmtNum(rep.db.confirmed)}건</td><td class="num muted">{rep.db.bookings ? fmtPct(rep.db.confirmed / rep.db.bookings, 0) : '—'}</td></tr>
+              <tr><td>문의 (스테이 알림 제외)</td><td class="num"><b>{fmtNum(inqTotal - (inq.stay || 0))}건</b> <span class="muted">({fmtNum(rep.cur.conv.contact?.n || 0)})</span></td><td class="num muted">{Object.entries(inq).filter(([k]) => k !== 'stay').map(([k, v]) => `${({ use: '이용', host: '입점', biz: '제휴', press: '기타' } as any)[k] || k} ${v}`).join(' · ')}</td></tr>
+              <tr><td>레스텔 스테이 알림 신청</td><td class="num"><b>{fmtNum(inq.stay || 0)}건</b> <span class="muted">({fmtNum(rep.cur.conv.stay?.n || 0)})</span></td><td></td></tr>
+              <tr><td>호스트 가입</td><td class="num"><b>{fmtNum(rep.db.hostSignups)}명</b></td><td></td></tr>
+            </tbody>
+          </table>
+          {rep.db.bookingLangs.length > 0 && <p class="small muted" style="margin:10px 0 0">예약 고객 안내 언어: {rep.db.bookingLangs.map((r: any) => `${langName(r.lang)} ${r.n}`).join(' · ')}</p>}
+        </div>
+        <div class="panel">
+          <h2 class="h3">예약 흐름(퍼널)</h2>
+          <p class="help">방문 단위. 단계마다 몇 %가 다음으로 넘어갔는지 봅니다.</p>
+          {funnel.map((f, i) => (
+            <div class="kpi-funnel">
+              <div class="kpi-goal__row"><span>{i + 1}. {f.label}</span><span><b>{fmtNum(f.n)}</b>{i > 0 && <span class="muted"> · 이전 단계의 {funnel[i - 1].n ? fmtPct(f.n / funnel[i - 1].n, 0) : '—'}</span>}</span></div>
+              <span class="kbar kbar--lg"><i style={`width:${(share(f.n, funnel[0].n) * 100).toFixed(1)}%`}></i></span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">인기 페이지 <span class="small muted">언어 통합</span></h2>
+          {rep.pages.length === 0 ? <p class="help">아직 기록이 없습니다.</p> : (
+            <div class="table-wrap"><table class="list kpi-table">
+              <thead><tr><th>페이지</th><th class="num">조회</th><th class="num">방문자</th><th class="num">평균 체류</th><th class="num">스크롤</th></tr></thead>
+              <tbody>{rep.pages.map((r: any) => (
+                <tr>
+                  <td><div class="kpi-name">{cleanTitle(r.title) || r.page_key}</div><div class="small muted">{r.page_key}{r.langs > 1 ? ` · ${r.langs}개 언어` : ''}</div><span class="kbar"><i style={`width:${(share(r.pv, rep!.pages[0].pv) * 100).toFixed(1)}%`}></i></span></td>
+                  <td class="num">{fmtNum(r.pv)}</td><td class="num">{fmtNum(r.visitors)}</td><td class="num">{fmtDur(r.dur)}</td><td class="num">{r.sc ? Math.round(r.sc) + '%' : '—'}</td>
+                </tr>
+              ))}</tbody>
+            </table></div>
+          )}
+        </div>
+        <div class="panel">
+          <h2 class="h3">가장 많이 본 정보</h2>
+          <p class="help">페이지를 정보 종류별로 묶은 조회수입니다.</p>
+          {rep.sections.length === 0 ? <p class="help">아직 기록이 없습니다.</p> : (
+            <table class="list kpi-table">
+              <thead><tr><th>정보</th><th class="num">조회</th><th class="num">비중</th><th class="num">평균 체류</th></tr></thead>
+              <tbody>{rep.sections.map((r: any) => (
+                <tr><td>{SECTION_KO[r.section] || r.section}<span class="kbar"><i style={`width:${(share(r.pv, rep!.sections[0].pv) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtNum(r.pv)}</td><td class="num">{fmtPct(share(r.pv, pvTotal), 0)}</td><td class="num">{fmtDur(r.dur)}</td></tr>
+              ))}</tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
+      <div class="panel kpi-panel">
+        <h2 class="h3">저널 글 순위</h2>
+        <p class="help">"끝까지 읽음"은 글의 75% 이상까지 내려 본 비율입니다. 검색 유입용 글이 실제로 읽히는지 확인하세요.</p>
+        {rep.journal.length === 0 ? <p class="help">아직 저널 글 조회 기록이 없습니다.</p> : (
+          <div class="table-wrap"><table class="list kpi-table">
+            <thead><tr><th>글</th><th class="num">조회</th><th class="num">방문자</th><th class="num">평균 체류</th><th class="num">끝까지 읽음</th><th>읽힌 언어</th></tr></thead>
+            <tbody>{rep.journal.map((r: any) => (
+              <tr><td><div class="kpi-name">{cleanTitle(r.title)}</div><div class="small muted">{r.page_key}</div></td><td class="num">{fmtNum(r.pv)}</td><td class="num">{fmtNum(r.visitors)}</td><td class="num">{fmtDur(r.dur)}</td><td class="num">{fmtPct(r.read_rate, 0)}</td><td class="small">{String(r.langs || '').split(',').filter(Boolean).join(' · ')}</td></tr>
+            ))}</tbody>
+          </table></div>
+        )}
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">많이 방문한 국가</h2>
+          {rep.countries.length === 0 ? <p class="help">아직 기록이 없습니다.</p> : (
+            <table class="list kpi-table">
+              <thead><tr><th>국가</th><th class="num">방문자</th><th class="num">비중</th><th class="num">페이지뷰</th></tr></thead>
+              <tbody>{rep.countries.map((r: any) => (
+                <tr><td><span aria-hidden="true">{flag(r.country)}</span> {countryName(r.country)}<span class="kbar"><i style={`width:${(share(r.visitors, rep!.countries[0].visitors) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtNum(r.visitors)}</td><td class="num">{fmtPct(share(r.visitors, countryTotal), 0)}</td><td class="num">{fmtNum(r.pv)}</td></tr>
+              ))}</tbody>
+            </table>
+          )}
+          {rep.cities.length > 0 && <p class="small muted" style="margin:10px 0 0">도시: {rep.cities.map((r: any) => `${r.city}(${r.country}) ${r.visitors}`).join(' · ')}</p>}
+        </div>
+        <div class="panel">
+          <div data-tabs>
+            <div class="toolbar" style="margin-bottom:6px"><h2 class="h3" style="margin:0">언어</h2></div>
+            <div class="tabs"><button class="is-active">사이트에서 본 언어</button><button>브라우저 언어</button></div>
+            <div class="tabpanel is-active">
+              <table class="list kpi-table">
+                <thead><tr><th>언어</th><th class="num">페이지뷰</th><th class="num">비중</th><th class="num">방문자</th></tr></thead>
+                <tbody>{rep.langs.map((r: any) => (
+                  <tr><td>{langName(r.lang)} <span class="small muted">/{r.lang === 'ko' ? '' : r.lang}</span><span class="kbar"><i style={`width:${(share(r.pv, rep!.langs[0]?.pv) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtNum(r.pv)}</td><td class="num">{fmtPct(share(r.pv, langTotal), 0)}</td><td class="num">{fmtNum(r.visitors)}</td></tr>
+                ))}</tbody>
+              </table>
+            </div>
+            <div class="tabpanel">
+              <p class="help" style="margin-top:0">방문자 브라우저에 설정된 언어입니다. 사이트 언어와 차이가 크면 해당 언어 콘텐츠를 늘릴 신호입니다.</p>
+              <table class="list kpi-table">
+                <thead><tr><th>브라우저 언어</th><th class="num">방문자</th><th class="num">비중</th></tr></thead>
+                <tbody>{rep.blangs.map((r: any) => (
+                  <tr><td>{langName(r.blang)}<span class="kbar"><i style={`width:${(share(r.visitors, rep!.blangs[0]?.visitors) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtNum(r.visitors)}</td><td class="num">{fmtPct(share(r.visitors, blangTotal), 0)}</td></tr>
+                ))}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">유입 경로</h2>
+          {rep.kinds.length > 0 && (
+            <div class="kpi-chips">{rep.kinds.map((r: any) => <span class="kpi-chip">{KIND_KO[r.ref_kind] || r.ref_kind} <b>{fmtPct(share(r.sessions, kindTotal), 0)}</b></span>)}</div>
+          )}
+          {rep.sources.length === 0 ? <p class="help">아직 기록이 없습니다.</p> : (
+            <table class="list kpi-table">
+              <thead><tr><th>출처</th><th>종류</th><th class="num">방문</th><th class="num">비중</th></tr></thead>
+              <tbody>{rep.sources.map((r: any) => (
+                <tr><td>{r.ref_source}<span class="kbar"><i style={`width:${(share(r.sessions, rep!.sources[0].sessions) * 100).toFixed(1)}%`}></i></span></td><td class="small muted">{KIND_KO[r.ref_kind] || r.ref_kind}</td><td class="num">{fmtNum(r.sessions)}</td><td class="num">{fmtPct(share(r.sessions, entryTotal), 0)}</td></tr>
+              ))}</tbody>
+            </table>
+          )}
+        </div>
+        <div class="panel">
+          <h2 class="h3">캠페인(UTM)</h2>
+          {rep.utm.length === 0 ? (
+            <p class="help">아직 캠페인 링크로 들어온 방문이 없습니다. 인스타그램 프로필, 네이버 플레이스, 제휴 게시물에 아래처럼 꼬리표를 붙인 주소를 쓰면 어디서 들어왔는지 따로 셀 수 있습니다.</p>
+          ) : (
+            <table class="list kpi-table">
+              <thead><tr><th>source</th><th>medium</th><th>campaign</th><th class="num">방문</th></tr></thead>
+              <tbody>{rep.utm.map((r: any) => <tr><td>{r.utm_source}</td><td class="small">{r.utm_medium || '—'}</td><td class="small">{r.utm_campaign || '—'}</td><td class="num">{fmtNum(r.sessions)}</td></tr>)}</tbody>
+            </table>
+          )}
+          <p class="small muted" style="margin:10px 0 0">예) <code>https://restel.kr/?utm_source=instagram&amp;utm_medium=profile&amp;utm_campaign=open</code></p>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">시간대별 방문 <span class="small muted">한국 시간</span></h2>
+          <ColumnChart title="시간대별 페이지뷰" points={hours} height={200} width={560} labelEvery={3} tableHead={['시간', '페이지뷰']} />
+        </div>
+        <div class="panel">
+          <h2 class="h3">요일별 방문</h2>
+          <ColumnChart title="요일별 페이지뷰" points={dows} height={200} width={560} labelEvery={1} tableHead={['요일', '페이지뷰']} />
+        </div>
+      </div>
+
+      <div class="kpi-grid kpi-grid--3">
+        <div class="panel">
+          <h2 class="h3">기기</h2>
+          <table class="list kpi-table"><tbody>{rep.devices.map((r: any) => <tr><td>{DEVICE_KO[r.device] || r.device}<span class="kbar"><i style={`width:${(share(r.visitors, devTotal) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtPct(share(r.visitors, devTotal), 0)}</td><td class="num muted">{fmtNum(r.visitors)}</td></tr>)}</tbody></table>
+        </div>
+        <div class="panel">
+          <h2 class="h3">운영체제</h2>
+          <table class="list kpi-table"><tbody>{rep.oses.map((r: any) => <tr><td>{r.os}<span class="kbar"><i style={`width:${(share(r.visitors, osTotal) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtPct(share(r.visitors, osTotal), 0)}</td><td class="num muted">{fmtNum(r.visitors)}</td></tr>)}</tbody></table>
+        </div>
+        <div class="panel">
+          <h2 class="h3">브라우저·앱</h2>
+          <table class="list kpi-table"><tbody>{rep.browsers.map((r: any) => <tr><td>{r.browser}<span class="kbar"><i style={`width:${(share(r.visitors, brTotal) * 100).toFixed(1)}%`}></i></span></td><td class="num">{fmtPct(share(r.visitors, brTotal), 0)}</td><td class="num muted">{fmtNum(r.visitors)}</td></tr>)}</tbody></table>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel">
+          <h2 class="h3">많이 누른 버튼·링크</h2>
+          {rep.clicks.length === 0 ? <p class="help">아직 기록이 없습니다.</p> : (
+            <table class="list kpi-table">
+              <thead><tr><th>버튼·링크</th><th>위치</th><th class="num">클릭</th><th class="num">방문자</th></tr></thead>
+              <tbody>{rep.clicks.map((r: any) => (
+                <tr><td><div class="kpi-name">{r.label || '(글자 없음)'}</div><div class="small muted kpi-ellipsis">{r.target}</div></td><td class="small muted">{({ header: '상단 메뉴', footer: '하단', banner: '언어 안내', body: '본문' } as any)[r.zone] || r.zone}</td><td class="num">{fmtNum(r.n)}</td><td class="num">{fmtNum(r.visitors)}</td></tr>
+              ))}</tbody>
+            </table>
+          )}
+        </div>
+        <div class="panel">
+          <div data-tabs>
+            <div class="toolbar" style="margin-bottom:6px"><h2 class="h3" style="margin:0">들어온 페이지 · 나간 페이지</h2></div>
+            <div class="tabs"><button class="is-active">첫 페이지(진입)</button><button>마지막 페이지</button></div>
+            <div class="tabpanel is-active">
+              <table class="list kpi-table">
+                <thead><tr><th>페이지</th><th class="num">진입</th><th class="num">이탈률</th></tr></thead>
+                <tbody>{rep.entries.map((r: any) => <tr><td>{r.page_key}</td><td class="num">{fmtNum(r.n)}</td><td class="num">{fmtPct(share(r.bounces, r.n), 0)}</td></tr>)}</tbody>
+              </table>
+            </div>
+            <div class="tabpanel">
+              <table class="list kpi-table">
+                <thead><tr><th>페이지</th><th class="num">마지막으로 본 방문</th></tr></thead>
+                <tbody>{rep.exits.map((r: any) => <tr><td>{r.page_key}</td><td class="num">{fmtNum(r.n)}</td></tr>)}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {rep.notFound.length > 0 && (
+        <div class="panel kpi-panel">
+          <h2 class="h3">없는 페이지(404)로 들어온 주소</h2>
+          <p class="help">잘못된 링크가 어딘가에 걸려 있다는 뜻입니다. 자주 나오는 주소는 연결을 고치세요.</p>
+          <table class="list kpi-table"><tbody>{rep.notFound.map((r: any) => <tr><td><code>{r.path}</code></td><td class="num">{fmtNum(r.n)}회</td></tr>)}</tbody></table>
+        </div>
+      )}
+
+      <div class="panel kpi-panel kpi-note">
+        <h2 class="h3">집계 방식</h2>
+        <ul class="small">
+          <li>쿠키를 쓰지 않고 익명으로 셉니다. 방문자 구분값은 매일 바뀌어 하루가 지나면 같은 사람인지 알 수 없고, IP 주소는 저장하지 않습니다. 그래서 "방문자"는 하루 단위 순방문자의 합입니다.</li>
+          <li>관리자·호스트로 로그인한 브라우저, 검색엔진 로봇은 집계하지 않습니다. 기록은 약 13개월 보관합니다.</li>
+          <li>체류 시간은 화면이 실제로 보이는 동안만 잽니다. 마지막 페이지의 시간이 빠지는 일부 기기가 있어 실제보다 조금 짧게 나올 수 있습니다.</li>
+          <li>검색어(네이버·구글에서 어떤 단어로 찾았는지)는 이 화면에 나오지 않습니다. 네이버 서치어드바이저와 구글 서치콘솔에서 확인하세요.</li>
+        </ul>
+        <p class="small" style="margin:10px 0 0">대표님 개인 휴대폰·PC에서 로그인하지 않고 사이트를 볼 때도 빼고 싶다면, 그 브라우저에서 이 화면을 열고 버튼을 누르세요. <button type="button" class="btn btn--ghost btn--sm" id="notrack-btn">이 브라우저 집계 제외</button> <span class="small muted" id="notrack-state"></span></p>
+      </div>
+    </>
+  )}
+  <div class="ktip" id="ktip" hidden></div>
+  <script is:inline>
+    (function () {
+      var tip = document.getElementById('ktip');
+      document.addEventListener('mousemove', function (e) {
+        var t = e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+        if (!t) { tip.hidden = true; return; }
+        tip.textContent = t.getAttribute('data-tip'); tip.hidden = false;
+        var x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8), y = e.clientY - tip.offsetHeight - 12;
+        tip.style.left = x + 'px'; tip.style.top = (y < 8 ? e.clientY + 18 : y) + 'px';
+      });
+      var btn = document.getElementById('notrack-btn'), st = document.getElementById('notrack-state');
+      if (!btn) return;
+      function show() { var on = false; try { on = localStorage.getItem('restel_notrack') === '1'; } catch (e) {} btn.textContent = on ? '이 브라우저 다시 집계' : '이 브라우저 집계 제외'; st.textContent = on ? '현재: 이 브라우저는 집계하지 않음' : ''; }
+      btn.addEventListener('click', function () { try { if (localStorage.getItem('restel_notrack') === '1') localStorage.removeItem('restel_notrack'); else localStorage.setItem('restel_notrack', '1'); } catch (e) {} show(); });
+      show();
+    })();
+  </script>
+</Portal>

@@ -8,7 +8,7 @@ const { lang } = Astro.props;
 const t = getDict(lang);
 ---
 <Base lang={lang} path="/404" title={t.notFound.title} noindex hideNotice>
-  <section class="section center">
+  <section class="section center" data-notfound>
     <div class="narrow">
       <img src="/brand/mascot.webp" alt="" width="140" height="185" style="margin:0 auto 18px" />
       <h1 class="h2">{t.notFound.title}</h1>

@@ -109,6 +109,36 @@ const fonts = meta.font ? `https://fonts.googleapis.com/css2?family=${meta.font}
         } catch (e) {}
       })();
     </script>
+    <script is:inline>
+      // 방문 통계(쿠키 없음). 수집 항목: 페이지 경로·제목, 이전 페이지 주소, UTM, 브라우저 언어, 화면 너비, 체류 시간, 스크롤 깊이, 클릭한 버튼·링크
+      (function () {
+        try { if (navigator.webdriver || localStorage.getItem('restel_notrack') === '1') return; } catch (e) {}
+        var E = '/api/collect';
+        function rid() { var a = new Uint8Array(8); crypto.getRandomValues(a); return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+        function post(o) { return fetch(E, { method: 'POST', body: JSON.stringify(o), keepalive: true, credentials: 'same-origin', headers: { 'content-type': 'text/plain' } }).catch(function () {}); }
+        function beacon(o) { var b = JSON.stringify(o); if (navigator.sendBeacon && navigator.sendBeacon(E, new Blob([b], { type: 'text/plain' }))) return; post(o); }
+        var q = new URLSearchParams(location.search), id = rid(), P = location.pathname;
+        var first = post({ t: 'pv', id: id, p: P, ti: document.title, r: document.referrer, us: q.get('utm_source') || '', um: q.get('utm_medium') || '', uc: q.get('utm_campaign') || '', l: navigator.language || '', w: screen.width || 0, nf: document.querySelector('[data-notfound]') ? 1 : 0 });
+        // 전환: 예약 요청·문의·스테이 알림 신청 완료 화면
+        var cv = document.querySelector('[data-convert]');
+        if (cv) first.then(function () { post({ t: 'cv', id: id, p: P, lb: cv.getAttribute('data-convert') }); });
+        // 체류 시간(화면에 보이는 동안만)과 스크롤 깊이
+        var since = document.visibilityState === 'visible' ? Date.now() : 0, total = 0, maxS = 0;
+        function sc() { var h = document.documentElement; var v = Math.round((window.scrollY + window.innerHeight) / Math.max(h.scrollHeight, 1) * 100); if (v > maxS) maxS = Math.min(100, v); }
+        sc(); addEventListener('scroll', sc, { passive: true });
+        function flush() { if (since) { total += Date.now() - since; since = 0; } if (total > 500) beacon({ t: 'en', id: id, p: P, d: Math.min(total, 1800000), s: maxS }); }
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); else since = Date.now(); });
+        addEventListener('pagehide', flush);
+        // 클릭한 버튼·링크
+        document.addEventListener('click', function (e) {
+          var el = e.target && e.target.closest ? e.target.closest('a[href],button,[data-track]') : null;
+          if (!el || el.closest('[data-notrack]')) return;
+          var label = el.getAttribute('data-track') || el.getAttribute('aria-label') || (el.textContent || '').replace(/\s+/g, ' ').trim() || el.getAttribute('title') || '';
+          var zone = el.closest('.header,.mobile-nav') ? 'header' : el.closest('footer') ? 'footer' : el.closest('.lang-banner') ? 'banner' : 'body';
+          beacon({ t: 'ck', id: id, p: P, lb: label.slice(0, 80), hr: el.href || el.getAttribute('href') || '', z: zone });
+        }, true);
+      })();
+    </script>
     {site.cfAnalyticsToken && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${site.cfAnalyticsToken}"}`}></script>}
   </body>
 </html>

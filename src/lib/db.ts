@@ -91,6 +91,22 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT, actor TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL DEFAULT '',
   detail TEXT NOT NULL DEFAULT '', at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL, day TEXT NOT NULL, hour INTEGER NOT NULL, dow INTEGER NOT NULL,
+  type TEXT NOT NULL, vid TEXT NOT NULL, sid TEXT NOT NULL, pvid TEXT NOT NULL DEFAULT '', entry INTEGER NOT NULL DEFAULT 0,
+  host TEXT NOT NULL DEFAULT '', path TEXT NOT NULL DEFAULT '', page_key TEXT NOT NULL DEFAULT '', lang TEXT NOT NULL DEFAULT '', section TEXT NOT NULL DEFAULT '', title TEXT NOT NULL DEFAULT '',
+  ref_host TEXT NOT NULL DEFAULT '', ref_source TEXT NOT NULL DEFAULT '', ref_kind TEXT NOT NULL DEFAULT '',
+  utm_source TEXT NOT NULL DEFAULT '', utm_medium TEXT NOT NULL DEFAULT '', utm_campaign TEXT NOT NULL DEFAULT '',
+  country TEXT NOT NULL DEFAULT '', city TEXT NOT NULL DEFAULT '',
+  device TEXT NOT NULL DEFAULT '', os TEXT NOT NULL DEFAULT '', browser TEXT NOT NULL DEFAULT '', blang TEXT NOT NULL DEFAULT '',
+  duration INTEGER, scroll INTEGER,
+  label TEXT NOT NULL DEFAULT '', target TEXT NOT NULL DEFAULT '', zone TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_ae_day_type ON analytics_events(day, type);
+CREATE INDEX IF NOT EXISTS idx_ae_vid_ts ON analytics_events(vid, ts);
+CREATE INDEX IF NOT EXISTS idx_ae_pvid ON analytics_events(pvid);
+CREATE INDEX IF NOT EXISTS idx_ae_ts ON analytics_events(ts);
 `;
 
 // 이미 만들어진 테이블에 나중에 추가된 열. PRAGMA로 없는 열만 ALTER 한다.

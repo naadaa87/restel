@@ -66,7 +66,7 @@ const [t1, t2] = s.title.split('\n');
       <div>
         <h2 class="h2">{s.formTitle}</h2>
         <p class="lead" style="margin:10px 0 22px">{s.formLead}</p>
-        {result?.done ? <div class="alert alert--ok">{s.form.done}</div> : (
+        {result?.done ? <div class="alert alert--ok" data-convert="stay">{s.form.done}</div> : (
           <form class="form" method="post" action={L('/stay') + '#stay-list'}>
             <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
             {result?.error && <div class="alert alert--error">{result.error}</div>}

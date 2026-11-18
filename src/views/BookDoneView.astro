@@ -13,7 +13,7 @@ const L = (p: string) => localizePath(p, lang);
   <section class="section center">
     <div class="narrow">
       <img src="/brand/mascot.webp" alt="" width="120" height="158" style="margin:0 auto 16px" />
-      <h1 class="h2">{t.book.done.title}</h1>
+      <h1 class="h2" data-convert="booking">{t.book.done.title}</h1>
       <p class="lead" style="margin:0 auto 24px">{fmt(t.book.done.body, { code })}</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <a class="btn btn--primary" href={L('/my') + `?code=${code}`}>{t.book.done.cta}</a>

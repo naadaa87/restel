@@ -18,7 +18,7 @@ const v = result?.values || {};
         <span class="kicker">{t.nav.contact}</span>
         <h1 class="h1" style="font-size:clamp(28px,4vw,40px)">{t.contact.title}</h1>
         <p class="lead" style="margin:12px 0 24px">{t.contact.lead}</p>
-        {result?.done ? <div class="alert alert--ok">{t.contact.done}</div> : (
+        {result?.done ? <div class="alert alert--ok" data-convert="contact">{t.contact.done}</div> : (
           <form class="form" method="post">
             <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
             {result?.error && <div class="alert alert--error">{result.error}</div>}

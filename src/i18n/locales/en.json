@@ -509,6 +509,7 @@
       "Purpose: confirming and managing requests, entry information, follow-up surveys and replying to enquiries.",
       "Retention: one year after the session, then anonymised. Transaction records required by law are kept for the statutory period.",
       "Processors: payment provider, messaging and email providers, hosting (Cloudflare). This list is updated here when it changes.",
+      "Visit statistics: to improve the website we keep anonymous, cookie-free statistics — pages viewed, how you arrived (previous site or campaign tag), country and city, device and browser type, browser language, time on page, scroll depth and buttons or links clicked. IP addresses are not stored, and the visitor identifier changes every day. Records are kept for about 13 months.",
       "You may request access, correction or deletion at any time using the contact details below."
     ],
     "refund": [
