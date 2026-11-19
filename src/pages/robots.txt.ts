@@ -16,6 +16,7 @@ export const GET: APIRoute = () =>
       'Disallow: /*/my',
       'Disallow: /book/done',
       'Disallow: /*/book/done',
+      'Disallow: /cdn-cgi/',
       '',
       `Sitemap: ${site.url}/sitemap.xml`,
       '',
